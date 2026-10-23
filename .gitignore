@@ -1,0 +1,16 @@
+# Sistema Operativo y Entorno
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# IDEs
+.vscode/
+.idea/

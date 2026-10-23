@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>GeoWedge 3D Pro - Perfiles Multiforma y Piques Verticales (Shafts)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    input[type=range] { accent-color: #0284c7; }
+    .robot-glow { box-shadow: 0 0 25px -5px rgba(56, 189, 248, 0.25); }
+    .seismic-glow { box-shadow: 0 0 20px -5px rgba(249, 115, 22, 0.3); }
+  </style>
+</head>
+<body class="bg-[#0f172a] text-slate-100 font-sans p-4 min-h-screen">
+  <div class="max-w-7xl mx-auto space-y-4">
+    
+    <!-- ENCABEZADO Y SELECTOR DE UNIDADES -->
+    <header class="flex flex-wrap items-center justify-between border-b border-slate-800 pb-3 gap-3">
+      <div class="flex items-center space-x-3">
+        <div class="h-10 px-2 py-1 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center shadow-lg">
+          <img src="assets/logo_geologgia.svg" alt="Geologgia Logo" class="h-7 w-auto object-contain">
+        </div>
+        <div>
+          <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+            GeoWedge 3D Pro
+            <span class="text-xs font-medium px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Túneles & Piques Verticales</span>
+          </h1>
+          <p class="text-xs text-slate-400">Desarrollado por <b class="text-sky-400">Geologgia Ltda</b> • Teoría de Bloques (Goodman & Shi) y Equilibrio Límite 3D</p>
+        </div>
+      </div>
+
+      <!-- BOTONES DE MODO DE UNIDAD Y PRESETS -->
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="bg-slate-900 border border-slate-700 p-0.5 rounded-lg flex items-center text-xs">
+          <button id="btn-unit-mpa" class="px-2.5 py-1 rounded bg-sky-600 text-white font-bold transition">MPa & MN</button>
+          <button id="btn-unit-kpa" class="px-2.5 py-1 rounded text-slate-400 hover:text-white transition">kPa & kN</button>
+        </div>
+        <button id="btn-preset-sin-soporte" class="px-2.5 py-1 text-xs bg-rose-950/40 text-rose-300 border border-rose-800/60 rounded-lg hover:bg-rose-900/60 transition">Sin Soporte</button>
+        <button id="btn-preset-pique" class="px-2.5 py-1 text-xs bg-cyan-950/40 text-cyan-300 border border-cyan-800/60 rounded-lg hover:bg-cyan-900/60 transition">🪜 Pique Vertical (90°)</button>
+        <button id="btn-preset-sismo-chile" class="px-2.5 py-1 text-xs bg-amber-950/40 text-amber-300 border border-amber-800/60 rounded-lg hover:bg-amber-900/60 transition">Sismo Chile (0.20g)</button>
+        <button id="btn-preset-full" class="px-2.5 py-1 text-xs bg-emerald-950/40 text-emerald-300 border border-emerald-800/60 rounded-lg hover:bg-emerald-900/60 transition">Pernos + Shotcrete</button>
+      </div>
+    </header>
+
+    <!-- GRID PRINCIPAL -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+      
+      <!-- COLUMNA IZQUIERDA: CONTROLES GEOMECÁNICOS Y FORMA DEL PERFIL (4 COLS) -->
+      <div class="lg:col-span-4 space-y-3">
+        
+        <!-- SECCIÓN 1: PERFIL Y GEOMETRÍA -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 space-y-2">
+          <h2 class="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
+            <span>🚇</span> Tipo de Perfil & Orientación
+          </h2>
+
+          <!-- SELECTOR DE FORMA DEL TÚNEL O PIQUE -->
+          <div>
+            <label class="text-slate-400 block mb-1 text-[11px]">Forma de Excavación</label>
+            <select id="select-shape" class="w-full bg-slate-800 border border-sky-600/60 rounded px-2 py-1 text-white text-xs font-semibold">
+              <option value="horseshoe">Herradura Clásica (Horseshoe)</option>
+              <option value="arch">Bóveda / Medio Punto Semicircular</option>
+              <option value="circular">Circular (TBM / Túnel Escudo)</option>
+              <option value="rectangular">Rectangular / Baúl / Caserón</option>
+              <option value="shaft">🪜 Pique Vertical (Shaft a 90°)</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div>
+              <label class="text-slate-400 block mb-0.5">Rumbo Eje (°)</label>
+              <input id="input-trend" type="number" min="0" max="360" value="45" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white text-xs font-mono">
+            </div>
+            <div>
+              <label class="text-slate-400 block mb-0.5">Inclinación Plunge (°)</label>
+              <input id="input-plunge" type="number" min="0" max="90" value="0" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white text-xs font-mono">
+            </div>
+            <div>
+              <label class="text-slate-400 block mb-0.5" id="lbl-span">Ancho / Span (m)</label>
+              <input id="input-span" type="number" min="2" max="15" step="0.5" value="5.0" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white text-xs font-mono">
+            </div>
+            <div>
+              <label class="text-slate-400 block mb-0.5" id="lbl-height">Altura / Height (m)</label>
+              <input id="input-height" type="number" min="2" max="15" step="0.5" value="4.5" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white text-xs font-mono">
+            </div>
+            <div class="col-span-2 pt-1 border-t border-slate-800/80">
+              <div class="flex justify-between items-center mb-0.5">
+                <label class="text-sky-300 font-semibold flex items-center gap-1">
+                  <span>📐</span> Escala Tamaño Cuña
+                </label>
+                <span id="label-wedge-scale" class="font-mono text-sky-400 font-bold">100% (Máxima)</span>
+              </div>
+              <input id="input-wedge-scale" type="range" min="10" max="100" step="5" value="100" class="w-full h-1.5 bg-slate-700 rounded cursor-pointer accent-sky-400">
+              <div class="flex justify-between text-[10px] text-slate-500">
+                <span>10% (Puntual)</span>
+                <span>50% (Media)</span>
+                <span>100% (Crítica Máx)</span>
+              </div>
+            </div>
+          </div>
+
+          <div id="box-shaft-notice" class="hidden p-1.5 rounded bg-cyan-950/50 border border-cyan-800 text-[10px] text-cyan-300">
+            ℹ️ <b>Modo Pique Vertical Activo:</b> La labor se excava verticalmente ($90^\circ$). El análisis evalúa las cuñas de hastial/pared cilíndrica del pique que deslizan hacia el fondo del pozo.
+          </div>
+        </div>
+
+        <!-- SECCIÓN 2: DISCONTINUIDADES Y RESISTENCIA -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 space-y-2">
+          <h2 class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+            <span>📐</span> Familias de Juntas & Resistencia
+          </h2>
+          
+          <div class="space-y-1.5 text-xs">
+            <div class="p-1.5 rounded bg-slate-950/50 border border-slate-800">
+              <div class="flex justify-between items-center text-cyan-400 font-semibold mb-1">
+                <span>J1</span><span id="label-j1" class="font-mono">65° / 135°</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <input id="j1-dip" type="range" min="10" max="89" value="65" class="w-full h-1 bg-slate-700 rounded">
+                <input id="j1-dipdir" type="range" min="0" max="359" value="135" class="w-full h-1 bg-slate-700 rounded">
+              </div>
+            </div>
+
+            <div class="p-1.5 rounded bg-slate-950/50 border border-slate-800">
+              <div class="flex justify-between items-center text-amber-400 font-semibold mb-1">
+                <span>J2</span><span id="label-j2" class="font-mono">75° / 225°</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <input id="j2-dip" type="range" min="10" max="89" value="75" class="w-full h-1 bg-slate-700 rounded">
+                <input id="j2-dipdir" type="range" min="0" max="359" value="225" class="w-full h-1 bg-slate-700 rounded">
+              </div>
+            </div>
+
+            <div class="p-1.5 rounded bg-slate-950/50 border border-slate-800">
+              <div class="flex justify-between items-center text-emerald-400 font-semibold mb-1">
+                <span>J3</span><span id="label-j3" class="font-mono">50° / 015°</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2">
+                <input id="j3-dip" type="range" min="10" max="89" value="50" class="w-full h-1 bg-slate-700 rounded">
+                <input id="j3-dipdir" type="range" min="0" max="359" value="15" class="w-full h-1 bg-slate-700 rounded">
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <div>
+                <label class="text-slate-400 block mb-0.5">Cohesión c (<span class="unit-stress">MPa</span>)</label>
+                <input id="input-cohesion" type="number" min="0" max="1000" step="0.005" value="0.030" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white font-mono text-xs">
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-0.5">Fricción φ (°)</label>
+                <input id="input-friction" type="number" min="10" max="50" value="32" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white text-xs font-mono">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECCIÓN 3: SÍSMICO PSEUDOESTÁTICO -->
+        <div class="bg-gradient-to-r from-slate-900 via-orange-950/30 to-slate-900 border border-orange-700/60 rounded-xl p-3 space-y-2 text-xs seismic-glow">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xs font-bold text-orange-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span>🌋</span> Efecto Sísmico (kh, kv)
+            </h2>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input id="chk-seismic" type="checkbox" checked class="rounded bg-slate-800 border-slate-700 text-orange-500 focus:ring-0">
+              <span class="text-[11px] text-slate-300">Activo</span>
+            </label>
+          </div>
+
+          <div id="panel-seismic" class="space-y-2">
+            <div class="grid grid-cols-3 gap-2">
+              <div>
+                <label class="text-slate-400 block mb-0.5">kh (Horiz. g)</label>
+                <input id="input-kh" type="number" min="0" max="0.5" step="0.01" value="0.15" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white font-mono">
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-0.5">kv (Vert. g)</label>
+                <input id="input-kv" type="number" min="-0.3" max="0.3" step="0.01" value="-0.08" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white font-mono">
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-0.5">Azimuth (°)</label>
+                <input id="input-sismo-az" type="number" min="0" max="360" value="90" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white font-mono">
+              </div>
+            </div>
+            <div class="p-1.5 rounded bg-orange-950/40 border border-orange-900/50 flex justify-between text-[11px]">
+              <span class="text-orange-300">Inercial Sísmica: <b id="ui-seismic-f" class="font-mono">0.018 MN</b></span>
+              <span class="text-orange-300 font-mono">Sobrecarga: <b id="ui-seismic-pct">+17.0%</b></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECCIÓN 4: PATRÓN DE PERNOS -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 space-y-2 text-xs">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xs font-bold text-violet-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span>🔩</span> Patrón de Pernos
+            </h2>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input id="chk-bolts" type="checkbox" checked class="rounded bg-slate-800 border-slate-700 text-violet-600 focus:ring-0">
+              <span class="text-[11px] text-slate-300">Activo</span>
+            </label>
+          </div>
+
+          <div id="panel-bolts" class="space-y-2">
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-slate-400 block mb-0.5">Malla Transv. (m)</label>
+                <input id="input-bolt-st" type="number" min="0.8" max="3.0" step="0.1" value="1.5" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white font-mono">
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-0.5">Malla Longit. (m)</label>
+                <input id="input-bolt-sl" type="number" min="0.8" max="3.0" step="0.1" value="1.5" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white font-mono">
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-0.5">Capacidad (<span class="unit-force">MN</span>)</label>
+                <input id="input-bolt-cap" type="number" min="0.05" max="0.5" step="0.01" value="0.18" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white font-mono">
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-0.5">Longitud (m)</label>
+                <input id="input-bolt-len" type="number" min="1.5" max="6.0" step="0.5" value="3.0" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white font-mono">
+              </div>
+            </div>
+            <div class="p-1.5 rounded bg-violet-950/30 border border-violet-900/50 flex justify-between text-[11px]">
+              <span class="text-violet-300">Pernos: <b id="ui-bolt-count">3</b> | Presión: <b id="ui-bolt-press" class="font-mono">0.089 MPa</b></span>
+              <span class="text-violet-300 font-mono">Total: <b id="ui-bolt-total">0.540 MN</b></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECCIÓN 5: SHOTCRETE -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 space-y-2 text-xs">
+          <div class="flex items-center justify-between">
+            <h2 class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+              <span>🧱</span> Hormigón Proyectado / Shotcrete
+            </h2>
+            <label class="flex items-center gap-1.5 cursor-pointer">
+              <input id="chk-shotcrete" type="checkbox" checked class="rounded bg-slate-800 border-slate-700 text-amber-600 focus:ring-0">
+              <span class="text-[11px] text-slate-300">Activo</span>
+            </label>
+          </div>
+
+          <div id="panel-shotcrete" class="space-y-2">
+            <div class="grid grid-cols-3 gap-2">
+              <div>
+                <label class="text-slate-400 block mb-0.5">Espesor (cm)</label>
+                <input id="input-shot-t" type="number" min="3" max="30" step="1" value="10" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white font-mono">
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-0.5">f'c (<span class="unit-stress">MPa</span>)</label>
+                <input id="input-shot-fc" type="number" min="1" max="50000" step="1" value="28" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white font-mono">
+              </div>
+              <div>
+                <label class="text-slate-400 block mb-0.5">τ corte (<span class="unit-stress">MPa</span>)</label>
+                <input id="input-shot-shear" type="number" min="0.05" max="3000" step="0.1" value="1.2" class="w-full bg-slate-800 border border-slate-700 rounded px-2 py-1 text-white font-mono">
+              </div>
+            </div>
+            <div class="p-1.5 rounded bg-amber-950/30 border border-amber-900/50 flex justify-between text-[11px]">
+              <span class="text-amber-300">Perímetro: <b id="ui-shot-perim">11.3 m</b> | Presión: <b id="ui-shot-press" class="font-mono">0.222 MPa</b></span>
+              <span class="text-amber-300 font-mono">Total: <b id="ui-shot-total">1.350 MN</b></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COLUMNA DERECHA: RESULTADOS + CANVAS 3D INTERACTIVO + ROBOTITO IA (8 COLS) -->
+      <div class="lg:col-span-8 space-y-4">
+        
+        <!-- TARJETA FACTOR DE SEGURIDAD SÍSMICO -->
+        <div id="card-fs" class="bg-slate-900/90 border border-emerald-800/80 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-xl">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span id="title-wedge-type" class="text-xs font-bold uppercase tracking-wider text-slate-400">Estabilidad Cuña (Clave Túnel)</span>
+              <span id="badge-seismic-state" class="text-[10px] px-1.5 py-0.2 rounded bg-orange-500/20 text-orange-400 border border-orange-500/30 font-bold uppercase">Sismo Activo</span>
+            </div>
+            <div class="flex items-baseline gap-3">
+              <span id="val-fs" class="text-4xl font-black text-emerald-400 tracking-tight font-mono">16.01</span>
+              <span id="badge-fs" class="text-xs font-bold px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 uppercase">ESTABLE (SÍSMICO)</span>
+            </div>
+            <p id="desc-mode" class="text-xs text-slate-300">Modo de falla: <b class="text-white">Caída Libre Directa</b></p>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 text-center border-l border-slate-800 pl-4 text-xs">
+            <div class="bg-slate-950/50 p-2 rounded-lg">
+              <span class="text-slate-400 text-[11px] block">Peso Cuña</span>
+              <b id="val-weight" class="text-sm font-mono text-amber-400">10.8 Ton</b>
+            </div>
+            <div class="bg-slate-950/50 p-2 rounded-lg">
+              <span class="text-slate-400 text-[11px] block">Carga Motriz Total</span>
+              <b id="val-driving" class="text-sm font-mono text-rose-400">0.118 MN</b>
+            </div>
+            <div class="bg-slate-950/50 p-2 rounded-lg">
+              <span class="text-slate-400 text-[11px] block">Resistencia Total</span>
+              <b id="val-resisting" class="text-sm font-mono text-emerald-400">1.890 MN</b>
+            </div>
+          </div>
+        </div>
+
+        <!-- MÓDULO ROBOTITO IA: ASISTENTE DE PROPUESTA MÍNIMA SÍSMICA -->
+        <div class="bg-gradient-to-r from-slate-900 via-indigo-950/40 to-slate-900 border border-indigo-700/60 rounded-xl p-3.5 space-y-3 robot-glow">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-indigo-900/60 pb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">🤖</span>
+              <div>
+                <h3 class="text-xs font-bold text-indigo-300 uppercase tracking-wider">Robotito IA — Sostenimiento Mínimo Optimizado</h3>
+                <p class="text-[11px] text-slate-400">Calcula la configuración estricta para garantizar que la cuña no deslice</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="text-slate-400">Criterio:</span>
+              <select id="select-target-fs" class="bg-slate-800 border border-indigo-700 rounded px-2 py-0.5 text-white font-mono text-xs">
+                <option value="1.15" selected>FS Sísmico ≥ 1.15 (Norma Minera/Civil)</option>
+                <option value="1.30">FS ≥ 1.30 (Labor Crítica / Temporal)</option>
+                <option value="1.50">FS ≥ 1.50 (Permanente / Conservador)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 3 TARJETAS DE PROPUESTAS DE LA IA -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
+            
+            <!-- OPCIÓN A: SOLO PERNOS -->
+            <div class="p-2.5 rounded-lg bg-slate-950/70 border border-violet-800/60 flex flex-col justify-between space-y-2 hover:border-violet-500 transition">
+              <div class="space-y-1">
+                <div class="flex justify-between items-center text-violet-400 font-bold">
+                  <span>Opción A: Solo Pernos</span>
+                  <span id="ai-opt-a-fs" class="px-1.5 py-0.2 rounded bg-violet-500/20 text-[10px] font-mono">FS 1.5</span>
+                </div>
+                <p class="text-[11px] text-slate-300">Malla requerida: <b id="ai-opt-a-mesh" class="text-white font-mono">2.2 x 2.2 m</b></p>
+                <p class="text-[11px] text-slate-300">Pernos activos: <b id="ai-opt-a-count" class="text-white font-mono">1 perno</b></p>
+                <p class="text-[11px] text-slate-300">Longitud mín: <b id="ai-opt-a-len" class="text-white font-mono">3.0 m</b></p>
+              </div>
+              <button id="btn-apply-ai-a" class="w-full py-1 text-[11px] rounded bg-violet-600 hover:bg-violet-500 text-white font-bold transition flex items-center justify-center gap-1">
+                <span>⚡</span> Aplicar Solo Pernos
+              </button>
+            </div>
+
+            <!-- OPCIÓN B: SOLO SHOTCRETE -->
+            <div class="p-2.5 rounded-lg bg-slate-950/70 border border-amber-800/60 flex flex-col justify-between space-y-2 hover:border-amber-500 transition">
+              <div class="space-y-1">
+                <div class="flex justify-between items-center text-amber-400 font-bold">
+                  <span>Opción B: Solo Shotcrete</span>
+                  <span id="ai-opt-b-fs" class="px-1.5 py-0.2 rounded bg-amber-500/20 text-[10px] font-mono">FS 5.7</span>
+                </div>
+                <p class="text-[11px] text-slate-300">Espesor mínimo: <b id="ai-opt-b-t" class="text-white font-mono">5 cm</b></p>
+                <p class="text-[11px] text-slate-300">Corte perimetral: <b id="ai-opt-b-shear" class="text-white font-mono">0.68 MN</b></p>
+                <p class="text-[11px] text-slate-300">Aporte pernos: <b class="text-slate-400">0 kN (Sin pernos)</b></p>
+              </div>
+              <button id="btn-apply-ai-b" class="w-full py-1 text-[11px] rounded bg-amber-600 hover:bg-amber-500 text-white font-bold transition flex items-center justify-center gap-1">
+                <span>⚡</span> Aplicar Solo Shotcrete
+              </button>
+            </div>
+
+            <!-- OPCIÓN C: COMBINADA RECOMENDADA -->
+            <div class="p-2.5 rounded-lg bg-slate-950/70 border border-emerald-700/80 flex flex-col justify-between space-y-2 hover:border-emerald-500 transition relative">
+              <span class="absolute -top-2 right-2 px-1.5 py-0.2 rounded bg-emerald-500 text-slate-950 font-bold text-[9px] uppercase">Recomendada</span>
+              <div class="space-y-1">
+                <div class="flex justify-between items-center text-emerald-400 font-bold">
+                  <span>Opción C: Combinación Óptima</span>
+                  <span id="ai-opt-c-fs" class="px-1.5 py-0.2 rounded bg-emerald-500/20 text-[10px] font-mono">FS 10.3</span>
+                </div>
+                <p class="text-[11px] text-slate-300">Malla: <b id="ai-opt-c-mesh" class="text-white font-mono">1.5 x 1.5 m (L=3.0m)</b></p>
+                <p class="text-[11px] text-slate-300">Shotcrete: <b id="ai-opt-c-t" class="text-white font-mono">5 cm con fibra</b></p>
+                <p class="text-[11px] text-slate-300">Resistencia total: <b id="ai-opt-c-res" class="text-white font-mono">1.22 MN</b></p>
+              </div>
+              <button id="btn-apply-ai-c" class="w-full py-1 text-[11px] rounded bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition flex items-center justify-center gap-1">
+                <span>⚡</span> Aplicar Combinado
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- CANVAS 3D INTERACTIVO CON ZOOM, PAN Y PERFILES DIVERSOS -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 flex flex-col items-center justify-between relative overflow-hidden">
+          
+          <!-- BARRA SUPERIOR DEL VISUALIZADOR 3D -->
+          <div class="w-full flex flex-wrap justify-between items-center mb-1.5 gap-2 text-xs">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-slate-300 flex items-center gap-1.5">
+                <span>🔄</span> Visualizador 3D: <span id="ui-current-shape-name" class="text-sky-400 font-semibold">Herradura Clásica</span>
+              </span>
+            </div>
+
+            <!-- BOTONERA DE NAVEGACIÓN 3D -->
+            <div class="flex items-center gap-1 bg-slate-950/80 p-0.5 rounded-lg border border-slate-700">
+              <button id="btn-mode-rotate" class="px-2 py-0.5 rounded bg-sky-600 text-white font-semibold text-[11px] flex items-center gap-1 transition" title="Arrastra para rotar la cámara">
+                <span>🔄</span> Rotar
+              </button>
+              <button id="btn-mode-pan" class="px-2 py-0.5 rounded text-slate-400 hover:text-white font-semibold text-[11px] flex items-center gap-1 transition" title="Arrastra para mover el perfil del túnel (Pan)">
+                <span>✋</span> Mover (Pan)
+              </button>
+              <span class="w-px h-4 bg-slate-700 mx-0.5"></span>
+              <button id="btn-zoom-in" class="px-2 py-0.5 rounded text-slate-300 hover:bg-slate-800 font-bold text-xs" title="Acercar">+</button>
+              <span id="ui-zoom-val" class="font-mono text-[10px] text-sky-400 px-1">100%</span>
+              <button id="btn-zoom-out" class="px-2 py-0.5 rounded text-slate-300 hover:bg-slate-800 font-bold text-xs" title="Alejar">-</button>
+              <span class="w-px h-4 bg-slate-700 mx-0.5"></span>
+              <button id="btn-center-model" class="px-2 py-0.5 rounded text-slate-300 hover:bg-slate-800 text-[11px] flex items-center gap-1" title="Centrar modelo">
+                <span>🎯</span> Centrar
+              </button>
+            </div>
+          </div>
+
+          <!-- ÁREA DEL CANVAS -->
+          <div class="w-full relative">
+            <canvas id="canvas-3d" width="700" height="360" class="w-full max-w-full rounded bg-slate-950 cursor-grab active:cursor-grabbing border border-slate-800 select-none"></canvas>
+            
+            <div class="absolute bottom-2 left-2 bg-slate-900/85 backdrop-blur-sm border border-slate-800 px-2 py-1 rounded text-[10px] text-slate-400 pointer-events-none flex gap-2">
+              <span>🖱️ Rueda: <b>Zoom</b></span>
+              <span>• Clic izq: <b id="hint-action">Rotar</b></span>
+              <span>• Clic der / Shift: <b>Mover</b></span>
+            </div>
+          </div>
+
+          <div class="w-full flex flex-wrap justify-between text-[10px] text-slate-500 mt-1.5 gap-2">
+            <div class="flex gap-3">
+              <span class="text-sky-400">● Labor/Pique</span>
+              <span id="legend-wedge" class="text-emerald-400">● Cuña</span>
+              <span class="text-violet-400">● Pernos</span>
+              <span class="text-amber-400">● Shotcrete</span>
+              <span class="text-orange-500">➜ Vector Sismo</span>
+            </div>
+            <div class="flex gap-2 text-slate-400">
+              <span id="ui-cam-coords" class="font-mono text-[10px]">Rot: (20°, -30°) | Pan: (0, 0)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- MEMORIA DE CÁLCULO DE TENSIONES Y SISMICIDAD -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3.5 text-xs space-y-2">
+          <div class="flex justify-between items-center">
+            <h3 class="font-bold text-slate-200 flex items-center gap-2">
+              <span>📊</span> Balance Pseudoestático de Fuerzas (MN) y Tensiones (MPa)
+            </h3>
+            <span class="text-[10px] text-slate-400">Análisis Vectorial W + F_sismo</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse font-mono text-[11px]">
+              <thead>
+                <tr class="border-b border-slate-800 text-slate-400">
+                  <th class="py-1">Parámetro / Mecanismo</th>
+                  <th class="py-1">Tensión (<span class="unit-stress">MPa</span>)</th>
+                  <th class="py-1 text-right">Fuerza (<span class="unit-force">MN</span>)</th>
+                  <th class="py-1 text-right">% Aporte</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800/60">
+                <tr class="bg-orange-950/20">
+                  <td class="py-1 text-orange-300 font-semibold">Fuerza Inercial Sísmica (kh=0.15g, kv=-0.08g)</td>
+                  <td id="row-stress-seismic" class="text-orange-400 font-mono">0.003 MPa</td>
+                  <td id="row-seismic" class="text-right text-orange-400 font-bold">0.018</td>
+                  <td id="row-seismic-pct" class="text-right text-orange-400">+17.0%</td>
+                </tr>
+                <tr>
+                  <td class="py-1 text-slate-300">1. Resistencia de Fricción & Cohesión en Roca</td>
+                  <td id="row-stress-rock" class="text-slate-400">0.000 MPa (c=0.030)</td>
+                  <td id="row-rock" class="text-right text-slate-300 font-bold">0.000</td>
+                  <td id="row-rock-pct" class="text-right text-slate-400">0.0%</td>
+                </tr>
+                <tr>
+                  <td class="py-1 text-violet-300 font-semibold">2. Patrón de Pernos de Anclaje</td>
+                  <td id="row-stress-bolts" class="text-violet-400">0.089 MPa</td>
+                  <td id="row-bolts" class="text-right text-violet-400 font-bold">0.540</td>
+                  <td id="row-bolts-pct" class="text-right text-violet-400">28.6%</td>
+                </tr>
+                <tr>
+                  <td class="py-1 text-amber-300 font-semibold">3. Hormigón Armado / Shotcrete</td>
+                  <td id="row-stress-shot" class="text-amber-400">0.222 MPa (τ=1.2)</td>
+                  <td id="row-shot" class="text-right text-amber-400 font-bold">1.350</td>
+                  <td id="row-shot-pct" class="text-right text-amber-400">71.4%</td>
+                </tr>
+                <tr class="bg-slate-950/60 font-bold">
+                  <td class="py-1.5 text-white">RESISTENCIA TOTAL (RT)</td>
+                  <td id="row-stress-total" class="text-emerald-400">0.311 MPa</td>
+                  <td id="row-total" class="text-right text-emerald-400 text-xs">1.890</td>
+                  <td class="text-right text-emerald-400">100%</td>
+                </tr>
+                <tr class="bg-slate-950/80 font-bold">
+                  <td class="py-1.5 text-white">FACTOR DE SEGURIDAD SÍSMICO (FS = RT / S_total)</td>
+                  <td id="row-status" class="text-emerald-400 font-sans">ESTABLE (FS ≥ 1.15)</td>
+                  <td id="row-fs" class="text-right text-emerald-400 text-sm">16.01</td>
+                  <td class="text-right text-slate-400">-</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- SCRIPT DE CÁLCULO PSEUDOESTÁTICO Y 3D -->
+  <script>
+    let useMPa = true;
+    let targetFS = 1.15;
+    let activeInteractionMode = 'rotate';
+
+    const state = {
+      shape: 'horseshoe', // 'horseshoe', 'arch', 'circular', 'rectangular', 'shaft'
+      trend: 45, plunge: 0, span: 5.0, height: 4.5, wedgeScale: 1.0,
+      j1: { dip: 65, dipdir: 135 },
+      j2: { dip: 75, dipdir: 225 },
+      j3: { dip: 50, dipdir: 15 },
+      cohesionMPa: 0.030,
+      friction: 32, rockDensity: 2.7,
+      // Sismo
+      enableSeismic: true, kh: 0.15, kv: -0.08, seismicAz: 90,
+      // Pernos
+      enableBolts: true, boltST: 1.5, boltSL: 1.5, boltCapMN: 0.18, boltLen: 3.0,
+      // Hormigón
+      enableShotcrete: true, shotT: 10, shotFC: 28, shotShearMPa: 1.2,
+      camera: { rotX: 20, rotY: -30, panX: 0, panY: 0, zoom: 1.0 }
+    };
+
+    function isShaftMode() {
+      return state.shape === 'shaft' || state.plunge >= 80;
+    }
+
+    function generateProfile2D(shape, W, H, numPts = 24) {
+      const pts = [];
+      if (shape === 'circular' || shape === 'shaft') {
+        const r = Math.min(W, H / 2);
+        const cy = shape === 'shaft' ? 0 : H / 2;
+        for (let i = 0; i < numPts; i++) {
+          const theta = 2 * Math.PI * i / numPts;
+          pts.push([r * Math.cos(theta), cy + r * Math.sin(theta)]);
+        }
+      } else if (shape === 'arch') {
+        const r = W;
+        const springY = Math.max(0.5, H - r);
+        pts.push([-W, 0], [W, 0], [W, springY]);
+        const arcPts = Math.floor(numPts / 2);
+        for (let i = 0; i <= arcPts; i++) {
+          const theta = Math.PI * i / arcPts;
+          pts.push([r * Math.cos(theta), springY + r * Math.sin(theta)]);
+        }
+        pts.push([-W, springY]);
+      } else if (shape === 'rectangular') {
+        pts.push([-W, 0], [W, 0], [W, H], [-W, H]);
+      } else {
+        // Horseshoe
+        const springY = H * 0.6;
+        pts.push([-W, 0], [W, 0], [W, springY], [W * 0.7, H * 0.9], [0, H], [-W * 0.7, H * 0.9], [-W, springY]);
+      }
+      return pts;
+    }
+
+    function dipDipDirToNormal(dipDeg, dipDirDeg) {
+      const dip = (dipDeg * Math.PI) / 180;
+      const dipdir = (dipDirDeg * Math.PI) / 180;
+      const nx = -Math.sin(dip) * Math.sin(dipdir);
+      const ny = -Math.sin(dip) * Math.cos(dipdir);
+      const nz = Math.cos(dip);
+      const len = Math.hypot(nx, ny, nz);
+      return [nx / len, ny / len, nz / len];
+    }
+
+    function cross(a, b) {
+      return [a[1]*b[2] - a[2]*b[1], a[2]*b[0] - a[0]*b[2], a[0]*b[1] - a[1]*b[0]];
+    }
+
+    function dot(a, b) { return a[0]*b[0] + a[1]*b[1] + a[2]*b[2]; }
+    function norm(v) { return Math.hypot(v[0], v[1], v[2]); }
+    function normalize(v) {
+      const l = norm(v);
+      return l > 1e-6 ? [v[0]/l, v[1]/l, v[2]/l] : [0,0,0];
+    }
+
+    function computeWedge() {
+      const isShaft = isShaftMode();
+      const n1 = dipDipDirToNormal(state.j1.dip, state.j1.dipdir);
+      const n2 = dipDipDirToNormal(state.j2.dip, state.j2.dipdir);
+      const n3 = dipDipDirToNormal(state.j3.dip, state.j3.dipdir);
+      const det = dot(n1, cross(n2, n3));
+
+      let I12 = normalize(cross(n1, n2)); if (I12[2] > 0) I12 = [-I12[0], -I12[1], -I12[2]];
+      let I23 = normalize(cross(n2, n3)); if (I23[2] > 0) I23 = [-I23[0], -I23[1], -I23[2]];
+      let I31 = normalize(cross(n3, n1)); if (I31[2] > 0) I31 = [-I31[0], -I31[1], -I31[2]];
+
+      const scaleFactor = Math.max(0.1, Math.min(1.0, state.wedgeScale || 1.0));
+      const ladoBase = (state.span * 0.75) * scaleFactor;
+      const baseArea = 0.433 * Math.pow(ladoBase, 2);
+      const totalFaceArea = baseArea * 1.5;
+      const perimetroBase = 3.0 * ladoBase;
+      const wedgeHeight = (state.span * 0.45 * scaleFactor) * Math.min(1.4, Math.max(0.3, Math.abs(det)));
+      const volume = (1.0 / 3.0) * baseArea * wedgeHeight;
+      const weightKN = volume * (state.rockDensity * 9.81);
+      const weightMN = weightKN / 1000.0;
+
+      // Vector de Peso y Sismo
+      const W_vec = [0, 0, -weightMN];
+      let F_sismo_vec = [0, 0, 0];
+      let seismicMagMN = 0;
+
+      if (state.enableSeismic) {
+        const radAz = (state.seismicAz * Math.PI) / 180;
+        const fx = weightMN * state.kh * Math.sin(radAz);
+        const fy = weightMN * state.kh * Math.cos(radAz);
+        const fz = weightMN * state.kv;
+        F_sismo_vec = [fx, fy, fz];
+        seismicMagMN = norm(F_sismo_vec);
+      }
+
+      const F_total_vec = [W_vec[0] + F_sismo_vec[0], W_vec[1] + F_sismo_vec[1], W_vec[2] + F_sismo_vec[2]];
+      const F_total_mag = norm(F_total_vec);
+
+      let mode = isShaft ? 'Deslizamiento en Pared de Pique (Shaft Wall)' : 'Caída Libre Directa (Vertical)';
+      let drivingForceMN = F_total_mag;
+      let shearRockMN = 0;
+      let sigmaN_MPa = 0;
+      let tauD_MPa = F_total_mag / totalFaceArea;
+      let tauR_MPa = 0;
+
+      if (!isShaft && I12[2] < -0.15 && I23[2] < -0.15 && I31[2] < -0.15) {
+        mode = 'Caída Libre Directa (Techo)';
+        drivingForceMN = F_total_mag;
+        shearRockMN = 0;
+      } else {
+        const p12 = Math.asin(Math.abs(I12[2]));
+        const p23 = Math.asin(Math.abs(I23[2]));
+        const p31 = Math.asin(Math.abs(I31[2]));
+        let steepest = I12;
+        if (p23 > p12) steepest = I23;
+        if (p31 > Math.max(p12, p23)) steepest = I31;
+
+        mode = isShaft ? `Deslizamiento en Pared de Pique (${Math.round(Math.max(p12,p23,p31)*180/Math.PI)}°)` : 'Deslizamiento en Diedro Sísmico';
+        drivingForceMN = Math.abs(dot(F_total_vec, steepest));
+        const normalF_MN = Math.max(0, Math.sqrt(Math.max(0, Math.pow(F_total_mag, 2) - Math.pow(drivingForceMN, 2))));
+        sigmaN_MPa = normalF_MN / totalFaceArea;
+        tauD_MPa = drivingForceMN / totalFaceArea;
+        tauR_MPa = state.cohesionMPa + (sigmaN_MPa * Math.tan(state.friction * Math.PI / 180));
+        shearRockMN = tauR_MPa * totalFaceArea;
+      }
+
+      // Pernos
+      let boltCount = 0;
+      let boltTotalMN = 0;
+      let boltPressureMPa = 0;
+      if (state.enableBolts) {
+        const tribArea = state.boltST * state.boltSL;
+        boltCount = Math.max(1, Math.round(baseArea / tribArea));
+        const embedment = state.boltLen - wedgeHeight;
+        const eff = embedment < 0.5 ? Math.max(0.2, embedment / 0.5) : 1.0;
+        boltTotalMN = boltCount * state.boltCapMN * eff;
+        boltPressureMPa = boltTotalMN / baseArea;
+      }
+
+      // Hormigón
+      let shotTotalMN = 0;
+      let shotPressureMPa = 0;
+      if (state.enableShotcrete) {
+        const tM = state.shotT / 100.0;
+        shotTotalMN = perimetroBase * tM * state.shotShearMPa;
+        shotPressureMPa = shotTotalMN / baseArea;
+      }
+
+      const totalResistingMN = shearRockMN + boltTotalMN + shotTotalMN;
+      const fs = drivingForceMN > 0.0001 ? totalResistingMN / drivingForceMN : 999.0;
+
+      // Robotito IA con Sismo
+      const deltaR = Math.max(0, (targetFS * drivingForceMN) - shearRockMN);
+      const minBoltLen = Math.round((wedgeHeight + 1.0) * 10) / 10;
+      
+      const optABoltsReq = Math.max(1, Math.ceil(deltaR / state.boltCapMN));
+      const optASpacing = Math.round(Math.max(0.8, Math.min(2.5, Math.sqrt(baseArea / optABoltsReq))) * 10) / 10;
+      const optAFS = drivingForceMN > 0.0001 ? (shearRockMN + optABoltsReq * state.boltCapMN) / drivingForceMN : 999;
+
+      const optB_t_m = deltaR / (perimetroBase * state.shotShearMPa);
+      const optB_t_cm = Math.max(5, Math.ceil((optB_t_m * 100) / 2) * 2);
+      const optB_R_shot = perimetroBase * (optB_t_cm / 100) * state.shotShearMPa;
+      const optBFS = drivingForceMN > 0.0001 ? (shearRockMN + optB_R_shot) / drivingForceMN : 999;
+
+      const optC_mesh = 1.5;
+      const optC_boltsCount = Math.max(1, Math.round(baseArea / (optC_mesh * optC_mesh)));
+      const optC_boltCap = optC_boltsCount * state.boltCapMN;
+      const optC_rem = Math.max(0, deltaR - optC_boltCap);
+      const optC_t_cm = optC_rem > 0 ? Math.max(5, Math.ceil((optC_rem / (perimetroBase * state.shotShearMPa) * 100) / 2) * 2) : 5;
+      const optC_shotCap = perimetroBase * (optC_t_cm / 100) * state.shotShearMPa;
+      const optCFS = drivingForceMN > 0.0001 ? (shearRockMN + optC_boltCap + optC_shotCap) / drivingForceMN : 999;
+
+      const seismicOverloadPct = weightMN > 0 ? ((drivingForceMN / weightMN) - 1.0) * 100 : 0;
+
+      return {
+        volume, weightTon: weightKN / 9.81, weightMN, weightKN,
+        wedgeHeight, perimetroBase, baseArea, totalFaceArea,
+        seismicMagMN, seismicOverloadPct, F_sismo_vec,
+        mode, drivingForceMN, drivingForceKN: drivingForceMN * 1000,
+        sigmaN_MPa, tauD_MPa, tauR_MPa,
+        shearRockMN, shearRockKN: shearRockMN * 1000,
+        boltCount, boltTotalMN, boltTotalKN: boltTotalMN * 1000, boltPressureMPa,
+        shotTotalMN, shotTotalKN: shotTotalMN * 1000, shotPressureMPa,
+        totalResistingMN, totalResistingKN: totalResistingMN * 1000,
+        totalPressureMPa: (totalResistingMN / baseArea),
+        fs,
+        ai: {
+          deltaR, minBoltLen,
+          optA: { count: optABoltsReq, spacing: optASpacing, fs: optAFS },
+          optB: { t_cm: optB_t_cm, shearMN: optB_R_shot, fs: optBFS },
+          optC: { spacing: optC_mesh, count: optC_boltsCount, t_cm: optC_t_cm, totalRes: (optC_boltCap + optC_shotCap), fs: optCFS }
+        }
+      };
+    }
+
+    function updateUI() {
+      const isShaft = isShaftMode();
+      const res = computeWedge();
+
+      document.getElementById('title-wedge-type').textContent = isShaft ? "Estabilidad Cuña de Pared (Pique Vertical)" : "Estabilidad Cuña de Techo (Túnel)";
+      document.getElementById('box-shaft-notice').className = isShaft ? "p-1.5 rounded bg-cyan-950/50 border border-cyan-800 text-[10px] text-cyan-300 block" : "hidden";
+
+      const shapeNames = {
+        horseshoe: 'Herradura Clásica',
+        arch: 'Bóveda / Medio Punto',
+        circular: 'Circular (TBM)',
+        rectangular: 'Rectangular / Caja',
+        shaft: 'Pique Vertical (Shaft 90°)'
+      };
+      document.getElementById('ui-current-shape-name').textContent = shapeNames[state.shape] || state.shape;
+
+      document.getElementById('val-fs').textContent = res.fs >= 100 ? '>100' : res.fs.toFixed(2);
+      document.getElementById('row-fs').textContent = res.fs >= 100 ? '>100' : res.fs.toFixed(2);
+      document.getElementById('val-weight').textContent = res.weightTon.toFixed(1) + ' Ton';
+      document.getElementById('desc-mode').innerHTML = `Modo de falla: <b class="text-white">${res.mode}</b>`;
+
+      if (state.enableSeismic) {
+        document.getElementById('badge-seismic-state').textContent = `Sismo Activo (kh=${state.kh}g, kv=${state.kv}g)`;
+        document.getElementById('badge-seismic-state').className = "text-[10px] px-1.5 py-0.2 rounded bg-orange-500/20 text-orange-400 border border-orange-500/30 font-bold uppercase";
+      } else {
+        document.getElementById('badge-seismic-state').textContent = `Estático (Sin Sismo)`;
+        document.getElementById('badge-seismic-state').className = "text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700 font-bold uppercase";
+      }
+
+      if (useMPa) {
+        document.getElementById('val-driving').textContent = res.drivingForceMN.toFixed(3) + ' MN';
+        document.getElementById('val-resisting').textContent = res.totalResistingMN.toFixed(3) + ' MN';
+        document.getElementById('ui-seismic-f').textContent = res.seismicMagMN.toFixed(3) + ' MN';
+        document.getElementById('row-seismic').textContent = res.seismicMagMN.toFixed(3);
+        document.getElementById('ui-bolt-total').textContent = res.boltTotalMN.toFixed(3) + ' MN';
+        document.getElementById('ui-shot-total').textContent = res.shotTotalMN.toFixed(3) + ' MN';
+        document.getElementById('row-rock').textContent = res.shearRockMN.toFixed(3);
+        document.getElementById('row-bolts').textContent = res.boltTotalMN.toFixed(3);
+        document.getElementById('row-shot').textContent = res.shotTotalMN.toFixed(3);
+        document.getElementById('row-total').textContent = res.totalResistingMN.toFixed(3);
+      } else {
+        document.getElementById('val-driving').textContent = res.drivingForceKN.toFixed(1) + ' kN';
+        document.getElementById('val-resisting').textContent = res.totalResistingKN.toFixed(1) + ' kN';
+        document.getElementById('ui-seismic-f').textContent = (res.seismicMagMN * 1000).toFixed(1) + ' kN';
+        document.getElementById('row-seismic').textContent = (res.seismicMagMN * 1000).toFixed(1);
+        document.getElementById('ui-bolt-total').textContent = res.boltTotalKN.toFixed(0) + ' kN';
+        document.getElementById('ui-shot-total').textContent = res.shotTotalKN.toFixed(0) + ' kN';
+        document.getElementById('row-rock').textContent = res.shearRockKN.toFixed(1);
+        document.getElementById('row-bolts').textContent = res.boltTotalKN.toFixed(1);
+        document.getElementById('row-shot').textContent = res.shotTotalKN.toFixed(1);
+        document.getElementById('row-total').textContent = res.totalResistingKN.toFixed(1);
+      }
+
+      document.getElementById('ui-seismic-pct').textContent = (res.seismicOverloadPct >= 0 ? '+' : '') + res.seismicOverloadPct.toFixed(1) + '%';
+      document.getElementById('row-seismic-pct').textContent = (res.seismicOverloadPct >= 0 ? '+' : '') + res.seismicOverloadPct.toFixed(1) + '%';
+      document.getElementById('row-stress-seismic').textContent = (res.seismicMagMN / res.baseArea).toFixed(3) + ' MPa';
+
+      const strStress = useMPa ? 'MPa' : 'kPa';
+      const convStress = useMPa ? 1.0 : 1000.0;
+
+      document.getElementById('ui-bolt-press').textContent = (res.boltPressureMPa * convStress).toFixed(useMPa ? 3 : 1) + ' ' + strStress;
+      document.getElementById('ui-shot-perim').textContent = res.perimetroBase.toFixed(1) + ' m';
+      document.getElementById('ui-shot-press').textContent = (res.shotPressureMPa * convStress).toFixed(useMPa ? 3 : 1) + ' ' + strStress;
+
+      const cDisp = useMPa ? state.cohesionMPa.toFixed(3) : (state.cohesionMPa * 1000).toFixed(0);
+      const tauDisp = useMPa ? state.shotShearMPa.toFixed(2) : (state.shotShearMPa * 1000).toFixed(0);
+      document.getElementById('row-stress-seismic').textContent = ((res.seismicMagMN / res.baseArea) * convStress).toFixed(useMPa ? 3 : 1) + ' ' + strStress;
+      document.getElementById('row-stress-rock').textContent = `${(res.tauR_MPa * convStress).toFixed(useMPa ? 3 : 1)} ${strStress} (c=${cDisp})`;
+      document.getElementById('row-stress-bolts').textContent = `${(res.boltPressureMPa * convStress).toFixed(useMPa ? 3 : 1)} ${strStress}`;
+      document.getElementById('row-stress-shot').textContent = `${(res.shotPressureMPa * convStress).toFixed(useMPa ? 3 : 1)} ${strStress} (τ=${tauDisp})`;
+      document.getElementById('row-stress-total').textContent = `${(res.totalPressureMPa * convStress).toFixed(useMPa ? 3 : 1)} ${strStress}`;
+
+      const tot = res.totalResistingMN > 0 ? res.totalResistingMN : 1;
+      document.getElementById('row-rock-pct').textContent = ((res.shearRockMN / tot) * 100).toFixed(1) + '%';
+      document.getElementById('row-bolts-pct').textContent = ((res.boltTotalMN / tot) * 100).toFixed(1) + '%';
+      document.getElementById('row-shot-pct').textContent = ((res.shotTotalMN / tot) * 100).toFixed(1) + '%';
+
+      // Actualizar Robotito IA
+      document.getElementById('ai-opt-a-fs').textContent = `FS ${res.ai.optA.fs.toFixed(2)}`;
+      document.getElementById('ai-opt-a-mesh').textContent = isShaft ? `Anillos a ${res.ai.optA.spacing}m` : `${res.ai.optA.spacing} x ${res.ai.optA.spacing} m`;
+      document.getElementById('ai-opt-a-count').textContent = `${res.ai.optA.count} perno(s) radiales`;
+      document.getElementById('ai-opt-a-len').textContent = `${res.ai.minBoltLen} m`;
+
+      document.getElementById('ai-opt-b-fs').textContent = `FS ${res.ai.optB.fs.toFixed(2)}`;
+      document.getElementById('ai-opt-b-t').textContent = `${res.ai.optB.t_cm} cm`;
+      document.getElementById('ai-opt-b-shear').textContent = `${res.ai.optB.shearMN.toFixed(2)} MN`;
+
+      document.getElementById('ai-opt-c-fs').textContent = `FS ${res.ai.optC.fs.toFixed(2)}`;
+      document.getElementById('ai-opt-c-mesh').textContent = isShaft ? `Malla 1.5m radial` : `${res.ai.optC.spacing} x ${res.ai.optC.spacing} m`;
+      document.getElementById('ai-opt-c-t').textContent = `${res.ai.optC.t_cm} cm con fibra`;
+      document.getElementById('ai-opt-c-res').textContent = `${res.ai.optC.totalRes.toFixed(2)} MN`;
+
+      const cardFS = document.getElementById('card-fs');
+      const badgeFS = document.getElementById('badge-fs');
+      const valFS = document.getElementById('val-fs');
+      const rowStatus = document.getElementById('row-status');
+      const legendWedge = document.getElementById('legend-wedge');
+
+      if (res.fs < 1.0) {
+        cardFS.className = "bg-slate-900/90 border border-rose-800/80 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-xl";
+        valFS.className = "text-4xl font-black text-rose-500 tracking-tight font-mono";
+        badgeFS.className = "text-xs font-bold px-2.5 py-1 rounded bg-rose-500/20 text-rose-300 border border-rose-500/40 uppercase";
+        badgeFS.textContent = "INESTABLE";
+        rowStatus.className = "text-rose-400 font-sans";
+        rowStatus.textContent = "CRÍTICO (FS < 1.0)";
+        legendWedge.className = "text-rose-400";
+      } else if (res.fs < targetFS) {
+        cardFS.className = "bg-slate-900/90 border border-amber-800/80 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-xl";
+        valFS.className = "text-4xl font-black text-amber-500 tracking-tight font-mono";
+        badgeFS.className = "text-xs font-bold px-2.5 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 uppercase";
+        badgeFS.textContent = "MARGINAL SÍSMICO";
+        rowStatus.className = "text-amber-400 font-sans";
+        rowStatus.textContent = `MARGINAL (FS < ${targetFS})`;
+        legendWedge.className = "text-amber-400";
+      } else {
+        cardFS.className = "bg-slate-900/90 border border-emerald-800/80 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-xl";
+        valFS.className = "text-4xl font-black text-emerald-400 tracking-tight font-mono";
+        badgeFS.className = "text-xs font-bold px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 uppercase";
+        badgeFS.textContent = "ESTABLE (SÍSMICO)";
+        rowStatus.className = "text-emerald-400 font-sans";
+        rowStatus.textContent = `ESTABLE (FS ≥ ${targetFS})`;
+        legendWedge.className = "text-emerald-400";
+      }
+
+      // Actualizar indicadores de cámara
+      document.getElementById('ui-zoom-val').textContent = `${Math.round(state.camera.zoom * 100)}%`;
+      document.getElementById('ui-cam-coords').textContent = `Rot: (${Math.round(state.camera.rotX)}°, ${Math.round(state.camera.rotY)}°) | Pan: (${Math.round(state.camera.panX)}, ${Math.round(state.camera.panY)})`;
+
+      draw3D(res);
+    }
+
+    // --- CANVAS 3D CON SOPORTE DE PIQUES Y FORMAS MULTIPLES ---
+    const canvas3d = document.getElementById('canvas-3d');
+    const ctx3d = canvas3d.getContext('2d');
+
+    function project3D(x, y, z, cx, cy, scale) {
+      const radX = (state.camera.rotX * Math.PI) / 180;
+      const radY = (state.camera.rotY * Math.PI) / 180;
+
+      let x1 = x * Math.cos(radY) + z * Math.sin(radY);
+      let y1 = y;
+      let z1 = -x * Math.sin(radY) + z * Math.cos(radY);
+
+      let x2 = x1;
+      let y2 = y1 * Math.cos(radX) - z1 * Math.sin(radX);
+      let z2 = y1 * Math.sin(radX) + z1 * Math.cos(radX);
+
+      const fov = 420;
+      const zoom = state.camera.zoom;
+      const pz = z2 + 500;
+      const px = cx + (x2 * fov / pz) * zoom * scale;
+      const py = cy - (y2 * fov / pz) * zoom * scale;
+      return { x: px, y: py, z: z2 };
+    }
+
+    function draw3D(res) {
+      ctx3d.clearRect(0, 0, canvas3d.width, canvas3d.height);
+      const isShaft = isShaftMode();
+      
+      const cx = (canvas3d.width / 2) + state.camera.panX;
+      const cy = (canvas3d.height / 2 + (isShaft ? 0 : 35)) + state.camera.panY;
+      const scale = 34;
+
+      const W = state.span / 2;
+      const H = state.height;
+      const L = 6.0;
+
+      // Retícula de fondo
+      ctx3d.strokeStyle = 'rgba(30, 41, 59, 0.4)';
+      ctx3d.lineWidth = 1;
+      const gridSize = 40;
+      const offsetX = state.camera.panX % gridSize;
+      const offsetY = state.camera.panY % gridSize;
+      for (let x = offsetX; x < canvas3d.width; x += gridSize) {
+        ctx3d.beginPath(); ctx3d.moveTo(x, 0); ctx3d.lineTo(x, canvas3d.height); ctx3d.stroke();
+      }
+      for (let y = offsetY; y < canvas3d.height; y += gridSize) {
+        ctx3d.beginPath(); ctx3d.moveTo(0, y); ctx3d.lineTo(canvas3d.width, y); ctx3d.stroke();
+      }
+
+      // Obtener perfil 2D paramétrico
+      const profile = generateProfile2D(state.shape, W, H);
+
+      // CASO A: PIQUE VERTICAL (Eje vertical Y)
+      if (isShaft) {
+        // Dibujar anillos del pique vertical a distintas profundidades
+        ctx3d.strokeStyle = '#334155';
+        ctx3d.lineWidth = 1.2;
+
+        for (let y = -H; y <= H; y += 1.2) {
+          ctx3d.beginPath();
+          for (let i = 0; i < profile.length; i++) {
+            // En pique: x=x, y=z (plano horizontal), z=y (profundidad vertical)
+            const pt = project3D(profile[i][0], y, profile[i][1], cx, cy, scale);
+            if (i === 0) ctx3d.moveTo(pt.x, pt.y); else ctx3d.lineTo(pt.x, pt.y);
+          }
+          ctx3d.closePath();
+          ctx3d.stroke();
+        }
+
+        // Generatrices verticales del pozo cilíndrico
+        for (let i = 0; i < profile.length; i += 4) {
+          const ptTop = project3D(profile[i][0], H, profile[i][1], cx, cy, scale);
+          const ptBottom = project3D(profile[i][0], -H, profile[i][1], cx, cy, scale);
+          ctx3d.beginPath(); ctx3d.moveTo(ptTop.x, ptTop.y); ctx3d.lineTo(ptBottom.x, ptBottom.y); ctx3d.stroke();
+        }
+
+        // Cuña en la pared del Pique (Shaft Wall Wedge)
+        const scaleFactor = Math.max(0.1, Math.min(1.0, state.wedgeScale || 1.0));
+        const wallX = W * 0.95;
+        const vApex = project3D(wallX + res.wedgeHeight, 0, 0, cx, cy, scale);
+        const vBase1 = project3D(wallX, -1.2 * scaleFactor, -1.0 * scaleFactor, cx, cy, scale);
+        const vBase2 = project3D(wallX, 1.2 * scaleFactor, -1.0 * scaleFactor, cx, cy, scale);
+        const vBase3 = project3D(wallX, 0, 1.3 * scaleFactor, cx, cy, scale);
+
+        const isStable = res.fs >= targetFS;
+        const isMarginal = res.fs >= 1.0 && res.fs < targetFS;
+        ctx3d.fillStyle = isStable ? 'rgba(16, 185, 129, 0.45)' : (isMarginal ? 'rgba(245, 158, 11, 0.5)' : 'rgba(239, 68, 68, 0.55)');
+        ctx3d.strokeStyle = isStable ? '#34d399' : (isMarginal ? '#fbbf24' : '#f87171');
+        ctx3d.lineWidth = 1.5;
+
+        const faces = [
+          [vApex, vBase1, vBase2],
+          [vApex, vBase2, vBase3],
+          [vApex, vBase3, vBase1],
+          [vBase1, vBase2, vBase3]
+        ];
+        faces.forEach(f => {
+          ctx3d.beginPath();
+          ctx3d.moveTo(f[0].x, f[0].y); ctx3d.lineTo(f[1].x, f[1].y); ctx3d.lineTo(f[2].x, f[2].y);
+          ctx3d.closePath(); ctx3d.fill(); ctx3d.stroke();
+        });
+
+        // Pernos Radiales en la pared del Pique
+        if (state.enableBolts && res.boltCount > 0) {
+          ctx3d.strokeStyle = '#a855f7';
+          ctx3d.lineWidth = 2.5;
+          const boltY = [-0.6, 0.6, 0].slice(0, res.boltCount);
+          boltY.forEach(by => {
+            const pCollar = project3D(wallX, by, 0, cx, cy, scale);
+            const pToe = project3D(wallX + state.boltLen, by, 0, cx, cy, scale);
+            ctx3d.beginPath(); ctx3d.moveTo(pCollar.x, pCollar.y); ctx3d.lineTo(pToe.x, pToe.y); ctx3d.stroke();
+            ctx3d.fillStyle = '#c084fc'; ctx3d.beginPath(); ctx3d.arc(pCollar.x, pCollar.y, 4, 0, Math.PI*2); ctx3d.fill();
+            ctx3d.fillStyle = '#7e22ce'; ctx3d.beginPath(); ctx3d.arc(pToe.x, pToe.y, 2.5, 0, Math.PI*2); ctx3d.fill();
+          });
+        }
+
+      } else {
+        // CASO B: TÚNEL HORIZONTAL (Herradura, Medio Punto, Circular o Rectangular)
+        // Costillas del túnel extruidas a lo largo de Y
+        ctx3d.strokeStyle = '#334155';
+        ctx3d.lineWidth = 1;
+
+        for (let y = -L/2; y <= L/2; y += 1.5) {
+          ctx3d.beginPath();
+          for (let i = 0; i < profile.length; i++) {
+            const pt = project3D(profile[i][0], profile[i][1], y, cx, cy, scale);
+            if (i === 0) ctx3d.moveTo(pt.x, pt.y); else ctx3d.lineTo(pt.x, pt.y);
+          }
+          if (state.shape === 'circular' || state.shape === 'rectangular') ctx3d.closePath();
+          ctx3d.stroke();
+        }
+
+        // Líneas longitudinales
+        for (let i = 0; i < profile.length; i += 3) {
+          const pStart = project3D(profile[i][0], profile[i][1], -L/2, cx, cy, scale);
+          const pEnd = project3D(profile[i][0], profile[i][1], L/2, cx, cy, scale);
+          ctx3d.beginPath(); ctx3d.moveTo(pStart.x, pStart.y); ctx3d.lineTo(pEnd.x, pEnd.y); ctx3d.stroke();
+        }
+
+        // Shotcrete
+        if (state.enableShotcrete) {
+          ctx3d.strokeStyle = '#f59e0b';
+          ctx3d.lineWidth = 1.2;
+          for (let y = -L/2; y <= L/2; y += 1.2) {
+            ctx3d.beginPath();
+            for (let i = 0; i < profile.length; i++) {
+              if (profile[i][1] > H * 0.4) {
+                const pt = project3D(profile[i][0] * 0.98, profile[i][1] * 0.98, y, cx, cy, scale);
+                ctx3d.lineTo(pt.x, pt.y);
+              }
+            }
+            ctx3d.stroke();
+          }
+        }
+
+        // Cuña en Techo (Roof Wedge)
+        const scaleFactor = Math.max(0.1, Math.min(1.0, state.wedgeScale || 1.0));
+        const bW = (W * 0.75) * scaleFactor;
+        const crownY = (state.shape === 'circular' ? H : (state.shape === 'arch' ? H : (state.shape === 'rectangular' ? H : H)));
+        const apexH = crownY + res.wedgeHeight;
+        const vApex = project3D(0, apexH, 0, cx, cy, scale);
+        const vBase1 = project3D(-bW, crownY * 0.9, -1.3 * scaleFactor, cx, cy, scale);
+        const vBase2 = project3D(bW, crownY * 0.9, -1.3 * scaleFactor, cx, cy, scale);
+        const vBase3 = project3D(0, crownY, 1.4 * scaleFactor, cx, cy, scale);
+
+        const isStable = res.fs >= targetFS;
+        const isMarginal = res.fs >= 1.0 && res.fs < targetFS;
+        ctx3d.fillStyle = isStable ? 'rgba(16, 185, 129, 0.45)' : (isMarginal ? 'rgba(245, 158, 11, 0.5)' : 'rgba(239, 68, 68, 0.55)');
+        ctx3d.strokeStyle = isStable ? '#34d399' : (isMarginal ? '#fbbf24' : '#f87171');
+        ctx3d.lineWidth = 1.5;
+
+        const faces = [
+          [vApex, vBase1, vBase2],
+          [vApex, vBase2, vBase3],
+          [vApex, vBase3, vBase1],
+          [vBase1, vBase2, vBase3]
+        ];
+        faces.forEach(f => {
+          ctx3d.beginPath();
+          ctx3d.moveTo(f[0].x, f[0].y); ctx3d.lineTo(f[1].x, f[1].y); ctx3d.lineTo(f[2].x, f[2].y);
+          ctx3d.closePath(); ctx3d.fill(); ctx3d.stroke();
+        });
+
+        // Pernos
+        if (state.enableBolts && res.boltCount > 0) {
+          ctx3d.strokeStyle = '#a855f7';
+          ctx3d.lineWidth = 2.5;
+          const boltPositions = [
+            { x: 0, z: 0 },
+            { x: -bW * 0.45, z: -0.6 },
+            { x: bW * 0.45, z: -0.6 },
+            { x: 0, z: 0.8 },
+            { x: -bW * 0.3, z: 0.4 },
+            { x: bW * 0.3, z: 0.4 }
+          ].slice(0, res.boltCount);
+
+          boltPositions.forEach(bp => {
+            const collarY = crownY * 0.95;
+            const toeY = collarY + state.boltLen;
+            const pCollar = project3D(bp.x, collarY, bp.z, cx, cy, scale);
+            const pToe = project3D(bp.x, toeY, bp.z, cx, cy, scale);
+            ctx3d.beginPath(); ctx3d.moveTo(pCollar.x, pCollar.y); ctx3d.lineTo(pToe.x, pToe.y); ctx3d.stroke();
+            ctx3d.fillStyle = '#c084fc'; ctx3d.beginPath(); ctx3d.arc(pCollar.x, pCollar.y, 4, 0, Math.PI * 2); ctx3d.fill();
+            ctx3d.fillStyle = '#7e22ce'; ctx3d.beginPath(); ctx3d.arc(pToe.x, pToe.y, 2.5, 0, Math.PI * 2); ctx3d.fill();
+          });
+        }
+      }
+
+      // Vector Gravedad Estática (Amarillo)
+      ctx3d.strokeStyle = '#fbbf24';
+      ctx3d.lineWidth = 2;
+      const gCenter = isShaft ? [W, 0, 0] : [0, H * 0.9, 0];
+      const gStart = project3D(gCenter[0], gCenter[1], gCenter[2], cx, cy, scale);
+      const gEnd = project3D(gCenter[0], gCenter[1] - 1.5, gCenter[2], cx, cy, scale);
+      ctx3d.beginPath(); ctx3d.moveTo(gStart.x, gStart.y); ctx3d.lineTo(gEnd.x, gEnd.y); ctx3d.stroke();
+      ctx3d.fillStyle = '#fbbf24'; ctx3d.beginPath(); ctx3d.arc(gEnd.x, gEnd.y, 3, 0, Math.PI*2); ctx3d.fill();
+
+      // Vector Sísmico Inercial (Naranja)
+      if (state.enableSeismic && res.seismicMagMN > 0.001) {
+        const radAz = (state.seismicAz * Math.PI) / 180;
+        const sismoScale = 8.0;
+        const sx = Math.sin(radAz) * state.kh * sismoScale;
+        const sz = Math.cos(radAz) * state.kh * sismoScale;
+        const sy = state.kv * sismoScale;
+
+        const sEnd = project3D(gCenter[0] + sx, gCenter[1] + sy, gCenter[2] + sz, cx, cy, scale);
+        ctx3d.strokeStyle = '#f97316';
+        ctx3d.lineWidth = 3;
+        ctx3d.beginPath(); ctx3d.moveTo(gStart.x, gStart.y); ctx3d.lineTo(sEnd.x, sEnd.y); ctx3d.stroke();
+        ctx3d.fillStyle = '#f97316'; ctx3d.beginPath(); ctx3d.arc(sEnd.x, sEnd.y, 4.5, 0, Math.PI*2); ctx3d.fill();
+      }
+    }
+
+    function setUnitMode(mpaMode) {
+      if (useMPa === mpaMode) return;
+      useMPa = mpaMode;
+
+      // Actualizar etiquetas visuales de unidades
+      document.querySelectorAll('.unit-stress').forEach(el => el.textContent = useMPa ? 'MPa' : 'kPa');
+      document.querySelectorAll('.unit-force').forEach(el => el.textContent = useMPa ? 'MN' : 'kN');
+
+      const btnMpa = document.getElementById('btn-unit-mpa');
+      const btnKpa = document.getElementById('btn-unit-kpa');
+      if (useMPa) {
+        btnMpa.className = "px-2.5 py-1 rounded bg-sky-600 text-white font-bold transition";
+        btnKpa.className = "px-2.5 py-1 rounded text-slate-400 hover:text-white transition";
+      } else {
+        btnKpa.className = "px-2.5 py-1 rounded bg-sky-600 text-white font-bold transition";
+        btnMpa.className = "px-2.5 py-1 rounded text-slate-400 hover:text-white transition";
+      }
+
+      // Convertir valores de los inputs en el formulario:
+      // Cohesión:
+      const inputCohesion = document.getElementById('input-cohesion');
+      if (inputCohesion) {
+        inputCohesion.value = useMPa 
+          ? (state.cohesionMPa).toFixed(3) 
+          : (state.cohesionMPa * 1000).toFixed(1);
+        inputCohesion.step = useMPa ? "0.005" : "5";
+      }
+
+      // Capacidad de perno (MN <-> kN):
+      const inputBoltCap = document.getElementById('input-bolt-cap');
+      if (inputBoltCap) {
+        inputBoltCap.value = useMPa
+          ? (state.boltCapMN).toFixed(2)
+          : (state.boltCapMN * 1000).toFixed(0);
+        inputBoltCap.step = useMPa ? "0.01" : "10";
+      }
+
+      // Shotcrete f'c (MPa <-> kPa):
+      const inputShotFC = document.getElementById('input-shot-fc');
+      if (inputShotFC) {
+        inputShotFC.value = useMPa
+          ? (state.shotFC).toFixed(0)
+          : (state.shotFC * 1000).toFixed(0);
+        inputShotFC.step = useMPa ? "1" : "500";
+      }
+
+      // Shotcrete τ corte (MPa <-> kPa):
+      const inputShotShear = document.getElementById('input-shot-shear');
+      if (inputShotShear) {
+        inputShotShear.value = useMPa
+          ? (state.shotShearMPa).toFixed(2)
+          : (state.shotShearMPa * 1000).toFixed(0);
+        inputShotShear.step = useMPa ? "0.1" : "50";
+      }
+
+      updateUI();
+    }
+
+    function setInteractionMode(mode) {
+      activeInteractionMode = mode;
+      const btnRot = document.getElementById('btn-mode-rotate');
+      const btnPan = document.getElementById('btn-mode-pan');
+      const hint = document.getElementById('hint-action');
+
+      if (mode === 'rotate') {
+        btnRot.className = "px-2 py-0.5 rounded bg-sky-600 text-white font-semibold text-[11px] flex items-center gap-1 transition";
+        btnPan.className = "px-2 py-0.5 rounded text-slate-400 hover:text-white font-semibold text-[11px] flex items-center gap-1 transition";
+        canvas3d.className = "w-full max-w-full rounded bg-slate-950 cursor-grab active:cursor-grabbing border border-slate-800 select-none";
+        hint.textContent = "Rotar";
+      } else {
+        btnPan.className = "px-2 py-0.5 rounded bg-amber-600 text-white font-semibold text-[11px] flex items-center gap-1 transition";
+        btnRot.className = "px-2 py-0.5 rounded text-slate-400 hover:text-white font-semibold text-[11px] flex items-center gap-1 transition";
+        canvas3d.className = "w-full max-w-full rounded bg-slate-950 cursor-move border border-slate-800 select-none";
+        hint.textContent = "Mover (Pan)";
+      }
+    }
+
+    function zoomCamera(delta) {
+      state.camera.zoom = Math.max(0.3, Math.min(3.5, state.camera.zoom + delta));
+      updateUI();
+    }
+
+    function resetCamera() {
+      if (isShaftMode()) {
+        state.camera.rotX = 35;
+        state.camera.rotY = -45;
+      } else {
+        state.camera.rotX = 20;
+        state.camera.rotY = -30;
+      }
+      state.camera.panX = 0;
+      state.camera.panY = 0;
+      state.camera.zoom = 1.0;
+      updateUI();
+    }
+
+    function bindInputs() {
+      const bind = (id, fn) => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', fn);
+      };
+
+      document.getElementById('btn-unit-mpa').addEventListener('click', () => setUnitMode(true));
+      document.getElementById('btn-unit-kpa').addEventListener('click', () => setUnitMode(false));
+
+      // Selector de Forma / Perfil
+      document.getElementById('select-shape').addEventListener('change', (e) => {
+        state.shape = e.target.value;
+        if (state.shape === 'shaft') {
+          state.plunge = 90;
+          document.getElementById('input-plunge').value = 90;
+          document.getElementById('lbl-span').textContent = "Diámetro Pique (m)";
+          document.getElementById('lbl-height').textContent = "Profundidad Visible (m)";
+          resetCamera();
+        } else {
+          document.getElementById('lbl-span').textContent = "Ancho / Span (m)";
+          document.getElementById('lbl-height').textContent = "Altura / Height (m)";
+          if (state.plunge === 90) {
+            state.plunge = 0;
+            document.getElementById('input-plunge').value = 0;
+          }
+        }
+        updateUI();
+      });
+
+      // Botonera de Cámara 3D (Zoom y Pan)
+      document.getElementById('btn-mode-rotate').addEventListener('click', () => setInteractionMode('rotate'));
+      document.getElementById('btn-mode-pan').addEventListener('click', () => setInteractionMode('pan'));
+      document.getElementById('btn-zoom-in').addEventListener('click', () => zoomCamera(0.2));
+      document.getElementById('btn-zoom-out').addEventListener('click', () => zoomCamera(-0.2));
+      document.getElementById('btn-center-model').addEventListener('click', resetCamera);
+
+      // Zoom con rueda
+      canvas3d.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const delta = e.deltaY < 0 ? 0.15 : -0.15;
+        zoomCamera(delta);
+      }, { passive: false });
+
+      // Mouse Orbit & Pan
+      let isDragging = false;
+      let lastX = 0, lastY = 0;
+      let dragButton = 0;
+
+      canvas3d.addEventListener('contextmenu', e => e.preventDefault());
+
+      canvas3d.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        dragButton = e.button;
+        lastX = e.clientX;
+        lastY = e.clientY;
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+        const dx = e.clientX - lastX;
+        const dy = e.clientY - lastY;
+        lastX = e.clientX;
+        lastY = e.clientY;
+
+        const isPan = (dragButton === 2) || e.shiftKey || (activeInteractionMode === 'pan');
+
+        if (isPan) {
+          state.camera.panX += dx;
+          state.camera.panY += dy;
+        } else {
+          state.camera.rotY += dx * 0.7;
+          state.camera.rotX += dy * 0.7;
+        }
+
+        updateUI();
+      });
+
+      window.addEventListener('mouseup', () => { isDragging = false; });
+
+      // Táctil (iPad)
+      let touchStartDist = 0;
+      let touchLastX = 0, touchLastY = 0;
+
+      canvas3d.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          touchLastX = e.touches[0].clientX;
+          touchLastY = e.touches[0].clientY;
+        } else if (e.touches.length === 2) {
+          isDragging = false;
+          touchStartDist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+        }
+      }, { passive: true });
+
+      canvas3d.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 1 && isDragging) {
+          const dx = e.touches[0].clientX - touchLastX;
+          const dy = e.touches[0].clientY - touchLastY;
+          touchLastX = e.touches[0].clientX;
+          touchLastY = e.touches[0].clientY;
+
+          if (activeInteractionMode === 'pan') {
+            state.camera.panX += dx;
+            state.camera.panY += dy;
+          } else {
+            state.camera.rotY += dx * 0.8;
+            state.camera.rotX += dy * 0.8;
+          }
+          updateUI();
+        } else if (e.touches.length === 2) {
+          const dist = Math.hypot(
+            e.touches[0].clientX - e.touches[1].clientX,
+            e.touches[0].clientY - e.touches[1].clientY
+          );
+          if (touchStartDist > 0) {
+            const factor = dist / touchStartDist;
+            if (Math.abs(factor - 1.0) > 0.05) {
+              zoomCamera((factor - 1.0) * 0.3);
+              touchStartDist = dist;
+            }
+          }
+        }
+      }, { passive: true });
+
+      canvas3d.addEventListener('touchend', () => { isDragging = false; touchStartDist = 0; });
+
+      // Parámetros de geometría
+      document.getElementById('select-target-fs').addEventListener('change', e => {
+        targetFS = Number(e.target.value);
+        updateUI();
+      });
+
+      bind('input-trend', e => { state.trend = Number(e.target.value); updateUI(); });
+      bind('input-plunge', e => {
+        state.plunge = Number(e.target.value);
+        if (state.plunge >= 80 && state.shape !== 'shaft') {
+          state.shape = 'shaft';
+          document.getElementById('select-shape').value = 'shaft';
+        }
+        updateUI();
+      });
+      bind('input-span', e => { state.span = Number(e.target.value); updateUI(); });
+      bind('input-height', e => { state.height = Number(e.target.value); updateUI(); });
+      bind('input-wedge-scale', e => {
+        const val = Number(e.target.value);
+        state.wedgeScale = val / 100.0;
+        document.getElementById('label-wedge-scale').textContent = `${val}% ${val === 100 ? '(Máxima)' : '(Escalada)'}`;
+        updateUI();
+      });
+
+      // Juntas
+      const bindJ = (id, k, p) => {
+        bind(id, e => {
+          state[k][p] = Number(e.target.value);
+          document.getElementById(`label-${k}`).textContent = `${state[k].dip}° / ${String(state[k].dipdir).padStart(3, '0')}°`;
+          updateUI();
+        });
+      };
+      bindJ('j1-dip', 'j1', 'dip'); bindJ('j1-dipdir', 'j1', 'dipdir');
+      bindJ('j2-dip', 'j2', 'dip'); bindJ('j2-dipdir', 'j2', 'dipdir');
+      bindJ('j3-dip', 'j3', 'dip'); bindJ('j3-dipdir', 'j3', 'dipdir');
+
+      bind('input-cohesion', e => {
+        const val = Number(e.target.value);
+        state.cohesionMPa = useMPa ? val : (val / 1000.0);
+        updateUI();
+      });
+      bind('input-friction', e => { state.friction = Number(e.target.value); updateUI(); });
+
+      // Sismo
+      document.getElementById('chk-seismic').addEventListener('change', e => {
+        state.enableSeismic = e.target.checked;
+        document.getElementById('panel-seismic').style.opacity = state.enableSeismic ? '1' : '0.4';
+        updateUI();
+      });
+      bind('input-kh', e => { state.kh = Number(e.target.value); updateUI(); });
+      bind('input-kv', e => { state.kv = Number(e.target.value); updateUI(); });
+      bind('input-sismo-az', e => { state.seismicAz = Number(e.target.value); updateUI(); });
+
+      // Pernos
+      document.getElementById('chk-bolts').addEventListener('change', e => {
+        state.enableBolts = e.target.checked;
+        document.getElementById('panel-bolts').style.opacity = state.enableBolts ? '1' : '0.4';
+        updateUI();
+      });
+      bind('input-bolt-st', e => { state.boltST = Number(e.target.value); updateUI(); });
+      bind('input-bolt-sl', e => { state.boltSL = Number(e.target.value); updateUI(); });
+      bind('input-bolt-cap', e => {
+        const val = Number(e.target.value);
+        state.boltCapMN = useMPa ? val : (val / 1000.0);
+        updateUI();
+      });
+      bind('input-bolt-len', e => { state.boltLen = Number(e.target.value); updateUI(); });
+
+      // Shotcrete
+      document.getElementById('chk-shotcrete').addEventListener('change', e => {
+        state.enableShotcrete = e.target.checked;
+        document.getElementById('panel-shotcrete').style.opacity = state.enableShotcrete ? '1' : '0.4';
+        updateUI();
+      });
+      bind('input-shot-t', e => { state.shotT = Number(e.target.value); updateUI(); });
+      bind('input-shot-fc', e => {
+        const val = Number(e.target.value);
+        state.shotFC = useMPa ? val : (val / 1000.0);
+        updateUI();
+      });
+      bind('input-shot-shear', e => {
+        const val = Number(e.target.value);
+        state.shotShearMPa = useMPa ? val : (val / 1000.0);
+        updateUI();
+      });
+
+      // APLICACIÓN ROBOTITO IA
+      document.getElementById('btn-apply-ai-a').addEventListener('click', () => {
+        const res = computeWedge();
+        state.enableBolts = true; state.enableShotcrete = false;
+        state.boltST = res.ai.optA.spacing; state.boltSL = res.ai.optA.spacing;
+        state.boltLen = res.ai.minBoltLen;
+        document.getElementById('chk-bolts').checked = true;
+        document.getElementById('chk-shotcrete').checked = false;
+        document.getElementById('panel-bolts').style.opacity = '1';
+        document.getElementById('panel-shotcrete').style.opacity = '0.4';
+        document.getElementById('input-bolt-st').value = state.boltST;
+        document.getElementById('input-bolt-sl').value = state.boltSL;
+        document.getElementById('input-bolt-len').value = state.boltLen;
+        updateUI();
+      });
+
+      document.getElementById('btn-apply-ai-b').addEventListener('click', () => {
+        const res = computeWedge();
+        state.enableBolts = false; state.enableShotcrete = true;
+        state.shotT = res.ai.optB.t_cm;
+        document.getElementById('chk-bolts').checked = false;
+        document.getElementById('chk-shotcrete').checked = true;
+        document.getElementById('panel-bolts').style.opacity = '0.4';
+        document.getElementById('panel-shotcrete').style.opacity = '1';
+        document.getElementById('input-shot-t').value = state.shotT;
+        updateUI();
+      });
+
+      document.getElementById('btn-apply-ai-c').addEventListener('click', () => {
+        const res = computeWedge();
+        state.enableBolts = true; state.enableShotcrete = true;
+        state.boltST = res.ai.optC.spacing; state.boltSL = res.ai.optC.spacing;
+        state.boltLen = res.ai.minBoltLen; state.shotT = res.ai.optC.t_cm;
+        document.getElementById('chk-bolts').checked = true;
+        document.getElementById('chk-shotcrete').checked = true;
+        document.getElementById('panel-bolts').style.opacity = '1';
+        document.getElementById('panel-shotcrete').style.opacity = '1';
+        document.getElementById('input-bolt-st').value = state.boltST;
+        document.getElementById('input-bolt-sl').value = state.boltSL;
+        document.getElementById('input-bolt-len').value = state.boltLen;
+        document.getElementById('input-shot-t').value = state.shotT;
+        updateUI();
+      });
+
+      // Presets
+      document.getElementById('btn-preset-sin-soporte').addEventListener('click', () => {
+        state.enableBolts = false; state.enableShotcrete = false;
+        document.getElementById('chk-bolts').checked = false;
+        document.getElementById('chk-shotcrete').checked = false;
+        document.getElementById('panel-bolts').style.opacity = '0.4';
+        document.getElementById('panel-shotcrete').style.opacity = '0.4';
+        updateUI();
+      });
+
+      document.getElementById('btn-preset-pique').addEventListener('click', () => {
+        state.shape = 'shaft';
+        state.plunge = 90;
+        document.getElementById('select-shape').value = 'shaft';
+        document.getElementById('input-plunge').value = 90;
+        document.getElementById('lbl-span').textContent = "Diámetro Pique (m)";
+        document.getElementById('lbl-height').textContent = "Profundidad Visible (m)";
+        resetCamera();
+        updateUI();
+      });
+
+      document.getElementById('btn-preset-sismo-chile').addEventListener('click', () => {
+        state.enableSeismic = true;
+        state.kh = 0.20; state.kv = -0.10;
+        document.getElementById('chk-seismic').checked = true;
+        document.getElementById('panel-seismic').style.opacity = '1';
+        document.getElementById('input-kh').value = 0.20;
+        document.getElementById('input-kv').value = -0.10;
+        updateUI();
+      });
+
+      document.getElementById('btn-preset-full').addEventListener('click', () => {
+        state.enableBolts = true; state.enableShotcrete = true;
+        document.getElementById('chk-bolts').checked = true;
+        document.getElementById('chk-shotcrete').checked = true;
+        document.getElementById('panel-bolts').style.opacity = '1';
+        document.getElementById('panel-shotcrete').style.opacity = '1';
+        updateUI();
+      });
+    }
+
+    bindInputs();
+    updateUI();
+  </script>
+</body>
+</html>
