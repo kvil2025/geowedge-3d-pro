@@ -675,17 +675,137 @@
       const n3 = dipDipDirToNormal(state.j3.dip, state.j3.dipdir);
       const det = dot(n1, cross(n2, n3));
 
-      let I12 = normalize(cross(n1, n2)); if (I12[2] > 0) I12 = [-I12[0], -I12[1], -I12[2]];
-      let I23 = normalize(cross(n2, n3)); if (I23[2] > 0) I23 = [-I23[0], -I23[1], -I23[2]];
-      let I31 = normalize(cross(n3, n1)); if (I31[2] > 0) I31 = [-I31[0], -I31[1], -I31[2]];
+      // Conversión a coordenadas locales del túnel:
+      // X = eje transversal (ancho), Y = vertical (cota), Z = longitudinal (avance)
+      const radTr = (state.trend * Math.PI) / 180;
+      const T_axis = [Math.sin(radTr), Math.cos(radTr), 0];
+      const X_lat = [Math.cos(radTr), -Math.sin(radTr), 0];
+      const Y_vert = [0, 0, 1];
 
+      const toTunnel = (v) => [
+        dot(v, X_lat),
+        dot(v, Y_vert),
+        dot(v, T_axis)
+      ];
+
+      // Vectores de intersección diedra entre familias (I12, I23, I31)
+      let rawI12 = cross(n1, n2);
+      let rawI23 = cross(n2, n3);
+      let rawI31 = cross(n3, n1);
+
+      let e12 = toTunnel(rawI12);
+      let e23 = toTunnel(rawI23);
+      let e31 = toTunnel(rawI31);
+
+      let I12 = normalize(rawI12); if (I12[2] > 0) I12 = [-I12[0], -I12[1], -I12[2]];
+      let I23 = normalize(rawI23); if (I23[2] > 0) I23 = [-I23[0], -I23[1], -I23[2]];
+      let I31 = normalize(rawI31); if (I31[2] > 0) I31 = [-I31[0], -I31[1], -I31[2]];
+
+      const isFinite = Math.abs(det) >= 0.05;
       const scaleFactor = Math.max(0.1, Math.min(1.0, state.wedgeScale || 1.0));
-      const ladoBase = (state.span * 0.75) * scaleFactor;
-      const baseArea = 0.433 * Math.pow(ladoBase, 2);
-      const totalFaceArea = baseArea * 1.5;
-      const perimetroBase = 3.0 * ladoBase;
-      const wedgeHeight = (state.span * 0.45 * scaleFactor) * Math.min(1.4, Math.max(0.3, Math.abs(det)));
-      const volume = (1.0 / 3.0) * baseArea * wedgeHeight;
+
+      let b1 = [0, 0, 0], b2 = [0, 0, 0], b3 = [0, 0, 0], apex = [0, 0, 0];
+      let wedgeHeight = 1.0;
+      let baseArea = 1.0;
+      let perimetroBase = 1.0;
+      let totalFaceArea = 1.0;
+      let volume = 1.0;
+
+      if (state.wedgeLoc === 'roof' || isShaft) {
+        // En techo: diedros apuntan hacia abajo (-Y) desde el ápice
+        if (e12[1] > 0) e12 = [-e12[0], -e12[1], -e12[2]];
+        if (e23[1] > 0) e23 = [-e23[0], -e23[1], -e23[2]];
+        if (e31[1] > 0) e31 = [-e31[0], -e31[1], -e31[2]];
+
+        const dY1 = Math.max(0.15, Math.abs(e12[1]));
+        const dY2 = Math.max(0.15, Math.abs(e23[1]));
+        const dY3 = Math.max(0.15, Math.abs(e31[1]));
+
+        const r1 = [e12[0] / dY1, e12[2] / dY1];
+        const r2 = [e23[0] / dY2, e23[2] / dY2];
+        const r3 = [e31[0] / dY3, e31[2] / dY3];
+
+        const dx = Math.max(r1[0], r2[0], r3[0]) - Math.min(r1[0], r2[0], r3[0]);
+        // Límite geométrico de la cuña máxima acotada por el Span del túnel
+        const h_max = Math.min(state.span * 1.5, (state.span * 0.85) / Math.max(0.35, dx));
+        wedgeHeight = h_max * scaleFactor;
+
+        const cx = ((r1[0] + r2[0] + r3[0]) / 3.0) * wedgeHeight;
+        const cz = ((r1[1] + r2[1] + r3[1]) / 3.0) * wedgeHeight;
+
+        b1 = [wedgeHeight * r1[0] - cx, 0, wedgeHeight * r1[1] - cz];
+        b2 = [wedgeHeight * r2[0] - cx, 0, wedgeHeight * r2[1] - cz];
+        b3 = [wedgeHeight * r3[0] - cx, 0, wedgeHeight * r3[1] - cz];
+        apex = [-cx, wedgeHeight, -cz];
+
+        baseArea = 0.5 * Math.abs((b2[0] - b1[0]) * (b3[2] - b1[2]) - (b3[0] - b1[0]) * (b2[2] - b1[2]));
+        baseArea = Math.max(0.2, baseArea);
+        volume = (1.0 / 3.0) * baseArea * wedgeHeight;
+
+        const p12 = Math.hypot(b2[0] - b1[0], b2[2] - b1[2]);
+        const p23 = Math.hypot(b3[0] - b2[0], b3[2] - b2[2]);
+        const p31 = Math.hypot(b1[0] - b3[0], b1[2] - b3[2]);
+        perimetroBase = p12 + p23 + p31;
+
+        const triArea3D = (pA, pB, pC) => {
+          const ab = [pB[0]-pA[0], pB[1]-pA[1], pB[2]-pA[2]];
+          const ac = [pC[0]-pA[0], pC[1]-pA[1], pC[2]-pA[2]];
+          const cp = cross(ab, ac);
+          return 0.5 * norm(cp);
+        };
+        totalFaceArea = triArea3D(apex, b1, b2) + triArea3D(apex, b2, b3) + triArea3D(apex, b3, b1);
+      } else {
+        // En cajas / paredes laterales:
+        const isLeft = state.wedgeLoc === 'left';
+        if (isLeft) {
+          if (e12[0] > 0) e12 = [-e12[0], -e12[1], -e12[2]];
+          if (e23[0] > 0) e23 = [-e23[0], -e23[1], -e23[2]];
+          if (e31[0] > 0) e31 = [-e31[0], -e31[1], -e31[2]];
+        } else {
+          if (e12[0] < 0) e12 = [-e12[0], -e12[1], -e12[2]];
+          if (e23[0] < 0) e23 = [-e23[0], -e23[1], -e23[2]];
+          if (e31[0] < 0) e31 = [-e31[0], -e31[1], -e31[2]];
+        }
+
+        const dX1 = Math.max(0.15, Math.abs(e12[0]));
+        const dX2 = Math.max(0.15, Math.abs(e23[0]));
+        const dX3 = Math.max(0.15, Math.abs(e31[0]));
+
+        const r1 = [e12[1] / dX1, e12[2] / dX1]; // Y, Z
+        const r2 = [e23[1] / dX2, e23[2] / dX2];
+        const r3 = [e31[1] / dX3, e31[2] / dX3];
+
+        const dy = Math.max(r1[0], r2[0], r3[0]) - Math.min(r1[0], r2[0], r3[0]);
+        // Límite geométrico acotado por la altura de la pared del túnel
+        const h_max = Math.min(state.height * 1.5, (state.height * 0.85) / Math.max(0.35, dy));
+        wedgeHeight = h_max * scaleFactor;
+
+        const cy = ((r1[0] + r2[0] + r3[0]) / 3.0) * wedgeHeight;
+        const cz = ((r1[1] + r2[1] + r3[1]) / 3.0) * wedgeHeight;
+
+        b1 = [0, wedgeHeight * r1[0] - cy, wedgeHeight * r1[1] - cz];
+        b2 = [0, wedgeHeight * r2[0] - cy, wedgeHeight * r2[1] - cz];
+        b3 = [0, wedgeHeight * r3[0] - cy, wedgeHeight * r3[1] - cz];
+        apex = [isLeft ? -wedgeHeight : wedgeHeight, -cy, -cz];
+
+        baseArea = 0.5 * Math.abs((b2[1] - b1[1]) * (b3[2] - b1[2]) - (b3[1] - b1[1]) * (b2[2] - b1[2]));
+        baseArea = Math.max(0.2, baseArea);
+        volume = (1.0 / 3.0) * baseArea * wedgeHeight;
+
+        const p12 = Math.hypot(b2[1] - b1[1], b2[2] - b1[2]);
+        const p23 = Math.hypot(b3[1] - b2[1], b3[2] - b2[2]);
+        const p31 = Math.hypot(b1[1] - b3[1], b1[2] - b3[2]);
+        perimetroBase = p12 + p23 + p31;
+
+        const triArea3D = (pA, pB, pC) => {
+          const ab = [pB[0]-pA[0], pB[1]-pA[1], pB[2]-pA[2]];
+          const ac = [pC[0]-pA[0], pC[1]-pA[1], pC[2]-pA[2]];
+          const cp = cross(ab, ac);
+          return 0.5 * norm(cp);
+        };
+        totalFaceArea = triArea3D(apex, b1, b2) + triArea3D(apex, b2, b3) + triArea3D(apex, b3, b1);
+      }
+
       const weightKN = volume * (state.rockDensity * 9.81);
       const weightMN = weightKN / 1000.0;
 
@@ -713,7 +833,11 @@
       let tauD_MPa = F_total_mag / totalFaceArea;
       let tauR_MPa = 0;
 
-      if (!isShaft && state.wedgeLoc === 'roof' && I12[2] < -0.15 && I23[2] < -0.15 && I31[2] < -0.15) {
+      if (!isFinite) {
+        mode = '⚠️ Sin Cuña Finita (Planos Subparalelos / Sin Cierre)';
+        drivingForceMN = 0;
+        shearRockMN = 0;
+      } else if (!isShaft && state.wedgeLoc === 'roof' && I12[2] < -0.15 && I23[2] < -0.15 && I31[2] < -0.15) {
         mode = 'Caída Libre Directa (Techo)';
         drivingForceMN = F_total_mag;
         shearRockMN = 0;
@@ -794,6 +918,7 @@
       return {
         volume, weightTon: weightKN / 9.81, weightMN, weightKN,
         wedgeHeight, perimetroBase, baseArea, totalFaceArea,
+        b1, b2, b3, apex, isFinite,
         seismicMagMN, seismicOverloadPct, F_sismo_vec,
         mode, drivingForceMN, drivingForceKN: drivingForceMN * 1000,
         sigmaN_MPa, tauD_MPa, tauR_MPa,
@@ -918,7 +1043,16 @@
       const rowStatus = document.getElementById('row-status');
       const legendWedge = document.getElementById('legend-wedge');
 
-      if (res.fs < 1.0) {
+      if (!res.isFinite) {
+        cardFS.className = "panel-glass rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 border border-slate-400 dark:border-slate-700 shadow-md";
+        valFS.className = "text-4xl md:text-5xl font-black text-slate-400 tracking-tight font-mono";
+        valFS.textContent = "N/A";
+        badgeFS.className = "text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 uppercase";
+        badgeFS.textContent = "SIN CUÑA FINITA";
+        rowStatus.className = "text-slate-500 font-sans font-semibold";
+        rowStatus.textContent = "GEOMETRÍA ABIERTA";
+        legendWedge.className = "text-slate-400 font-medium";
+      } else if (res.fs < 1.0) {
         cardFS.className = "panel-glass rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 border border-rose-300 dark:border-rose-900/80 shadow-md";
         valFS.className = "text-4xl md:text-5xl font-black text-rose-600 dark:text-rose-500 tracking-tight font-mono";
         badgeFS.className = "text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-500/40 uppercase";
@@ -1125,34 +1259,31 @@
           }
         }
 
-        // Cuña según Ubicación (Techo, Caja Izquierda o Caja Derecha)
-        const scaleFactor = Math.max(0.1, Math.min(1.0, state.wedgeScale || 1.0));
+        // Cuña según Ubicación y Orientación Real de Juntas (Block Theory Goodman & Shi)
         let vApex, vBase1, vBase2, vBase3;
-        const bW = (W * 0.75) * scaleFactor;
-        const crownY = (state.shape === 'circular' ? H : (state.shape === 'arch' ? H : (state.shape === 'rectangular' ? H : H)));
+        const crownY = H;
         const wallY = H * 0.5;
 
         if (state.wedgeLoc === 'left') {
           // Cuña en Caja/Pared Izquierda
           const wallX = -W * 0.98;
-          vApex = project3D(wallX - res.wedgeHeight, wallY, 0, cx, cy, scale);
-          vBase1 = project3D(wallX, wallY - 1.2 * scaleFactor, -1.1 * scaleFactor, cx, cy, scale);
-          vBase2 = project3D(wallX, wallY + 1.2 * scaleFactor, -1.1 * scaleFactor, cx, cy, scale);
-          vBase3 = project3D(wallX, wallY, 1.3 * scaleFactor, cx, cy, scale);
+          vApex = project3D(wallX + res.apex[0], wallY + res.apex[1], res.apex[2], cx, cy, scale);
+          vBase1 = project3D(wallX + res.b1[0], wallY + res.b1[1], res.b1[2], cx, cy, scale);
+          vBase2 = project3D(wallX + res.b2[0], wallY + res.b2[1], res.b2[2], cx, cy, scale);
+          vBase3 = project3D(wallX + res.b3[0], wallY + res.b3[1], res.b3[2], cx, cy, scale);
         } else if (state.wedgeLoc === 'right') {
           // Cuña en Caja/Pared Derecha
           const wallX = W * 0.98;
-          vApex = project3D(wallX + res.wedgeHeight, wallY, 0, cx, cy, scale);
-          vBase1 = project3D(wallX, wallY - 1.2 * scaleFactor, -1.1 * scaleFactor, cx, cy, scale);
-          vBase2 = project3D(wallX, wallY + 1.2 * scaleFactor, -1.1 * scaleFactor, cx, cy, scale);
-          vBase3 = project3D(wallX, wallY, 1.3 * scaleFactor, cx, cy, scale);
+          vApex = project3D(wallX + res.apex[0], wallY + res.apex[1], res.apex[2], cx, cy, scale);
+          vBase1 = project3D(wallX + res.b1[0], wallY + res.b1[1], res.b1[2], cx, cy, scale);
+          vBase2 = project3D(wallX + res.b2[0], wallY + res.b2[1], res.b2[2], cx, cy, scale);
+          vBase3 = project3D(wallX + res.b3[0], wallY + res.b3[1], res.b3[2], cx, cy, scale);
         } else {
-          // Cuña en Techo (Roof Wedge)
-          const apexH = crownY + res.wedgeHeight;
-          vApex = project3D(0, apexH, 0, cx, cy, scale);
-          vBase1 = project3D(-bW, crownY * 0.9, -1.3 * scaleFactor, cx, cy, scale);
-          vBase2 = project3D(bW, crownY * 0.9, -1.3 * scaleFactor, cx, cy, scale);
-          vBase3 = project3D(0, crownY, 1.4 * scaleFactor, cx, cy, scale);
+          // Cuña en Techo (Roof Wedge) orientada por los diedros de discontinuidades
+          vApex = project3D(res.apex[0], crownY + res.apex[1], res.apex[2], cx, cy, scale);
+          vBase1 = project3D(res.b1[0], crownY + res.b1[1], res.b1[2], cx, cy, scale);
+          vBase2 = project3D(res.b2[0], crownY + res.b2[1], res.b2[2], cx, cy, scale);
+          vBase3 = project3D(res.b3[0], crownY + res.b3[1], res.b3[2], cx, cy, scale);
         }
 
         const isStable = res.fs >= targetFS;
@@ -1175,46 +1306,60 @@
           ctx3d.closePath(); ctx3d.fill(); ctx3d.stroke();
         });
 
-        // Pernos Adaptativos en Techo o en Paredes/Cajas
+        // Pernos Adaptativos a la Geometría Dinámica de la Cuña
         if (state.enableBolts && res.boltCount > 0) {
           ctx3d.strokeStyle = '#7c3aed';
           ctx3d.lineWidth = 2.5;
 
           if (state.wedgeLoc === 'left') {
-            // Pernos horizontales/radiales en pared izquierda
+            // Pernos en caja izquierda siguiendo los vértices de la cuña
             const wallX = -W * 0.98;
-            const boltYOffsets = [-0.6 * scaleFactor, 0.6 * scaleFactor, 0, -0.3 * scaleFactor, 0.3 * scaleFactor].slice(0, res.boltCount);
-            boltYOffsets.forEach(by => {
-              const pCollar = project3D(wallX, wallY + by, 0, cx, cy, scale);
-              const pToe = project3D(wallX - state.boltLen, wallY + by, 0, cx, cy, scale);
+            const collarOffsets = [
+              { y: 0, z: 0 },
+              { y: res.b1[1] * 0.6, z: res.b1[2] * 0.6 },
+              { y: res.b2[1] * 0.6, z: res.b2[2] * 0.6 },
+              { y: res.b3[1] * 0.6, z: res.b3[2] * 0.6 },
+              { y: (res.b1[1] + res.b2[1]) * 0.4, z: (res.b1[2] + res.b2[2]) * 0.4 }
+            ].slice(0, res.boltCount);
+
+            collarOffsets.forEach(co => {
+              const pCollar = project3D(wallX, wallY + co.y, co.z, cx, cy, scale);
+              const pToe = project3D(wallX - state.boltLen, wallY + co.y, co.z, cx, cy, scale);
               ctx3d.beginPath(); ctx3d.moveTo(pCollar.x, pCollar.y); ctx3d.lineTo(pToe.x, pToe.y); ctx3d.stroke();
               ctx3d.fillStyle = '#a78bfa'; ctx3d.beginPath(); ctx3d.arc(pCollar.x, pCollar.y, 4, 0, Math.PI * 2); ctx3d.fill();
               ctx3d.fillStyle = '#6d28d9'; ctx3d.beginPath(); ctx3d.arc(pToe.x, pToe.y, 2.5, 0, Math.PI * 2); ctx3d.fill();
             });
           } else if (state.wedgeLoc === 'right') {
-            // Pernos horizontales/radiales en pared derecha
+            // Pernos en caja derecha siguiendo los vértices de la cuña
             const wallX = W * 0.98;
-            const boltYOffsets = [-0.6 * scaleFactor, 0.6 * scaleFactor, 0, -0.3 * scaleFactor, 0.3 * scaleFactor].slice(0, res.boltCount);
-            boltYOffsets.forEach(by => {
-              const pCollar = project3D(wallX, wallY + by, 0, cx, cy, scale);
-              const pToe = project3D(wallX + state.boltLen, wallY + by, 0, cx, cy, scale);
+            const collarOffsets = [
+              { y: 0, z: 0 },
+              { y: res.b1[1] * 0.6, z: res.b1[2] * 0.6 },
+              { y: res.b2[1] * 0.6, z: res.b2[2] * 0.6 },
+              { y: res.b3[1] * 0.6, z: res.b3[2] * 0.6 },
+              { y: (res.b1[1] + res.b2[1]) * 0.4, z: (res.b1[2] + res.b2[2]) * 0.4 }
+            ].slice(0, res.boltCount);
+
+            collarOffsets.forEach(co => {
+              const pCollar = project3D(wallX, wallY + co.y, co.z, cx, cy, scale);
+              const pToe = project3D(wallX + state.boltLen, wallY + co.y, co.z, cx, cy, scale);
               ctx3d.beginPath(); ctx3d.moveTo(pCollar.x, pCollar.y); ctx3d.lineTo(pToe.x, pToe.y); ctx3d.stroke();
               ctx3d.fillStyle = '#a78bfa'; ctx3d.beginPath(); ctx3d.arc(pCollar.x, pCollar.y, 4, 0, Math.PI * 2); ctx3d.fill();
               ctx3d.fillStyle = '#6d28d9'; ctx3d.beginPath(); ctx3d.arc(pToe.x, pToe.y, 2.5, 0, Math.PI * 2); ctx3d.fill();
             });
           } else {
-            // Pernos en techo
-            const boltPositions = [
+            // Pernos en techo adaptados a la huella real de la cuña en la corona
+            const collarOffsets = [
               { x: 0, z: 0 },
-              { x: -bW * 0.45, z: -0.6 },
-              { x: bW * 0.45, z: -0.6 },
-              { x: 0, z: 0.8 },
-              { x: -bW * 0.3, z: 0.4 },
-              { x: bW * 0.3, z: 0.4 }
+              { x: res.b1[0] * 0.55, z: res.b1[2] * 0.55 },
+              { x: res.b2[0] * 0.55, z: res.b2[2] * 0.55 },
+              { x: res.b3[0] * 0.55, z: res.b3[2] * 0.55 },
+              { x: (res.b1[0] + res.b2[0]) * 0.35, z: (res.b1[2] + res.b2[2]) * 0.35 },
+              { x: (res.b2[0] + res.b3[0]) * 0.35, z: (res.b2[2] + res.b3[2]) * 0.35 }
             ].slice(0, res.boltCount);
 
-            boltPositions.forEach(bp => {
-              const collarY = crownY * 0.95;
+            collarOffsets.forEach(bp => {
+              const collarY = crownY * 0.96;
               const toeY = collarY + state.boltLen;
               const pCollar = project3D(bp.x, collarY, bp.z, cx, cy, scale);
               const pToe = project3D(bp.x, toeY, bp.z, cx, cy, scale);
