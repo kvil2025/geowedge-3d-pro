@@ -57,8 +57,9 @@
     <!-- ENCABEZADO Y SELECTOR DE UNIDADES / TEMA -->
     <header class="panel-glass rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 shadow-sm">
       <div class="flex items-center space-x-3.5">
-        <div class="h-11 px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-center shadow-sm">
-          <img src="assets/logo_geologgia.svg" alt="Geologgia Logo" class="h-7 w-auto object-contain">
+        <div class="h-11 px-3 py-1.5 rounded-xl bg-slate-900/90 dark:bg-slate-950 border border-slate-700/60 dark:border-slate-800 flex items-center justify-center shadow-md">
+          <!-- Logo adaptable de alto contraste para que el isotipo rojo y las letras resalten nítidamente -->
+          <img id="header-logo" src="assets/logo_geologgia_dark.svg" alt="Geologgia Logo" class="h-7 w-auto object-contain drop-shadow">
         </div>
         <div>
           <div class="flex items-center gap-2">
@@ -562,14 +563,25 @@
       const htmlEl = document.documentElement;
       const icon = document.getElementById('theme-icon');
       const text = document.getElementById('theme-text');
+      const logo = document.getElementById('header-logo');
+      const logoBox = logo ? logo.parentElement : null;
+
       if (dark) {
         htmlEl.classList.add('dark');
         icon.textContent = '🌙';
         text.textContent = 'Oscuro';
+        if (logo) logo.src = 'assets/logo_geologgia_dark.svg';
+        if (logoBox) {
+          logoBox.className = "h-11 px-3 py-1.5 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center shadow-md";
+        }
       } else {
         htmlEl.classList.remove('dark');
         icon.textContent = '☀️';
         text.textContent = 'Claro';
+        if (logo) logo.src = 'assets/logo_geologgia_light.svg';
+        if (logoBox) {
+          logoBox.className = "h-11 px-3 py-1.5 rounded-xl bg-white border border-slate-200/90 flex items-center justify-center shadow-sm";
+        }
       }
       updateUI();
     }
