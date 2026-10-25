@@ -113,15 +113,25 @@
           </div>
 
           <!-- SELECTOR DE FORMA DEL TÚNEL O PIQUE -->
-          <div>
-            <label class="text-slate-500 dark:text-slate-400 block mb-1 text-[11px] font-medium">Forma de Excavación</label>
-            <select id="select-shape" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-800 dark:text-slate-100 text-xs font-semibold focus:ring-1 focus:ring-sky-500">
-              <option value="horseshoe">Herradura Clásica (Horseshoe)</option>
-              <option value="arch">Bóveda / Medio Punto Semicircular</option>
-              <option value="circular">Circular (TBM / Túnel Escudo)</option>
-              <option value="rectangular">Rectangular / Baúl / Caserón</option>
-              <option value="shaft">🪜 Pique Vertical Cilíndrico (Shaft 90°)</option>
-            </select>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="text-slate-500 dark:text-slate-400 block mb-1 text-[11px] font-medium">Forma de Excavación</label>
+              <select id="select-shape" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1.5 text-slate-800 dark:text-slate-100 text-xs font-semibold focus:ring-1 focus:ring-sky-500">
+                <option value="horseshoe">Herradura (Horseshoe)</option>
+                <option value="arch">Bóveda / Medio Punto</option>
+                <option value="circular">Circular (TBM / Escudo)</option>
+                <option value="rectangular">Rectangular / Caja</option>
+                <option value="shaft">🪜 Pique Vertical (90°)</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-slate-500 dark:text-slate-400 block mb-1 text-[11px] font-medium">Ubicación de Cuña</label>
+              <select id="select-wedge-loc" class="w-full bg-white dark:bg-slate-900 border border-sky-500/60 dark:border-sky-500/60 rounded-lg px-2 py-1.5 text-sky-700 dark:text-sky-300 text-xs font-bold focus:ring-1 focus:ring-sky-500">
+                <option value="roof">🏛️ Techo / Corona</option>
+                <option value="left">🧱 Pared / Caja Izq.</option>
+                <option value="right">🧱 Pared / Caja Der.</option>
+              </select>
+            </div>
           </div>
 
           <div class="grid grid-cols-2 gap-2 text-xs">
@@ -588,6 +598,7 @@
 
     const state = {
       shape: 'horseshoe', // 'horseshoe', 'arch', 'circular', 'rectangular', 'shaft'
+      wedgeLoc: 'roof', // 'roof', 'left', 'right'
       trend: 45, plunge: 0, span: 5.0, height: 4.5, wedgeScale: 1.0,
       j1: { dip: 65, dipdir: 135 },
       j2: { dip: 75, dipdir: 225 },
@@ -702,7 +713,7 @@
       let tauD_MPa = F_total_mag / totalFaceArea;
       let tauR_MPa = 0;
 
-      if (!isShaft && I12[2] < -0.15 && I23[2] < -0.15 && I31[2] < -0.15) {
+      if (!isShaft && state.wedgeLoc === 'roof' && I12[2] < -0.15 && I23[2] < -0.15 && I31[2] < -0.15) {
         mode = 'Caída Libre Directa (Techo)';
         drivingForceMN = F_total_mag;
         shearRockMN = 0;
@@ -714,7 +725,16 @@
         if (p23 > p12) steepest = I23;
         if (p31 > Math.max(p12, p23)) steepest = I31;
 
-        mode = isShaft ? `Deslizamiento en Pared de Pique (${Math.round(Math.max(p12,p23,p31)*180/Math.PI)}°)` : 'Deslizamiento en Diedro Sísmico';
+        if (isShaft) {
+          mode = `Deslizamiento en Pared de Pique (${Math.round(Math.max(p12,p23,p31)*180/Math.PI)}°)`;
+        } else if (state.wedgeLoc === 'left') {
+          mode = `Deslizamiento en Pared/Caja Izquierda (${Math.round(Math.max(p12,p23,p31)*180/Math.PI)}°)`;
+        } else if (state.wedgeLoc === 'right') {
+          mode = `Deslizamiento en Pared/Caja Derecha (${Math.round(Math.max(p12,p23,p31)*180/Math.PI)}°)`;
+        } else {
+          mode = 'Deslizamiento en Diedro Sísmico (Techo)';
+        }
+
         drivingForceMN = Math.abs(dot(F_total_vec, steepest));
         const normalF_MN = Math.max(0, Math.sqrt(Math.max(0, Math.pow(F_total_mag, 2) - Math.pow(drivingForceMN, 2))));
         sigmaN_MPa = normalF_MN / totalFaceArea;
@@ -796,7 +816,15 @@
       const isShaft = isShaftMode();
       const res = computeWedge();
 
-      document.getElementById('title-wedge-type').textContent = isShaft ? "Estabilidad Cuña de Pared (Pique Vertical)" : "Estabilidad Cuña de Techo (Túnel)";
+      let locTitle = "Estabilidad Cuña de Techo (Túnel)";
+      if (isShaft) {
+        locTitle = "Estabilidad Cuña de Pared (Pique Vertical)";
+      } else if (state.wedgeLoc === 'left') {
+        locTitle = "Estabilidad Cuña en Pared / Caja Izquierda";
+      } else if (state.wedgeLoc === 'right') {
+        locTitle = "Estabilidad Cuña en Pared / Caja Derecha";
+      }
+      document.getElementById('title-wedge-type').textContent = locTitle;
       document.getElementById('box-shaft-notice').className = isShaft ? "p-1.5 rounded bg-cyan-950/50 border border-cyan-800 text-[10px] text-cyan-300 block" : "hidden";
 
       const shapeNames = {
@@ -1076,25 +1104,56 @@
           ctx3d.lineWidth = 1.3;
           for (let y = -L/2; y <= L/2; y += 1.2) {
             ctx3d.beginPath();
+            let started = false;
             for (let i = 0; i < profile.length; i++) {
-              if (profile[i][1] > H * 0.4) {
+              let isProtected = false;
+              if (state.wedgeLoc === 'roof' && profile[i][1] > H * 0.4) isProtected = true;
+              else if (state.wedgeLoc === 'left' && profile[i][0] < -W * 0.3) isProtected = true;
+              else if (state.wedgeLoc === 'right' && profile[i][0] > W * 0.3) isProtected = true;
+              
+              if (isProtected) {
                 const pt = project3D(profile[i][0] * 0.98, profile[i][1] * 0.98, y, cx, cy, scale);
-                ctx3d.lineTo(pt.x, pt.y);
+                if (!started) {
+                  ctx3d.moveTo(pt.x, pt.y);
+                  started = true;
+                } else {
+                  ctx3d.lineTo(pt.x, pt.y);
+                }
               }
             }
             ctx3d.stroke();
           }
         }
 
-        // Cuña en Techo (Roof Wedge)
+        // Cuña según Ubicación (Techo, Caja Izquierda o Caja Derecha)
         const scaleFactor = Math.max(0.1, Math.min(1.0, state.wedgeScale || 1.0));
+        let vApex, vBase1, vBase2, vBase3;
         const bW = (W * 0.75) * scaleFactor;
         const crownY = (state.shape === 'circular' ? H : (state.shape === 'arch' ? H : (state.shape === 'rectangular' ? H : H)));
-        const apexH = crownY + res.wedgeHeight;
-        const vApex = project3D(0, apexH, 0, cx, cy, scale);
-        const vBase1 = project3D(-bW, crownY * 0.9, -1.3 * scaleFactor, cx, cy, scale);
-        const vBase2 = project3D(bW, crownY * 0.9, -1.3 * scaleFactor, cx, cy, scale);
-        const vBase3 = project3D(0, crownY, 1.4 * scaleFactor, cx, cy, scale);
+        const wallY = H * 0.5;
+
+        if (state.wedgeLoc === 'left') {
+          // Cuña en Caja/Pared Izquierda
+          const wallX = -W * 0.98;
+          vApex = project3D(wallX - res.wedgeHeight, wallY, 0, cx, cy, scale);
+          vBase1 = project3D(wallX, wallY - 1.2 * scaleFactor, -1.1 * scaleFactor, cx, cy, scale);
+          vBase2 = project3D(wallX, wallY + 1.2 * scaleFactor, -1.1 * scaleFactor, cx, cy, scale);
+          vBase3 = project3D(wallX, wallY, 1.3 * scaleFactor, cx, cy, scale);
+        } else if (state.wedgeLoc === 'right') {
+          // Cuña en Caja/Pared Derecha
+          const wallX = W * 0.98;
+          vApex = project3D(wallX + res.wedgeHeight, wallY, 0, cx, cy, scale);
+          vBase1 = project3D(wallX, wallY - 1.2 * scaleFactor, -1.1 * scaleFactor, cx, cy, scale);
+          vBase2 = project3D(wallX, wallY + 1.2 * scaleFactor, -1.1 * scaleFactor, cx, cy, scale);
+          vBase3 = project3D(wallX, wallY, 1.3 * scaleFactor, cx, cy, scale);
+        } else {
+          // Cuña en Techo (Roof Wedge)
+          const apexH = crownY + res.wedgeHeight;
+          vApex = project3D(0, apexH, 0, cx, cy, scale);
+          vBase1 = project3D(-bW, crownY * 0.9, -1.3 * scaleFactor, cx, cy, scale);
+          vBase2 = project3D(bW, crownY * 0.9, -1.3 * scaleFactor, cx, cy, scale);
+          vBase3 = project3D(0, crownY, 1.4 * scaleFactor, cx, cy, scale);
+        }
 
         const isStable = res.fs >= targetFS;
         const isMarginal = res.fs >= 1.0 && res.fs < targetFS;
@@ -1116,35 +1175,63 @@
           ctx3d.closePath(); ctx3d.fill(); ctx3d.stroke();
         });
 
-        // Pernos
+        // Pernos Adaptativos en Techo o en Paredes/Cajas
         if (state.enableBolts && res.boltCount > 0) {
           ctx3d.strokeStyle = '#7c3aed';
           ctx3d.lineWidth = 2.5;
-          const boltPositions = [
-            { x: 0, z: 0 },
-            { x: -bW * 0.45, z: -0.6 },
-            { x: bW * 0.45, z: -0.6 },
-            { x: 0, z: 0.8 },
-            { x: -bW * 0.3, z: 0.4 },
-            { x: bW * 0.3, z: 0.4 }
-          ].slice(0, res.boltCount);
 
-          boltPositions.forEach(bp => {
-            const collarY = crownY * 0.95;
-            const toeY = collarY + state.boltLen;
-            const pCollar = project3D(bp.x, collarY, bp.z, cx, cy, scale);
-            const pToe = project3D(bp.x, toeY, bp.z, cx, cy, scale);
-            ctx3d.beginPath(); ctx3d.moveTo(pCollar.x, pCollar.y); ctx3d.lineTo(pToe.x, pToe.y); ctx3d.stroke();
-            ctx3d.fillStyle = '#a78bfa'; ctx3d.beginPath(); ctx3d.arc(pCollar.x, pCollar.y, 4, 0, Math.PI * 2); ctx3d.fill();
-            ctx3d.fillStyle = '#6d28d9'; ctx3d.beginPath(); ctx3d.arc(pToe.x, pToe.y, 2.5, 0, Math.PI * 2); ctx3d.fill();
-          });
+          if (state.wedgeLoc === 'left') {
+            // Pernos horizontales/radiales en pared izquierda
+            const wallX = -W * 0.98;
+            const boltYOffsets = [-0.6 * scaleFactor, 0.6 * scaleFactor, 0, -0.3 * scaleFactor, 0.3 * scaleFactor].slice(0, res.boltCount);
+            boltYOffsets.forEach(by => {
+              const pCollar = project3D(wallX, wallY + by, 0, cx, cy, scale);
+              const pToe = project3D(wallX - state.boltLen, wallY + by, 0, cx, cy, scale);
+              ctx3d.beginPath(); ctx3d.moveTo(pCollar.x, pCollar.y); ctx3d.lineTo(pToe.x, pToe.y); ctx3d.stroke();
+              ctx3d.fillStyle = '#a78bfa'; ctx3d.beginPath(); ctx3d.arc(pCollar.x, pCollar.y, 4, 0, Math.PI * 2); ctx3d.fill();
+              ctx3d.fillStyle = '#6d28d9'; ctx3d.beginPath(); ctx3d.arc(pToe.x, pToe.y, 2.5, 0, Math.PI * 2); ctx3d.fill();
+            });
+          } else if (state.wedgeLoc === 'right') {
+            // Pernos horizontales/radiales en pared derecha
+            const wallX = W * 0.98;
+            const boltYOffsets = [-0.6 * scaleFactor, 0.6 * scaleFactor, 0, -0.3 * scaleFactor, 0.3 * scaleFactor].slice(0, res.boltCount);
+            boltYOffsets.forEach(by => {
+              const pCollar = project3D(wallX, wallY + by, 0, cx, cy, scale);
+              const pToe = project3D(wallX + state.boltLen, wallY + by, 0, cx, cy, scale);
+              ctx3d.beginPath(); ctx3d.moveTo(pCollar.x, pCollar.y); ctx3d.lineTo(pToe.x, pToe.y); ctx3d.stroke();
+              ctx3d.fillStyle = '#a78bfa'; ctx3d.beginPath(); ctx3d.arc(pCollar.x, pCollar.y, 4, 0, Math.PI * 2); ctx3d.fill();
+              ctx3d.fillStyle = '#6d28d9'; ctx3d.beginPath(); ctx3d.arc(pToe.x, pToe.y, 2.5, 0, Math.PI * 2); ctx3d.fill();
+            });
+          } else {
+            // Pernos en techo
+            const boltPositions = [
+              { x: 0, z: 0 },
+              { x: -bW * 0.45, z: -0.6 },
+              { x: bW * 0.45, z: -0.6 },
+              { x: 0, z: 0.8 },
+              { x: -bW * 0.3, z: 0.4 },
+              { x: bW * 0.3, z: 0.4 }
+            ].slice(0, res.boltCount);
+
+            boltPositions.forEach(bp => {
+              const collarY = crownY * 0.95;
+              const toeY = collarY + state.boltLen;
+              const pCollar = project3D(bp.x, collarY, bp.z, cx, cy, scale);
+              const pToe = project3D(bp.x, toeY, bp.z, cx, cy, scale);
+              ctx3d.beginPath(); ctx3d.moveTo(pCollar.x, pCollar.y); ctx3d.lineTo(pToe.x, pToe.y); ctx3d.stroke();
+              ctx3d.fillStyle = '#a78bfa'; ctx3d.beginPath(); ctx3d.arc(pCollar.x, pCollar.y, 4, 0, Math.PI * 2); ctx3d.fill();
+              ctx3d.fillStyle = '#6d28d9'; ctx3d.beginPath(); ctx3d.arc(pToe.x, pToe.y, 2.5, 0, Math.PI * 2); ctx3d.fill();
+            });
+          }
         }
       }
 
       // Vector Gravedad Estática (Amarillo)
       ctx3d.strokeStyle = '#fbbf24';
       ctx3d.lineWidth = 2;
-      const gCenter = isShaft ? [W, 0, 0] : [0, H * 0.9, 0];
+      const gCenter = isShaft 
+        ? [W, 0, 0] 
+        : (state.wedgeLoc === 'left' ? [-W * 0.9, H * 0.5, 0] : (state.wedgeLoc === 'right' ? [W * 0.9, H * 0.5, 0] : [0, H * 0.9, 0]));
       const gStart = project3D(gCenter[0], gCenter[1], gCenter[2], cx, cy, scale);
       const gEnd = project3D(gCenter[0], gCenter[1] - 1.5, gCenter[2], cx, cy, scale);
       ctx3d.beginPath(); ctx3d.moveTo(gStart.x, gStart.y); ctx3d.lineTo(gEnd.x, gEnd.y); ctx3d.stroke();
@@ -1275,15 +1362,24 @@
       // Selector de Forma / Perfil
       document.getElementById('select-shape').addEventListener('change', (e) => {
         state.shape = e.target.value;
+        const selLoc = document.getElementById('select-wedge-loc');
         if (state.shape === 'shaft') {
           state.plunge = 90;
           document.getElementById('input-plunge').value = 90;
           document.getElementById('lbl-span').textContent = "Diámetro Pique (m)";
           document.getElementById('lbl-height').textContent = "Profundidad Visible (m)";
+          if (selLoc) {
+            selLoc.disabled = true;
+            selLoc.title = "En piques verticales, las cuñas se analizan en paredes cilíndricas radiales";
+          }
           resetCamera();
         } else {
           document.getElementById('lbl-span').textContent = "Ancho / Span (m)";
           document.getElementById('lbl-height').textContent = "Altura / Height (m)";
+          if (selLoc) {
+            selLoc.disabled = false;
+            selLoc.title = "";
+          }
           if (state.plunge === 90) {
             state.plunge = 0;
             document.getElementById('input-plunge').value = 0;
@@ -1291,6 +1387,15 @@
         }
         updateUI();
       });
+
+      // Selector de Ubicación de Cuña (Techo / Caja Izquierda / Caja Derecha)
+      const selLoc = document.getElementById('select-wedge-loc');
+      if (selLoc) {
+        selLoc.addEventListener('change', (e) => {
+          state.wedgeLoc = e.target.value;
+          updateUI();
+        });
+      }
 
       // Botonera de Cámara 3D (Zoom y Pan)
       document.getElementById('btn-mode-rotate').addEventListener('click', () => setInteractionMode('rotate'));
