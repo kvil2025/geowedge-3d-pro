@@ -1,7 +1,7 @@
 """
 GeoWedge - Motor de Cálculo Geotécnico de Estabilidad de Cuñas Subterráneas
 Soporta Múltiples Perfiles: Herradura, Medio Punto, Circular, Rectangular y Pique Vertical
-Basado en Teoría de Bloques (Goodman & Shi, 1985) y Rocscience UnWedge
+Basado en Teoría de Bloques (Goodman & Shi, 1985) y Equilibrio Límite 3D
 """
 
 import numpy as np
