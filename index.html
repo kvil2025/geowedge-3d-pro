@@ -26,126 +26,185 @@
   </script>
   <style>
     body, header, div, span, button, input, select, table, th, td {
-      transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
     }
-    input[type=range] { accent-color: #0284c7; }
+    input[type=range] { accent-color: #2563eb; }
     
     html.dark body {
-      background: radial-gradient(120% 80% at 50% 0%, #0d1e3d 0%, #070c18 55%, #040810 100%) no-repeat fixed;
-      background-color: #070c18;
+      background-color: #0b0f19;
+      background: #0b0f19;
+      color: #f1f5f9;
     }
     
     .dark .panel-glass {
-      background: rgba(11, 20, 42, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(56, 189, 248, 0.16);
-      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
     }
     .panel-glass {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(226, 232, 240, 0.95);
-      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
     }
 
     .dark .panel-sub {
-      background: rgba(6, 12, 26, 0.75);
-      border: 1px solid rgba(30, 58, 95, 0.55);
+      background: #090d16;
+      border: 1px solid #1e293b;
     }
     .panel-sub {
-      background: rgba(248, 250, 252, 0.85);
-      border: 1px solid rgba(226, 232, 240, 0.9);
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Botones de Módulos Pro: Feedback Táctil Claro (Linear / Apple HIG) */
+    .btn-module-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.35rem 0.65rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      transition: all 0.15s ease;
+      cursor: pointer;
+      user-select: none;
+      border: 1px solid #334155;
+      background: #0b0f19;
+      color: #94a3b8;
+    }
+    .btn-module-toggle .indicator {
+      width: 6px;
+      height: 6px;
+      border-radius: 9999px;
+      background-color: #64748b;
+      transition: all 0.15s ease;
+    }
+    .btn-module-toggle:hover {
+      background: #1e293b;
+      color: #f8fafc;
+      border-color: #475569;
+    }
+    .btn-module-toggle.is-active {
+      background: #1e3a8a !important;
+      color: #ffffff !important;
+      border-color: #3b82f6 !important;
+      box-shadow: 0 0 10px rgba(37, 99, 235, 0.35);
+    }
+    .btn-module-toggle.is-active .indicator {
+      background-color: #38bdf8 !important;
+      box-shadow: 0 0 6px #38bdf8;
+    }
+
+    /* Botón de Memoria PDF */
+    .btn-report-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: #047857;
+      color: #ffffff;
+      border: 1px solid #059669;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+    .btn-report-action:hover {
+      background: #059669;
+      border-color: #10b981;
     }
   </style>
 </head>
-<body class="bg-slate-100 dark:bg-[#070c18] text-slate-800 dark:text-slate-100 font-sans p-3 md:p-6 min-h-screen">
+<body class="bg-slate-100 dark:bg-[#0b0f19] text-slate-800 dark:text-slate-100 font-sans p-3 md:p-6 min-h-screen">
   <div class="max-w-7xl mx-auto space-y-4">
     
-    <!-- ENCABEZADO Y COCKPIT DE INGENIERÍA GEOLOGGIA (PROPUESTA 1: DEEP TECH) -->
-    <header class="panel-glass rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 shadow-sm border border-slate-200 dark:border-sky-500/20">
-      <div class="flex items-center space-x-3.5">
-        <div class="h-11 px-3 py-1.5 rounded-xl bg-slate-900/95 dark:bg-slate-950 border border-slate-700/60 dark:border-sky-500/30 flex items-center justify-center shadow-lg shadow-sky-950/20">
-          <!-- Logo adaptable de alto contraste para que el isotipo rojo y las letras resalten nítidamente -->
-          <img id="header-logo" src="assets/logo_geologgia_dark.svg" alt="Geologgia Logo" class="h-7 w-auto object-contain drop-shadow">
+    <!-- ENCABEZADO MINIMALISTA DE PRECISIÓN (PROPUESTA 2: LINEAR / APPLE HIG) -->
+    <header class="panel-glass rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3 shadow-sm border border-slate-200 dark:border-slate-800">
+      <div class="flex items-center space-x-3">
+        <div class="h-10 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center">
+          <!-- Logo de Geologgia de alta definición sin saturación innecesaria -->
+          <img id="header-logo" src="assets/logo_geologgia_dark.svg" alt="Geologgia Logo" class="h-6 w-auto object-contain">
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-lg md:text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+            <h1 class="text-base md:text-lg font-semibold tracking-tight text-slate-900 dark:text-white">
               GeoWedge 3D Pro
             </h1>
-            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/25 font-mono">
-              v2.4 Enterprise
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700">
+              v2.4
             </span>
           </div>
-          <p class="text-xs text-slate-500 dark:text-slate-400">
-            Plataforma Geomecánica 3D • <b class="text-slate-700 dark:text-sky-300">Geologgia Ltda</b> (Teoría Goodman & Shi y Equilibrio Límite 3D)
+          <p class="text-[11px] text-slate-500 dark:text-slate-400">
+            Geomecánica Subterránea &bull; <span class="font-medium text-slate-700 dark:text-slate-300">Geologgia Ltda</span>
           </p>
         </div>
       </div>
 
-      <!-- TELEMETRÍA EN VIVO (COCKPIT STRIP) -->
+      <!-- TELEMETRÍA EN VIVO (PRECISIÓN MINIMALISTA) -->
       <div class="flex items-center gap-2">
-        <div id="cockpit-fs-pill" class="px-2.5 py-1 rounded-xl bg-slate-900/90 dark:bg-slate-950 border border-emerald-500/40 text-[11px] font-mono flex items-center gap-1.5 shadow-sm">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="text-slate-400 text-[10px] uppercase font-semibold">FS:</span>
+        <div id="cockpit-fs-pill" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-emerald-500/30 text-[11px] font-mono flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+          <span class="text-slate-400 text-[10px] font-semibold">FS:</span>
           <span id="cockpit-fs-val" class="font-bold text-emerald-400">16.01</span>
         </div>
-        <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/80 dark:bg-slate-950/80 border border-slate-700/60 text-[11px] font-mono">
-          <span class="text-amber-400 font-bold text-[10px]">VOL:</span>
-          <span id="cockpit-vol-val" class="text-slate-200 font-semibold">1.85 m³</span>
+        <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-[11px] font-mono">
+          <span class="text-slate-400 text-[10px]">Vol:</span>
+          <span id="cockpit-vol-val" class="text-slate-200 font-medium">1.85 m³</span>
         </div>
-        <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/80 dark:bg-slate-950/80 border border-slate-700/60 text-[11px] font-mono">
-          <span class="text-sky-400 font-bold text-[10px]">PESO:</span>
-          <span id="cockpit-weight-val" class="text-slate-200 font-semibold">4.8 T</span>
+        <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-[11px] font-mono">
+          <span class="text-slate-400 text-[10px]">Peso:</span>
+          <span id="cockpit-weight-val" class="text-slate-200 font-medium">4.8 T</span>
         </div>
-        <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/80 dark:bg-slate-950/80 border border-orange-500/30 text-[11px] font-mono">
-          <span class="text-orange-400 font-bold text-[10px]">SOPORTE:</span>
-          <span id="cockpit-support-val" class="text-slate-200 font-semibold">1.89 MN</span>
+        <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-[11px] font-mono">
+          <span class="text-slate-400 text-[10px]">Soporte:</span>
+          <span id="cockpit-support-val" class="text-slate-200 font-medium">1.89 MN</span>
         </div>
       </div>
 
       <!-- BOTONES DE MODO DE UNIDAD, TEMA Y PRESETS -->
-      <div class="flex flex-wrap items-center gap-2">
-        <div class="bg-slate-200/70 dark:bg-slate-900/90 border border-slate-300 dark:border-slate-800 p-0.5 rounded-xl flex items-center text-xs shadow-inner">
-          <button id="btn-unit-mpa" class="px-2.5 py-1 rounded-lg bg-sky-600 text-white font-semibold shadow-sm transition">MPa & MN</button>
-          <button id="btn-unit-kpa" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-medium transition">kPa & kN</button>
+      <div class="flex flex-wrap items-center gap-1.5">
+        <div class="bg-slate-200/80 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 p-0.5 rounded-lg flex items-center text-xs">
+          <button id="btn-unit-mpa" class="px-2 py-0.5 rounded-md bg-blue-600 text-white font-medium transition text-[11px]">MPa</button>
+          <button id="btn-unit-kpa" class="px-2 py-0.5 rounded-md text-slate-500 dark:text-slate-400 hover:text-white font-medium transition text-[11px]">kPa</button>
         </div>
 
-        <button id="btn-theme-toggle" class="p-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 text-xs flex items-center gap-1.5 font-medium shadow-sm transition" title="Alternar Modo Claro / Oscuro">
+        <button id="btn-theme-toggle" class="p-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-100 text-xs transition" title="Alternar Modo Claro / Oscuro">
           <span id="theme-icon">🌙</span>
-          <span id="theme-text" class="hidden sm:inline">Oscuro</span>
         </button>
 
-        <div class="h-6 w-px bg-slate-200 dark:bg-slate-800 mx-1 hidden sm:block"></div>
+        <div class="h-5 w-px bg-slate-300 dark:bg-slate-800 mx-0.5 hidden sm:block"></div>
 
-        <button id="btn-preset-sin-soporte" class="px-2.5 py-1 text-xs bg-rose-50 dark:bg-rose-950/40 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900/60 rounded-lg hover:bg-rose-100 dark:hover:bg-rose-900/60 font-medium transition">Sin Soporte</button>
-        <button id="btn-preset-pique" class="px-2.5 py-1 text-xs bg-cyan-50 dark:bg-cyan-950/40 text-cyan-700 dark:text-cyan-300 border border-cyan-200 dark:border-cyan-900/60 rounded-lg hover:bg-cyan-100 dark:hover:bg-cyan-900/60 font-medium transition">🪜 Pique (90°)</button>
-        <button id="btn-preset-sismo-chile" class="px-2.5 py-1 text-xs bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/60 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/60 font-medium transition">Sismo Chile (0.20g)</button>
-        <button id="btn-preset-full" class="px-2.5 py-1 text-xs bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/60 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/60 font-medium transition">Pernos + Shotcrete</button>
+        <button id="btn-preset-sin-soporte" class="px-2 py-1 text-[11px] bg-slate-100 dark:bg-slate-900 hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-800 rounded-lg font-medium transition">Sin Soporte</button>
+        <button id="btn-preset-pique" class="px-2 py-1 text-[11px] bg-slate-100 dark:bg-slate-900 hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-800 rounded-lg font-medium transition">Pique (90°)</button>
+        <button id="btn-preset-sismo-chile" class="px-2 py-1 text-[11px] bg-slate-100 dark:bg-slate-900 hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-800 rounded-lg font-medium transition">Sismo (0.20g)</button>
+        <button id="btn-preset-full" class="px-2 py-1 text-[11px] bg-slate-100 dark:bg-slate-900 hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-800 rounded-lg font-medium transition">Pernos + Shotcrete</button>
       </div>
 
-      <!-- BARRA DE MÓDULOS PRO (ACTIVACIÓN / DESACTIVACIÓN 1-CLIC) -->
-      <div class="w-full flex flex-wrap items-center justify-between gap-2 pt-2.5 border-t border-slate-200/80 dark:border-slate-800/80 text-xs">
-        <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 font-semibold text-[11px]">
-          <span class="text-sky-600 dark:text-sky-400">🧩 Módulos Pro:</span>
-          <span class="text-[10px] text-slate-400 font-normal hidden md:inline">• Activa o desactiva herramientas modulares</span>
+      <!-- BARRA DE MÓDULOS DE ANÁLISIS (CON FEEDBACK TÁCTIL CLARO) -->
+      <div class="w-full flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200 dark:border-slate-800/80 text-xs">
+        <div class="flex items-center gap-1.5 text-slate-400 font-medium text-[11px]">
+          <span>Módulos de Análisis:</span>
         </div>
         <div class="flex flex-wrap items-center gap-1.5">
-          <button id="btn-toggle-stereonet" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-stereonet', 'btn-toggle-stereonet')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-medium transition shadow-sm hover:border-sky-500 flex items-center gap-1 text-[11px]">
-            <span>🌐</span> Estereonet
+          <button id="btn-toggle-stereonet" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-stereonet', 'btn-toggle-stereonet')" class="btn-module-toggle" title="Mostrar u ocultar proyección estereográfica">
+            <span class="indicator"></span>
+            <span>Estereonet</span>
           </button>
-          <button id="btn-toggle-simulation" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-simulation', 'btn-toggle-simulation')" class="px-2.5 py-1 rounded-lg bg-sky-600 text-white border border-sky-500 font-medium transition shadow-sm flex items-center gap-1 text-[11px]" title="Mostrar u ocultar barra de simulación bajo el visor 3D">
-            <span>🎬</span> Simulación 3D
+          <button id="btn-toggle-simulation" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-simulation', 'btn-toggle-simulation')" class="btn-module-toggle is-active" title="Mostrar u ocultar simulación cinemática 3D">
+            <span class="indicator"></span>
+            <span>Simulación 3D</span>
           </button>
-          <button id="btn-toggle-sensitivity" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-sensitivity', 'btn-toggle-sensitivity')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-medium transition shadow-sm hover:border-sky-500 flex items-center gap-1 text-[11px]">
-            <span>📊</span> Sensibilidad
+          <button id="btn-toggle-sensitivity" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-sensitivity', 'btn-toggle-sensitivity')" class="btn-module-toggle" title="Mostrar u ocultar curvas de sensibilidad">
+            <span class="indicator"></span>
+            <span>Sensibilidad</span>
           </button>
-          <button id="btn-toggle-presets" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-presets', 'btn-toggle-presets')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-medium transition shadow-sm hover:border-sky-500 flex items-center gap-1 text-[11px]">
-            <span>💾</span> Proyectos & Presets
+          <button id="btn-toggle-presets" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-presets', 'btn-toggle-presets')" class="btn-module-toggle" title="Mostrar u ocultar gestor de proyectos">
+            <span class="indicator"></span>
+            <span>Proyectos</span>
           </button>
-          <button id="btn-print-report" onclick="window.GeoWedgeReport && window.GeoWedgeReport.openPrintWindow()" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition shadow-sm flex items-center gap-1.5 text-[11px]">
-            <span>📄</span> Memoria PDF
+          <button id="btn-print-report" onclick="window.GeoWedgeReport && window.GeoWedgeReport.openPrintWindow()" class="btn-report-action" title="Generar Memoria de Cálculo Oficial">
+            <span>Memoria PDF</span>
           </button>
         </div>
       </div>
@@ -158,32 +217,33 @@
       <div class="lg:col-span-4 space-y-3">
         
         <!-- SECCIÓN 1: PERFIL Y GEOMETRÍA -->
-        <div class="panel-glass rounded-2xl p-4 space-y-3 shadow-sm">
-          <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-2">
-            <h2 class="text-xs font-bold text-sky-600 dark:text-sky-400 uppercase tracking-wider flex items-center gap-1.5">
-              <span>🚇</span> Sección & Orientación
+        <div class="panel-glass rounded-xl p-3.5 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+            <h2 class="text-xs font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+              Sección & Orientación
             </h2>
-            <span class="text-[10px] text-slate-400 font-mono">Orientación 3D</span>
+            <span class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">3D Setup</span>
           </div>
 
           <!-- SELECTOR DE FORMA DEL TÚNEL O PIQUE -->
           <div class="grid grid-cols-2 gap-2">
             <div>
               <label class="text-slate-500 dark:text-slate-400 block mb-1 text-[11px] font-medium">Forma de Excavación</label>
-              <select id="select-shape" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1.5 text-slate-800 dark:text-slate-100 text-xs font-semibold focus:ring-1 focus:ring-sky-500">
+              <select id="select-shape" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1.5 text-slate-800 dark:text-slate-100 text-xs font-semibold focus:ring-1 focus:ring-blue-500">
                 <option value="horseshoe">Herradura (Horseshoe)</option>
                 <option value="arch">Bóveda / Medio Punto</option>
                 <option value="circular">Circular (TBM / Escudo)</option>
                 <option value="rectangular">Rectangular / Caja</option>
-                <option value="shaft">🪜 Pique Vertical (90°)</option>
+                <option value="shaft">Pique Vertical (90°)</option>
               </select>
             </div>
             <div>
               <label class="text-slate-500 dark:text-slate-400 block mb-1 text-[11px] font-medium">Ubicación de Cuña</label>
-              <select id="select-wedge-loc" class="w-full bg-white dark:bg-slate-900 border border-sky-500/60 dark:border-sky-500/60 rounded-lg px-2 py-1.5 text-sky-700 dark:text-sky-300 text-xs font-bold focus:ring-1 focus:ring-sky-500">
-                <option value="roof">🏛️ Techo / Corona</option>
-                <option value="left">🧱 Pared / Caja Izq.</option>
-                <option value="right">🧱 Pared / Caja Der.</option>
+              <select id="select-wedge-loc" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1.5 text-slate-800 dark:text-slate-100 text-xs font-semibold focus:ring-1 focus:ring-blue-500">
+                <option value="roof">Techo / Corona</option>
+                <option value="left">Pared / Caja Izq.</option>
+                <option value="right">Pared / Caja Der.</option>
               </select>
             </div>
           </div>
@@ -205,40 +265,41 @@
               <label class="text-slate-500 dark:text-slate-400 block mb-0.5 font-medium" id="lbl-height">Altura / Height (m)</label>
               <input id="input-height" type="number" min="2" max="15" step="0.5" value="4.5" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-slate-800 dark:text-slate-100 font-mono text-xs">
             </div>
-            <div class="col-span-2 pt-2 border-t border-slate-200/80 dark:border-slate-800/80">
+            <div class="col-span-2 pt-2 border-t border-slate-200 dark:border-slate-800">
               <div class="flex justify-between items-center mb-1">
-                <label class="text-slate-700 dark:text-slate-300 font-semibold flex items-center gap-1.5 text-xs">
-                  <span>📐</span> Escala Tamaño Cuña
+                <label class="text-slate-700 dark:text-slate-300 font-medium text-xs">
+                  Escala de Cuña
                 </label>
-                <span id="label-wedge-scale" class="font-mono text-sky-600 dark:text-sky-400 font-bold text-xs">100% (Máxima)</span>
+                <span id="label-wedge-scale" class="font-mono text-blue-500 font-semibold text-xs">100% (Máxima)</span>
               </div>
-              <input id="input-wedge-scale" type="range" min="10" max="100" step="5" value="100" class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded cursor-pointer accent-sky-500">
-              <div class="flex justify-between text-[10px] text-slate-400 mt-0.5">
+              <input id="input-wedge-scale" type="range" min="10" max="100" step="5" value="100" class="w-full h-1.5 bg-slate-200 dark:bg-slate-700 rounded cursor-pointer accent-blue-600">
+              <div class="flex justify-between text-[10px] text-slate-500 mt-0.5">
                 <span>10% (Puntual)</span>
                 <span>50% (Media)</span>
-                <span>100% (Crítica Máx)</span>
+                <span>100% (Crítica)</span>
               </div>
             </div>
           </div>
 
-          <div id="box-shaft-notice" class="hidden p-2 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 border border-cyan-200 dark:border-cyan-800/60 text-[11px] text-cyan-800 dark:text-cyan-300">
-            ℹ️ <b>Modo Pique Vertical Activo:</b> La labor desciende a $90^\circ$. El análisis evalúa las cuñas de pared cilíndrica del pique y anillos de pernos radiales.
+          <div id="box-shaft-notice" class="hidden p-2 rounded-lg bg-slate-900 border border-slate-800 text-[11px] text-slate-300">
+            <b>Modo Pique Vertical:</b> Inclinación 90°. Análisis en paredes cilíndricas del pique.
           </div>
         </div>
 
         <!-- SECCIÓN 2: DISCONTINUIDADES Y RESISTENCIA -->
-        <div class="panel-glass rounded-2xl p-4 space-y-3 shadow-sm">
-          <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-2">
-            <h2 class="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-              <span>📐</span> Familias de Juntas & Resistencia
+        <div class="panel-glass rounded-xl p-3.5 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+            <h2 class="text-xs font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+              Familias de Juntas & Resistencia
             </h2>
-            <span class="text-[10px] text-slate-400 font-mono">Dip / DipDir</span>
+            <span class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">Dip / DipDir</span>
           </div>
           
           <div class="space-y-2 text-xs">
-            <div class="panel-sub p-2 rounded-xl">
-              <div class="flex justify-between items-center text-sky-600 dark:text-cyan-400 font-semibold mb-1">
-                <span>J1</span><span id="label-j1" class="font-mono">65° / 135°</span>
+            <div class="panel-sub p-2 rounded-lg">
+              <div class="flex justify-between items-center text-slate-300 font-medium mb-1">
+                <span>Junta 1 (J1)</span><span id="label-j1" class="font-mono text-blue-400">65° / 135°</span>
               </div>
               <div class="grid grid-cols-2 gap-2">
                 <input id="j1-dip" type="range" min="10" max="89" value="65" class="w-full h-1 bg-slate-300 dark:bg-slate-700 rounded">
@@ -246,9 +307,9 @@
               </div>
             </div>
 
-            <div class="panel-sub p-2 rounded-xl">
-              <div class="flex justify-between items-center text-amber-600 dark:text-amber-400 font-semibold mb-1">
-                <span>J2</span><span id="label-j2" class="font-mono">75° / 225°</span>
+            <div class="panel-sub p-2 rounded-lg">
+              <div class="flex justify-between items-center text-slate-300 font-medium mb-1">
+                <span>Junta 2 (J2)</span><span id="label-j2" class="font-mono text-emerald-400">75° / 225°</span>
               </div>
               <div class="grid grid-cols-2 gap-2">
                 <input id="j2-dip" type="range" min="10" max="89" value="75" class="w-full h-1 bg-slate-300 dark:bg-slate-700 rounded">
@@ -256,9 +317,9 @@
               </div>
             </div>
 
-            <div class="panel-sub p-2 rounded-xl">
-              <div class="flex justify-between items-center text-emerald-600 dark:text-emerald-400 font-semibold mb-1">
-                <span>J3</span><span id="label-j3" class="font-mono">50° / 015°</span>
+            <div class="panel-sub p-2 rounded-lg">
+              <div class="flex justify-between items-center text-slate-300 font-medium mb-1">
+                <span>Junta 3 (J3)</span><span id="label-j3" class="font-mono text-amber-400">50° / 015°</span>
               </div>
               <div class="grid grid-cols-2 gap-2">
                 <input id="j3-dip" type="range" min="10" max="89" value="50" class="w-full h-1 bg-slate-300 dark:bg-slate-700 rounded">
@@ -280,13 +341,14 @@
         </div>
 
         <!-- SECCIÓN 3: SÍSMICO PSEUDOESTÁTICO -->
-        <div class="panel-glass rounded-2xl p-4 space-y-3 border border-orange-300 dark:border-orange-900/60 shadow-sm">
-          <div class="flex items-center justify-between border-b border-orange-200/60 dark:border-orange-900/40 pb-2">
-            <h2 class="text-xs font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider flex items-center gap-1.5">
-              <span>🌋</span> Efecto Sísmico (kh, kv)
+        <div class="panel-glass rounded-xl p-3.5 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+            <h2 class="text-xs font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+              Carga Sísmica (kh, kv)
             </h2>
             <label class="flex items-center gap-1.5 cursor-pointer">
-              <input id="chk-seismic" type="checkbox" checked class="rounded bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-orange-500 focus:ring-0">
+              <input id="chk-seismic" type="checkbox" checked class="rounded bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-0">
               <span class="text-[11px] text-slate-600 dark:text-slate-300 font-medium">Activo</span>
             </label>
           </div>
@@ -306,21 +368,22 @@
                 <input id="input-sismo-az" type="number" min="0" max="360" value="90" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-slate-800 dark:text-slate-100 font-mono text-xs">
               </div>
             </div>
-            <div class="p-2 rounded-xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-900/50 flex justify-between text-[11px]">
-              <span class="text-orange-800 dark:text-orange-300">Inercial Sísmica: <b id="ui-seismic-f" class="font-mono">0.018 MN</b></span>
-              <span class="text-orange-800 dark:text-orange-300 font-mono">Sobrecarga: <b id="ui-seismic-pct">+17.0%</b></span>
+            <div class="p-2 rounded-lg bg-slate-900 border border-slate-800 flex justify-between text-[11px] font-mono">
+              <span class="text-slate-400">Inercia: <b id="ui-seismic-f" class="text-slate-200">0.018 MN</b></span>
+              <span class="text-slate-400">Sobrecarga: <b id="ui-seismic-pct" class="text-amber-400">+17.0%</b></span>
             </div>
           </div>
         </div>
 
-        <!-- SECCIÓN 4: PATRÓN DE PERNOS (NARANJA INDUSTRIAL Y ACERO) -->
-        <div class="panel-glass rounded-2xl p-4 space-y-3 shadow-sm border border-slate-200 dark:border-orange-500/20">
-          <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-2">
-            <h2 class="text-xs font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider flex items-center gap-1.5">
-              <span>🔩</span> Patrón de Pernos
+        <!-- SECCIÓN 4: PATRÓN DE PERNOS -->
+        <div class="panel-glass rounded-xl p-3.5 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+            <h2 class="text-xs font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+              Patrón de Pernos
             </h2>
             <label class="flex items-center gap-1.5 cursor-pointer">
-              <input id="chk-bolts" type="checkbox" checked class="rounded bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-orange-600 focus:ring-0">
+              <input id="chk-bolts" type="checkbox" checked class="rounded bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-0">
               <span class="text-[11px] text-slate-600 dark:text-slate-300 font-medium">Activo</span>
             </label>
           </div>
@@ -341,43 +404,44 @@
               </div>
 
               <!-- Control Interactivo de Longitud con Slider y Cota Real -->
-              <div class="col-span-2 space-y-1.5 bg-orange-500/5 dark:bg-orange-950/25 p-2 rounded-xl border border-orange-500/20">
+              <div class="col-span-2 space-y-1.5 panel-sub p-2.5 rounded-lg">
                 <div class="flex justify-between items-center">
-                  <label class="text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-1.5 text-[11px]">
-                    <span>📏</span> Longitud del Perno (L)
+                  <label class="text-slate-700 dark:text-slate-200 font-medium text-[11px]">
+                    Longitud del Perno (L)
                   </label>
                   <div class="flex items-center gap-1">
-                    <input id="input-bolt-len" type="number" min="1.0" max="8.0" step="0.25" value="3.0" class="w-16 bg-white dark:bg-slate-900 border border-orange-300 dark:border-orange-700 rounded-lg px-1.5 py-0.5 text-right text-orange-700 dark:text-orange-300 font-mono text-xs font-bold">
+                    <input id="input-bolt-len" type="number" min="1.0" max="8.0" step="0.25" value="3.0" class="w-16 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-md px-1.5 py-0.5 text-right text-blue-500 font-mono text-xs font-semibold">
                     <span class="text-slate-400 font-mono text-xs">m</span>
                   </div>
                 </div>
                 <div class="flex items-center gap-2">
-                  <span class="text-[9px] text-slate-400 font-mono">1.0m</span>
-                  <input id="input-bolt-len-range" type="range" min="1.0" max="8.0" step="0.25" value="3.0" class="w-full accent-orange-500 cursor-pointer">
-                  <span class="text-[9px] text-slate-400 font-mono">8.0m</span>
+                  <span class="text-[9px] text-slate-500 font-mono">1.0m</span>
+                  <input id="input-bolt-len-range" type="range" min="1.0" max="8.0" step="0.25" value="3.0" class="w-full accent-blue-600 cursor-pointer">
+                  <span class="text-[9px] text-slate-500 font-mono">8.0m</span>
                 </div>
-                <div id="ui-bolt-embed-status" class="text-[10px] font-mono px-2 py-1 rounded bg-orange-900/30 text-orange-300 flex items-center justify-between border border-orange-800/40">
+                <div id="ui-bolt-embed-status" class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 text-slate-300 flex items-center justify-between border border-slate-800">
                   <span>Anclaje en roca sana:</span>
-                  <b class="font-bold">+0.85 m (Efectivo ✅)</b>
+                  <b class="font-semibold text-emerald-400">+0.85 m (Efectivo)</b>
                 </div>
               </div>
             </div>
 
-            <div class="p-2 rounded-xl bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-900/50 flex justify-between text-[11px]">
-              <span class="text-orange-800 dark:text-orange-300">Pernos: <b id="ui-bolt-count">3</b> | Presión: <b id="ui-bolt-press" class="font-mono">0.089 MPa</b></span>
-              <span class="text-orange-800 dark:text-orange-300 font-mono">Total: <b id="ui-bolt-total">0.540 MN</b></span>
+            <div class="p-2 rounded-lg bg-slate-900 border border-slate-800 flex justify-between text-[11px] font-mono">
+              <span class="text-slate-400">Pernos: <b id="ui-bolt-count" class="text-slate-200">3</b> | Presión: <b id="ui-bolt-press" class="text-slate-200 font-mono">0.089 MPa</b></span>
+              <span class="text-slate-400">Total: <b id="ui-bolt-total" class="text-slate-200">0.540 MN</b></span>
             </div>
           </div>
         </div>
 
         <!-- SECCIÓN 5: SHOTCRETE -->
-        <div class="panel-glass rounded-2xl p-4 space-y-3 shadow-sm">
-          <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-2">
-            <h2 class="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-              <span>🧱</span> Hormigón Proyectado / Shotcrete
+        <div class="panel-glass rounded-xl p-3.5 space-y-3">
+          <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+            <h2 class="text-xs font-semibold text-slate-800 dark:text-slate-200 uppercase tracking-wider flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+              Hormigón Proyectado / Shotcrete
             </h2>
             <label class="flex items-center gap-1.5 cursor-pointer">
-              <input id="chk-shotcrete" type="checkbox" checked class="rounded bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-amber-600 focus:ring-0">
+              <input id="chk-shotcrete" type="checkbox" checked class="rounded bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-blue-600 focus:ring-0">
               <span class="text-[11px] text-slate-600 dark:text-slate-300 font-medium">Activo</span>
             </label>
           </div>
@@ -397,9 +461,9 @@
                 <input id="input-shot-shear" type="number" min="0.05" max="3000" step="0.1" value="1.2" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-slate-800 dark:text-slate-100 font-mono text-xs">
               </div>
             </div>
-            <div class="p-2 rounded-xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 flex justify-between text-[11px]">
-              <span class="text-amber-800 dark:text-amber-300">Perímetro: <b id="ui-shot-perim">11.3 m</b> | Presión: <b id="ui-shot-press" class="font-mono">0.222 MPa</b></span>
-              <span class="text-amber-800 dark:text-amber-300 font-mono">Total: <b id="ui-shot-total">1.350 MN</b></span>
+            <div class="p-2 rounded-lg bg-slate-900 border border-slate-800 flex justify-between text-[11px] font-mono">
+              <span class="text-slate-400">Perímetro: <b id="ui-shot-perim" class="text-slate-200">11.3 m</b> | Presión: <b id="ui-shot-press" class="text-slate-200 font-mono">0.222 MPa</b></span>
+              <span class="text-slate-400">Total: <b id="ui-shot-total" class="text-slate-200">1.350 MN</b></span>
             </div>
           </div>
         </div>
@@ -409,49 +473,49 @@
       <!-- COLUMNA DERECHA: RESULTADOS + CANVAS 3D INTERACTIVO + ROBOTITO IA (8 COLS) -->
       <div class="lg:col-span-8 space-y-4">
         
-        <!-- TARJETA FACTOR DE SEGURIDAD SÍSMICO -->
-        <div id="card-fs" class="panel-glass rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 border border-emerald-400/40 dark:border-emerald-700/60 shadow-md">
+        <!-- FACTOR DE SEGURIDAD SÍSMICO (PRECISIÓN MINIMALISTA) -->
+        <div id="card-fs" class="panel-glass rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
           <div class="space-y-1">
             <div class="flex items-center gap-2">
-              <span id="title-wedge-type" class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">Estabilidad Cuña (Clave Túnel)</span>
-              <span id="badge-seismic-state" class="text-[10px] px-2 py-0.5 rounded-md bg-orange-100 dark:bg-orange-500/20 text-orange-700 dark:text-orange-400 border border-orange-200 dark:border-orange-500/30 font-bold uppercase">Sismo Activo</span>
+              <span id="title-wedge-type" class="text-xs font-medium uppercase tracking-wider text-slate-400">Estabilidad Cuña (Clave Túnel)</span>
+              <span id="badge-seismic-state" class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Sismo Activo</span>
             </div>
             <div class="flex items-baseline gap-3">
-              <span id="val-fs" class="text-4xl md:text-5xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight font-mono">16.01</span>
-              <span id="badge-fs" class="text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/40 uppercase">ESTABLE (SÍSMICO)</span>
+              <span id="val-fs" class="text-4xl md:text-5xl font-bold text-emerald-400 tracking-tight font-mono">16.01</span>
+              <span id="badge-fs" class="text-xs font-semibold px-2.5 py-1 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 uppercase">Estable (Sísmico)</span>
             </div>
-            <p id="desc-mode" class="text-xs text-slate-600 dark:text-slate-300">Modo de falla: <b class="text-slate-900 dark:text-white font-semibold">Caída Libre Directa</b></p>
+            <p id="desc-mode" class="text-xs text-slate-400">Modo de falla: <b class="text-slate-200 font-medium">Caída Libre Directa</b></p>
           </div>
 
-          <div class="grid grid-cols-3 gap-2.5 text-center border-l border-slate-200 dark:border-slate-800 pl-4 text-xs">
-            <div class="panel-sub p-2.5 rounded-xl">
-              <span class="text-slate-500 dark:text-slate-400 text-[11px] block">Peso Cuña</span>
-              <b id="val-weight" class="text-sm font-mono text-amber-600 dark:text-amber-400">10.8 Ton</b>
+          <div class="grid grid-cols-3 gap-2.5 text-center border-l border-slate-200 dark:border-slate-800 pl-4 text-xs font-mono">
+            <div class="panel-sub p-2 rounded-lg">
+              <span class="text-slate-500 text-[10px] block font-sans">Peso Cuña</span>
+              <b id="val-weight" class="text-xs font-semibold text-slate-200">10.8 Ton</b>
             </div>
-            <div class="panel-sub p-2.5 rounded-xl">
-              <span class="text-slate-500 dark:text-slate-400 text-[11px] block">Carga Motriz Total</span>
-              <b id="val-driving" class="text-sm font-mono text-rose-600 dark:text-rose-400">0.118 MN</b>
+            <div class="panel-sub p-2 rounded-lg">
+              <span class="text-slate-500 text-[10px] block font-sans">Carga Motriz</span>
+              <b id="val-driving" class="text-xs font-semibold text-rose-400">0.118 MN</b>
             </div>
-            <div class="panel-sub p-2.5 rounded-xl">
-              <span class="text-slate-500 dark:text-slate-400 text-[11px] block">Resistencia Total</span>
-              <b id="val-resisting" class="text-sm font-mono text-emerald-600 dark:text-emerald-400">1.890 MN</b>
+            <div class="panel-sub p-2 rounded-lg">
+              <span class="text-slate-500 text-[10px] block font-sans">Resistencia</span>
+              <b id="val-resisting" class="text-xs font-semibold text-emerald-400">1.890 MN</b>
             </div>
           </div>
         </div>
 
-        <!-- MÓDULO ROBOTITO IA: ASISTENTE DE PROPUESTA MÍNIMA SÍSMICA -->
-        <div class="panel-glass rounded-2xl p-4 space-y-3.5 border border-indigo-200 dark:border-indigo-900/60 shadow-sm relative overflow-hidden">
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-indigo-100 dark:border-indigo-950/80 pb-2.5">
-            <div class="flex items-center gap-2.5">
-              <span class="text-xl">🤖</span>
-              <div>
-                <h3 class="text-xs font-bold text-indigo-700 dark:text-indigo-300 uppercase tracking-wider">Robotito IA — Sostenimiento Mínimo Optimizado</h3>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400">Calcula la configuración estricta para garantizar que la cuña no deslice</p>
-              </div>
+        <!-- MÓDULO DE OPTIMIZACIÓN DE SOSTENIMIENTO -->
+        <div class="panel-glass rounded-xl p-4 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-2.5">
+            <div>
+              <h3 class="text-xs font-semibold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                Optimización de Sostenimiento
+              </h3>
+              <p class="text-[11px] text-slate-400">Configuración requerida para garantizar la estabilidad del bloque según criterio de diseño</p>
             </div>
             <div class="flex items-center gap-2 text-xs">
-              <span class="text-slate-500 dark:text-slate-400 font-medium">Criterio:</span>
-              <select id="select-target-fs" class="bg-white dark:bg-slate-900 border border-indigo-200 dark:border-indigo-700 rounded-lg px-2.5 py-1 text-slate-800 dark:text-white font-mono text-xs focus:ring-1 focus:ring-indigo-500">
+              <span class="text-slate-400 font-medium">Criterio:</span>
+              <select id="select-target-fs" class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1 text-slate-200 font-mono text-xs focus:ring-1 focus:ring-blue-500">
                 <option value="1.15" selected>FS Sísmico ≥ 1.15 (Norma Minera/Civil)</option>
                 <option value="1.30">FS ≥ 1.30 (Labor Crítica / Temporal)</option>
                 <option value="1.50">FS ≥ 1.50 (Permanente / Conservador)</option>
@@ -459,102 +523,94 @@
             </div>
           </div>
 
-          <!-- 3 TARJETAS DE PROPUESTAS DE LA IA -->
+          <!-- 3 OPCIONES TÉCNICAS -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-            
-            <!-- OPCIÓN A: SOLO PERNOS -->
-            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-orange-200 dark:border-orange-800/60 flex flex-col justify-between space-y-2.5 hover:border-orange-400 dark:hover:border-orange-500 transition shadow-sm">
+            <div class="panel-sub p-3 rounded-lg flex flex-col justify-between space-y-2">
               <div class="space-y-1">
-                <div class="flex justify-between items-center text-orange-700 dark:text-orange-400 font-bold">
-                  <span>Opción A: Solo Pernos</span>
-                  <span id="ai-opt-a-fs" class="px-1.5 py-0.5 rounded bg-orange-100 dark:bg-orange-500/20 text-orange-700 dark:text-orange-300 text-[10px] font-mono">FS 1.5</span>
+                <div class="flex justify-between items-center text-slate-200 font-semibold">
+                  <span>Opción 1: Solo Pernos</span>
+                  <span id="ai-opt-a-fs" class="px-1.5 py-0.5 rounded bg-slate-800 text-blue-400 border border-slate-700 text-[10px] font-mono">FS 1.50</span>
                 </div>
-                <p class="text-[11px] text-slate-600 dark:text-slate-300">Malla requerida: <b id="ai-opt-a-mesh" class="text-slate-900 dark:text-white font-mono">2.2 x 2.2 m</b></p>
-                <p class="text-[11px] text-slate-600 dark:text-slate-300">Pernos activos: <b id="ai-opt-a-count" class="text-slate-900 dark:text-white font-mono">1 perno</b></p>
-                <p class="text-[11px] text-slate-600 dark:text-slate-300">Longitud mín: <b id="ai-opt-a-len" class="text-slate-900 dark:text-white font-mono">3.0 m</b></p>
+                <p class="text-[11px] text-slate-400">Malla: <b id="ai-opt-a-mesh" class="text-slate-200 font-mono">2.2 x 2.2 m</b></p>
+                <p class="text-[11px] text-slate-400">Pernos: <b id="ai-opt-a-count" class="text-slate-200 font-mono">1 perno</b></p>
+                <p class="text-[11px] text-slate-400">Longitud: <b id="ai-opt-a-len" class="text-slate-200 font-mono">3.0 m</b></p>
               </div>
-              <button id="btn-apply-ai-a" class="w-full py-1.5 text-[11px] rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-semibold transition flex items-center justify-center gap-1 shadow-sm">
-                <span>⚡</span> Aplicar Solo Pernos
+              <button id="btn-apply-ai-a" class="w-full py-1.5 text-[11px] rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium border border-slate-700 transition">
+                Aplicar Pernos
               </button>
             </div>
 
-            <!-- OPCIÓN B: SOLO SHOTCRETE -->
-            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-amber-200 dark:border-amber-800/60 flex flex-col justify-between space-y-2.5 hover:border-amber-400 dark:hover:border-amber-500 transition shadow-sm">
+            <div class="panel-sub p-3 rounded-lg flex flex-col justify-between space-y-2">
               <div class="space-y-1">
-                <div class="flex justify-between items-center text-amber-700 dark:text-amber-400 font-bold">
-                  <span>Opción B: Solo Shotcrete</span>
-                  <span id="ai-opt-b-fs" class="px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-[10px] font-mono">FS 5.7</span>
+                <div class="flex justify-between items-center text-slate-200 font-semibold">
+                  <span>Opción 2: Solo Shotcrete</span>
+                  <span id="ai-opt-b-fs" class="px-1.5 py-0.5 rounded bg-slate-800 text-blue-400 border border-slate-700 text-[10px] font-mono">FS 5.70</span>
                 </div>
-                <p class="text-[11px] text-slate-600 dark:text-slate-300">Espesor mínimo: <b id="ai-opt-b-t" class="text-slate-900 dark:text-white font-mono">5 cm</b></p>
-                <p class="text-[11px] text-slate-600 dark:text-slate-300">Corte perimetral: <b id="ai-opt-b-shear" class="text-slate-900 dark:text-white font-mono">0.68 MN</b></p>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400">Aporte pernos: <b>0 kN (Sin pernos)</b></p>
+                <p class="text-[11px] text-slate-400">Espesor: <b id="ai-opt-b-t" class="text-slate-200 font-mono">5 cm</b></p>
+                <p class="text-[11px] text-slate-400">Corte: <b id="ai-opt-b-shear" class="text-slate-200 font-mono">0.68 MN</b></p>
+                <p class="text-[11px] text-slate-500">Sin pernos</p>
               </div>
-              <button id="btn-apply-ai-b" class="w-full py-1.5 text-[11px] rounded-lg bg-amber-600 hover:bg-amber-700 text-white font-semibold transition flex items-center justify-center gap-1 shadow-sm">
-                <span>⚡</span> Aplicar Solo Shotcrete
+              <button id="btn-apply-ai-b" class="w-full py-1.5 text-[11px] rounded bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium border border-slate-700 transition">
+                Aplicar Shotcrete
               </button>
             </div>
 
-            <!-- OPCIÓN C: COMBINADA RECOMENDADA -->
-            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-emerald-300 dark:border-emerald-700/80 flex flex-col justify-between space-y-2.5 hover:border-emerald-500 transition shadow-sm relative">
-              <span class="absolute -top-2 right-2 px-2 py-0.5 rounded-full bg-emerald-600 text-white font-bold text-[9px] uppercase tracking-wide shadow-sm">Recomendada</span>
+            <div class="panel-sub p-3 rounded-lg flex flex-col justify-between space-y-2 border border-blue-500/30">
               <div class="space-y-1">
-                <div class="flex justify-between items-center text-emerald-700 dark:text-emerald-400 font-bold">
-                  <span>Opción C: Combinación Óptima</span>
-                  <span id="ai-opt-c-fs" class="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-500/20 text-[10px] font-mono">FS 10.3</span>
+                <div class="flex justify-between items-center text-slate-200 font-semibold">
+                  <span>Opción 3: Combinada</span>
+                  <span id="ai-opt-c-fs" class="px-1.5 py-0.5 rounded bg-blue-500/15 text-blue-400 border border-blue-500/30 text-[10px] font-mono">FS 10.30</span>
                 </div>
-                <p class="text-[11px] text-slate-600 dark:text-slate-300">Malla: <b id="ai-opt-c-mesh" class="text-slate-900 dark:text-white font-mono">1.5 x 1.5 m (L=3.0m)</b></p>
-                <p class="text-[11px] text-slate-600 dark:text-slate-300">Shotcrete: <b id="ai-opt-c-t" class="text-slate-900 dark:text-white font-mono">5 cm con fibra</b></p>
-                <p class="text-[11px] text-slate-600 dark:text-slate-300">Resistencia total: <b id="ai-opt-c-res" class="text-slate-900 dark:text-white font-mono">1.22 MN</b></p>
+                <p class="text-[11px] text-slate-400">Malla: <b id="ai-opt-c-mesh" class="text-slate-200 font-mono">1.5 x 1.5 m (L=3m)</b></p>
+                <p class="text-[11px] text-slate-400">Shotcrete: <b id="ai-opt-c-t" class="text-slate-200 font-mono">5 cm fibra</b></p>
+                <p class="text-[11px] text-slate-400">Resistencia: <b id="ai-opt-c-res" class="text-slate-200 font-mono">1.22 MN</b></p>
               </div>
-              <button id="btn-apply-ai-c" class="w-full py-1.5 text-[11px] rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition flex items-center justify-center gap-1 shadow-sm">
-                <span>⚡</span> Aplicar Combinado
+              <button id="btn-apply-ai-c" class="w-full py-1.5 text-[11px] rounded bg-blue-600 hover:bg-blue-500 text-white font-medium transition">
+                Aplicar Combinada
               </button>
             </div>
-
           </div>
         </div>
 
         <!-- CANVAS 3D INTERACTIVO CON ZOOM, PAN Y PERFILES DIVERSOS -->
-        <div class="panel-glass rounded-2xl p-4 flex flex-col items-center justify-between relative overflow-hidden shadow-sm">
+        <div class="panel-glass rounded-xl p-3.5 flex flex-col items-center justify-between relative overflow-hidden">
           
           <!-- BARRA SUPERIOR DEL VISUALIZADOR 3D -->
           <div class="w-full flex flex-wrap justify-between items-center mb-2 gap-2 text-xs">
             <div class="flex items-center gap-2">
-              <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                <span>🔄</span> Visualizador 3D: <span id="ui-current-shape-name" class="text-sky-600 dark:text-sky-400 font-semibold">Herradura Clásica</span>
+              <span class="font-medium text-slate-200 flex items-center gap-1.5">
+                <span>Visualizador 3D:</span>
+                <span id="ui-current-shape-name" class="text-blue-400 font-semibold">Herradura Clásica</span>
               </span>
-              <span id="ui-render-mode-badge" class="text-[10px] px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-mono">Modo: Sólido</span>
+              <span id="ui-render-mode-badge" class="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">Modo: Sólido</span>
             </div>
 
             <!-- BOTONERA DE NAVEGACIÓN Y HERRAMIENTAS PRO 3D -->
-            <div class="flex flex-wrap items-center gap-1 bg-slate-100 dark:bg-slate-950/80 p-0.5 rounded-xl border border-slate-200 dark:border-slate-800">
-              <button id="btn-mode-rotate" class="px-2.5 py-1 rounded-lg bg-sky-600 text-white font-semibold text-[11px] flex items-center gap-1 shadow-sm transition" title="Arrastra para rotar la cámara">
-                <span>🔄</span> Rotar
+            <div class="flex flex-wrap items-center gap-1 bg-slate-900 p-0.5 rounded-lg border border-slate-800">
+              <button id="btn-mode-rotate" class="px-2 py-0.5 rounded bg-blue-600 text-white font-medium text-[11px] transition" title="Arrastra para rotar la cámara">
+                Rotar
               </button>
-              <button id="btn-mode-pan" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-semibold text-[11px] flex items-center gap-1 transition" title="Arrastra para mover el perfil del túnel (Pan)">
-                <span>✋</span> Mover
+              <button id="btn-mode-pan" class="px-2 py-0.5 rounded text-slate-400 hover:text-white font-medium text-[11px] transition" title="Arrastra para mover el perfil del túnel (Pan)">
+                Mover
               </button>
-              <span class="w-px h-4 bg-slate-300 dark:bg-slate-700 mx-0.5"></span>
-              <button id="btn-zoom-in" class="px-2 py-0.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 font-bold text-xs" title="Acercar">+</button>
-              <span id="ui-zoom-val" class="font-mono text-[10px] text-sky-600 dark:text-sky-400 px-1 font-bold">100%</span>
-              <button id="btn-zoom-out" class="px-2 py-0.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 font-bold text-xs" title="Alejar">-</button>
-              <span class="w-px h-4 bg-slate-300 dark:bg-slate-700 mx-0.5"></span>
-              <button id="btn-center-model" class="px-2 py-1 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 text-[11px] flex items-center gap-1 font-medium" title="Centrar modelo">
-                <span>🎯</span>
+              <span class="w-px h-3.5 bg-slate-800 mx-0.5"></span>
+              <button id="btn-zoom-in" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800 hover:text-white font-bold text-xs" title="Acercar">+</button>
+              <span id="ui-zoom-val" class="font-mono text-[10px] text-blue-400 px-1 font-semibold">100%</span>
+              <button id="btn-zoom-out" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800 hover:text-white font-bold text-xs" title="Alejar">-</button>
+              <span class="w-px h-3.5 bg-slate-800 mx-0.5"></span>
+              <button id="btn-center-model" class="px-2 py-0.5 rounded text-slate-400 hover:bg-slate-800 hover:text-white text-[11px] font-medium" title="Centrar modelo">
+                Centrar
               </button>
-              <span class="w-px h-4 bg-slate-300 dark:bg-slate-700 mx-0.5"></span>
+              <span class="w-px h-3.5 bg-slate-800 mx-0.5"></span>
               <!-- HERRAMIENTAS PRO FLOTANTES -->
-              <button id="btn-toggle-render-mode" class="px-2 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 hover:bg-sky-600 hover:text-white text-slate-700 dark:text-slate-300 text-[11px] font-semibold transition" title="Alternar Vista: Sólido / Rayos-X / Alambre">
-                <span>👁️</span> Rayos-X
+              <button id="btn-toggle-render-mode" class="px-2 py-0.5 rounded hover:bg-slate-800 text-slate-400 hover:text-white text-[11px] font-medium transition" title="Alternar Vista: Sólido / Rayos-X / Alambre">
+                Rayos-X
               </button>
-              <button id="btn-toggle-dimensions" class="px-2 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 hover:bg-sky-600 hover:text-white text-slate-700 dark:text-slate-300 text-[11px] font-semibold transition" title="Ver / Ocultar Cotas 3D">
-                <span>📐</span> Cotas
+              <button id="btn-toggle-dimensions" class="px-2 py-0.5 rounded hover:bg-slate-800 text-slate-400 hover:text-white text-[11px] font-medium transition" title="Ver / Ocultar Cotas 3D">
+                Cotas
               </button>
-              <button id="btn-snapshot-hd" class="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-semibold transition flex items-center gap-1 shadow-sm" title="Descargar Captura HD con marca de agua Geologgia">
-                <span>📷</span> HD
-              </button>
-              <button id="btn-fullscreen-3d" class="px-2 py-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs transition" title="Pantalla Completa">
-                <span>⛶</span>
+              <button id="btn-snapshot-hd" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-medium transition border border-slate-700" title="Descargar Captura HD">
+                Captura HD
               </button>
             </div>
           </div>
@@ -594,61 +650,59 @@
         </div>
 
         <!-- PANEL DE SIMULACIÓN CINEMÁTICA 3D (EN FRONT, BAJO EL VISUALIZADOR 3D) -->
-        <div id="panel-simulation" class="w-full panel-glass rounded-2xl p-3.5 md:p-4 space-y-3 border border-indigo-400/50 dark:border-indigo-900/70 shadow-lg">
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/80 dark:border-slate-800/80 pb-2.5">
-            <div class="flex items-center gap-2.5">
-              <span class="text-xl">🎬</span>
-              <div>
-                <h3 class="text-xs md:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                  Simulación Cinemática de Inestabilidad 3D
-                  <span class="text-[9px] px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-400 border border-indigo-500/30 font-mono">Tiempo Real (60 FPS)</span>
-                </h3>
-                <p class="text-[11px] text-slate-500 dark:text-slate-400">Prueba dinámica de desprendimiento de la cuña por gravedad y aceleración sísmica</p>
-              </div>
+        <div id="panel-simulation" class="w-full panel-glass rounded-xl p-3.5 space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
+            <div>
+              <h3 class="text-xs font-semibold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                Simulación Cinemática de Inestabilidad 3D
+                <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700 font-mono">60 FPS</span>
+              </h3>
+              <p class="text-[11px] text-slate-400">Verificación dinámica de desprendimiento vectorial por gravedad y aceleración sísmica</p>
             </div>
 
             <!-- Estado Cinemático Dinámico -->
-            <div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-950/80 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 text-[11px] font-mono">
+            <div class="flex items-center gap-2 bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800 text-[11px] font-mono">
               <span class="text-slate-400">Estado:</span>
-              <span id="sim-status-text" class="font-bold text-sky-600 dark:text-sky-400">En reposo en su posición geológica</span>
+              <span id="sim-status-text" class="font-medium text-slate-200">En reposo geológico</span>
             </div>
           </div>
 
           <!-- Botones de Control de Reproducción y Velocidad -->
-          <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-100/60 dark:bg-slate-950/40 p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-800/60">
+          <div class="flex flex-wrap items-center justify-between gap-3 panel-sub p-2 rounded-lg">
             <div class="flex items-center gap-2">
-              <button id="sim-btn-play" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95">
-                <span>▶️</span> Iniciar
+              <button id="sim-btn-play" class="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white rounded-md text-xs font-medium transition active:scale-95">
+                Iniciar
               </button>
-              <button id="sim-btn-pause" class="px-3 py-1.5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold transition active:scale-95">
-                <span>⏸️</span> Pausa
+              <button id="sim-btn-pause" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md text-xs font-medium transition active:scale-95">
+                Pausa
               </button>
-              <button id="sim-btn-reset" class="px-3 py-1.5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold transition active:scale-95">
-                <span>🔄</span> Reiniciar
+              <button id="sim-btn-reset" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-md text-xs font-medium transition active:scale-95">
+                Reiniciar
               </button>
             </div>
 
             <!-- Selector de Velocidad de Animación -->
-            <div class="flex items-center gap-2.5 text-xs bg-slate-200/50 dark:bg-slate-900/60 px-3 py-1 rounded-lg border border-slate-300/40 dark:border-slate-800">
-              <span class="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Velocidad:</span>
-              <input id="sim-slider-speed" type="range" min="0.5" max="3.0" step="0.5" value="1.0" class="w-20 md:w-28 accent-indigo-600 cursor-pointer">
-              <span id="sim-lbl-speed" class="font-mono text-indigo-600 dark:text-indigo-400 font-bold text-xs">1.0x</span>
+            <div class="flex items-center gap-2 text-xs">
+              <span class="text-slate-400 text-[11px] font-medium">Velocidad:</span>
+              <input id="sim-slider-speed" type="range" min="0.5" max="3.0" step="0.5" value="1.0" class="w-20 md:w-28 accent-blue-600 cursor-pointer">
+              <span id="sim-lbl-speed" class="font-mono text-blue-400 font-semibold text-xs">1.0x</span>
             </div>
 
-            <!-- Indicador Táctil -->
-            <div class="hidden sm:flex items-center gap-1.5 text-[10px] text-slate-400 font-mono">
-              <span>💡 Rota el modelo con el ratón durante la simulación</span>
+            <div class="hidden sm:flex items-center gap-1.5 text-[10px] text-slate-500 font-mono">
+              <span>Arrastra con el ratón para rotar el modelo durante la simulación</span>
             </div>
           </div>
         </div>
 
         <!-- MEMORIA DE CÁLCULO DE TENSIONES Y SISMICIDAD -->
-        <div class="panel-glass rounded-2xl p-4 text-xs space-y-2.5 shadow-sm">
-          <div class="flex justify-between items-center border-b border-slate-200/80 dark:border-slate-800/80 pb-2">
-            <h3 class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-2">
-              <span>📊</span> Balance Pseudoestático de Fuerzas (MN) y Tensiones (MPa)
+        <div class="panel-glass rounded-xl p-3.5 text-xs space-y-2.5">
+          <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-2">
+            <h3 class="font-semibold text-slate-200 flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+              Balance Vectorial de Fuerzas (MN) y Tensiones (MPa)
             </h3>
-            <span class="text-[10px] text-slate-400 font-mono">Vectorial W + F_sismo</span>
+            <span class="text-[10px] text-slate-500 font-mono">Equilibrio Límite</span>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse font-mono text-[11px]">
@@ -706,43 +760,41 @@
         <div id="modular-panels-container" class="space-y-4">
           
           <!-- MODULO 1: RED ESTEREOGRÁFICA INTERACTIVA PRO -->
-          <div id="panel-stereonet" class="panel-glass rounded-2xl p-4 md:p-5 space-y-4 border border-sky-400/40 dark:border-sky-800/60 shadow-xl hidden">
+          <div id="panel-stereonet" class="panel-glass rounded-xl p-4 md:p-5 space-y-4 hidden">
             <!-- Header con título y barra de herramientas -->
             <div class="flex flex-wrap items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3 gap-3">
-              <div class="flex items-center gap-2.5">
-                <span class="text-xl">🌐</span>
-                <div>
-                  <h3 class="text-xs md:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
-                    Proyección Estereográfica Geomecánica Pro
-                    <span class="text-[9px] px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-400 border border-sky-500/30 font-mono">Dips / Allmendinger</span>
-                  </h3>
-                  <p class="text-[11px] text-slate-500 dark:text-slate-400">Polos, grandes círculos, cono de fricción (φ), diedros cinemáticos y cursor interactivo en tiempo real</p>
-                </div>
+              <div>
+                <h3 class="text-xs md:text-sm font-semibold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                  Proyección Estereográfica Geomecánica
+                  <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 border border-slate-700 font-mono">Dips / Allmendinger</span>
+                </h3>
+                <p class="text-[11px] text-slate-400">Polos, grandes círculos, cono de fricción (φ), diedros cinemáticos y cursor interactivo</p>
               </div>
 
               <!-- Botonera de herramientas y exportación del estereograma -->
               <div class="flex flex-wrap items-center gap-1.5">
                 <!-- Selector de Proyección -->
-                <div class="flex items-center bg-slate-100 dark:bg-slate-900/90 p-0.5 rounded-lg border border-slate-200 dark:border-slate-800 text-[10px] font-semibold">
-                  <button id="btn-proj-schmidt" onclick="window.GeoWedgeStereonet && window.GeoWedgeStereonet.setProjection('schmidt')" class="px-2 py-1 rounded-md bg-sky-600 text-white transition shadow-sm" title="Proyección de Igual Área (Schmidt - Semisfera Inferior)">
+                <div class="flex items-center bg-slate-900 p-0.5 rounded-lg border border-slate-800 text-[10px] font-medium">
+                  <button id="btn-proj-schmidt" onclick="window.GeoWedgeStereonet && window.GeoWedgeStereonet.setProjection('schmidt')" class="px-2 py-0.5 rounded bg-blue-600 text-white transition" title="Proyección de Igual Área (Schmidt)">
                     Schmidt
                   </button>
-                  <button id="btn-proj-wulff" onclick="window.GeoWedgeStereonet && window.GeoWedgeStereonet.setProjection('wulff')" class="px-2 py-1 rounded-md bg-slate-800 text-slate-400 hover:text-white transition" title="Proyección de Igual Ángulo (Wulff)">
+                  <button id="btn-proj-wulff" onclick="window.GeoWedgeStereonet && window.GeoWedgeStereonet.setProjection('wulff')" class="px-2 py-0.5 rounded text-slate-400 hover:text-white transition" title="Proyección de Igual Ángulo (Wulff)">
                     Wulff
                   </button>
                 </div>
 
-                <span class="w-px h-4 bg-slate-300 dark:bg-slate-700 mx-0.5"></span>
+                <span class="w-px h-4 bg-slate-800 mx-0.5"></span>
 
                 <!-- Botones de Exportación -->
-                <button onclick="window.GeoWedgeStereonet && window.GeoWedgeStereonet.downloadCanvasHD()" class="px-2.5 py-1 rounded-lg bg-sky-600/90 hover:bg-sky-500 text-white text-[11px] font-semibold flex items-center gap-1 transition shadow-sm" title="Descargar estereograma en alta resolución (PNG)">
-                  <span>📷</span> HD
+                <button onclick="window.GeoWedgeStereonet && window.GeoWedgeStereonet.downloadCanvasHD()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-medium flex items-center gap-1 border border-slate-700 transition" title="Descargar estereograma en alta resolución (PNG)">
+                  Exportar PNG
                 </button>
-                <button onclick="window.GeoWedgeStereonet && window.GeoWedgeStereonet.showPythonModal()" class="px-2.5 py-1 rounded-lg bg-indigo-600/90 hover:bg-indigo-500 text-white text-[11px] font-semibold flex items-center gap-1 transition shadow-sm" title="Ver estereograma con calidad de publicación Matplotlib DPI 300">
-                  <span>🖼️</span> Python 300 DPI
+                <button onclick="window.GeoWedgeStereonet && window.GeoWedgeStereonet.showPythonModal()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-medium flex items-center gap-1 border border-slate-700 transition" title="Ver estereograma con calidad de publicación Matplotlib DPI 300">
+                  Python 300 DPI
                 </button>
-                <button onclick="window.GeoWedgeStereonet && window.GeoWedgeStereonet.downloadPythonScript()" class="px-2.5 py-1 rounded-lg bg-emerald-600/90 hover:bg-emerald-500 text-white text-[11px] font-semibold flex items-center gap-1 transition shadow-sm" title="Descargar script Python con tus parámetros para Matplotlib / mplstereonet">
-                  <span>🐍</span> Script .py
+                <button onclick="window.GeoWedgeStereonet && window.GeoWedgeStereonet.downloadPythonScript()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-medium flex items-center gap-1 border border-slate-700 transition" title="Descargar script Python con tus parámetros para Matplotlib / mplstereonet">
+                  Script .py
                 </button>
 
                 <button onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-stereonet', 'btn-toggle-stereonet')" class="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 text-xs transition" title="Ocultar módulo">✕</button>
@@ -835,54 +887,54 @@
 
 
           <!-- MODULO 3: ANÁLISIS DE SENSIBILIDAD MULTIVARIABLE -->
-          <div id="panel-sensitivity" class="panel-glass rounded-2xl p-4 space-y-3 border border-amber-300 dark:border-amber-900/60 shadow-md hidden">
+          <div id="panel-sensitivity" class="panel-glass rounded-xl p-4 space-y-3 hidden">
             <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
-              <div class="flex items-center gap-2">
-                <span class="text-base">📊</span>
-                <div>
-                  <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Curvas de Sensibilidad Geomecánica</h3>
-                  <p class="text-[10px] text-slate-500 dark:text-slate-400">Variación del Factor de Seguridad frente a parámetros críticos</p>
-                </div>
+              <div>
+                <h3 class="text-xs font-semibold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                  Curvas de Sensibilidad Geomecánica
+                </h3>
+                <p class="text-[10px] text-slate-400">Variación del Factor de Seguridad frente a parámetros críticos</p>
               </div>
               <div class="flex items-center gap-2">
-                <button id="btn-export-sensitivity-csv" class="px-2.5 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-[10px] font-bold transition flex items-center gap-1 shadow-sm">
-                  <span>📥</span> Exportar CSV
+                <button id="btn-export-sensitivity-csv" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-md text-[11px] font-medium border border-slate-700 transition">
+                  Exportar CSV
                 </button>
-                <button onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-sensitivity', 'btn-toggle-sensitivity')" class="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 text-xs transition" title="Ocultar módulo">✕</button>
+                <button onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-sensitivity', 'btn-toggle-sensitivity')" class="p-1 rounded hover:bg-slate-800 text-slate-400 text-xs transition" title="Ocultar módulo">✕</button>
               </div>
             </div>
 
             <div class="flex items-center justify-between text-xs">
               <div class="flex items-center gap-2">
-                <span class="text-slate-500 dark:text-slate-400 text-[11px]">Evaluar frente a:</span>
-                <select id="select-sensitivity-var" class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1 text-slate-800 dark:text-white text-xs font-semibold focus:ring-1 focus:ring-amber-500">
+                <span class="text-slate-400 text-[11px]">Evaluar frente a:</span>
+                <select id="select-sensitivity-var" class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1 text-slate-200 text-xs font-medium focus:ring-1 focus:ring-blue-500">
                   <option value="friction">Ángulo de Fricción en Discontinuidades (φ)</option>
                   <option value="shotcrete">Espesor de Shotcrete (cm)</option>
                   <option value="seismic">Aceleración Sísmica Horizontal (kh)</option>
                   <option value="bolts">Capacidad Tensil de Pernos (kN)</option>
                 </select>
               </div>
-              <span class="text-[10px] text-slate-400 font-mono">Líneas guía: FS=1.0 (Falla) y FS=Objetivo</span>
+              <span class="text-[10px] text-slate-500 font-mono">Líneas guía: FS=1.0 (Falla) y FS=Objetivo</span>
             </div>
 
             <div class="w-full flex justify-center">
-              <canvas id="canvas-sensitivity" width="680" height="240" class="w-full max-w-full rounded-xl bg-slate-900 border border-slate-700/60 shadow-inner"></canvas>
+              <canvas id="canvas-sensitivity" width="680" height="240" class="w-full max-w-full rounded-lg bg-slate-900 border border-slate-800"></canvas>
             </div>
           </div>
 
           <!-- MODULO 4: GESTOR DE PROYECTOS Y CASOS CHILENOS -->
-          <div id="panel-presets" class="panel-glass rounded-2xl p-4 space-y-3.5 border border-slate-300 dark:border-slate-800 shadow-md hidden">
+          <div id="panel-presets" class="panel-glass rounded-xl p-4 space-y-3.5 hidden">
             <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
-              <div class="flex items-center gap-2">
-                <span class="text-base">💾</span>
-                <div>
-                  <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Gestor de Proyectos & Casos de Estudio Chilenos</h3>
-                  <p class="text-[10px] text-slate-500 dark:text-slate-400">Guarda tus modelos en LocalStorage o carga referencias de minería y obras civiles</p>
-                </div>
+              <div>
+                <h3 class="text-xs font-semibold text-slate-200 uppercase tracking-wider flex items-center gap-2">
+                  <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                  Gestor de Proyectos & Casos de Estudio
+                </h3>
+                <p class="text-[10px] text-slate-400">Guarda tus modelos o carga referencias de minería y obras civiles</p>
               </div>
               <div class="flex items-center gap-1.5">
-                <label for="input-import-json" class="px-2.5 py-1 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-[10px] font-semibold transition cursor-pointer flex items-center gap-1">
-                  <span>📂</span> Importar JSON
+                <label for="input-import-json" class="px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-md text-[11px] font-medium border border-slate-700 transition cursor-pointer flex items-center gap-1">
+                  Importar JSON
                 </label>
                 <input id="input-import-json" type="file" accept=".json" class="hidden">
                 <button id="btn-export-projects" class="px-2.5 py-1 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-[10px] font-semibold transition flex items-center gap-1">
@@ -1468,60 +1520,60 @@
       const legendWedge = document.getElementById('legend-wedge');
 
       if (!res.isFinite) {
-        cardFS.className = "panel-glass rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 border border-slate-400 dark:border-slate-700 shadow-md";
-        valFS.className = "text-4xl md:text-5xl font-black text-slate-400 tracking-tight font-mono";
+        cardFS.className = "panel-glass rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 border border-slate-200 dark:border-slate-800";
+        valFS.className = "text-4xl md:text-5xl font-bold text-slate-500 tracking-tight font-mono";
         valFS.textContent = "N/A";
-        badgeFS.className = "text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 uppercase";
+        badgeFS.className = "text-xs font-semibold px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 uppercase";
         badgeFS.textContent = "SIN CUÑA FINITA";
-        rowStatus.className = "text-slate-500 font-sans font-semibold";
+        rowStatus.className = "text-slate-500 font-sans font-medium";
         rowStatus.textContent = "GEOMETRÍA ABIERTA";
-        legendWedge.className = "text-slate-400 font-medium";
+        legendWedge.className = "text-slate-500 font-medium";
       } else if (res.fs < 1.0) {
-        cardFS.className = "panel-glass rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 border border-rose-300 dark:border-rose-900/80 shadow-md";
-        valFS.className = "text-4xl md:text-5xl font-black text-rose-600 dark:text-rose-500 tracking-tight font-mono";
-        badgeFS.className = "text-xs font-bold px-2.5 py-1 rounded-lg bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-500/40 uppercase";
+        cardFS.className = "panel-glass rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 border border-slate-200 dark:border-slate-800";
+        valFS.className = "text-4xl md:text-5xl font-bold text-rose-500 tracking-tight font-mono";
+        badgeFS.className = "text-xs font-semibold px-2 py-0.5 rounded bg-rose-500/15 text-rose-400 border border-rose-500/30 uppercase";
         badgeFS.textContent = "INESTABLE";
-        rowStatus.className = "text-rose-600 dark:text-rose-400 font-sans font-semibold";
+        rowStatus.className = "text-rose-500 font-sans font-medium";
         rowStatus.textContent = "CRÍTICO (FS < 1.0)";
-        legendWedge.className = "text-rose-500 dark:text-rose-400 font-medium";
+        legendWedge.className = "text-rose-500 font-medium";
       } else if (res.fs < targetFS) {
-        cardFS.className = "panel-glass rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 border border-amber-300 dark:border-amber-900/80 shadow-md";
-        valFS.className = "text-4xl md:text-5xl font-black text-amber-600 dark:text-amber-500 tracking-tight font-mono";
-        badgeFS.className = "text-xs font-bold px-2.5 py-1 rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-500/40 uppercase";
+        cardFS.className = "panel-glass rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 border border-slate-200 dark:border-slate-800";
+        valFS.className = "text-4xl md:text-5xl font-bold text-amber-400 tracking-tight font-mono";
+        badgeFS.className = "text-xs font-semibold px-2 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30 uppercase";
         badgeFS.textContent = "MARGINAL SÍSMICO";
-        rowStatus.className = "text-amber-600 dark:text-amber-400 font-sans font-semibold";
+        rowStatus.className = "text-amber-400 font-sans font-medium";
         rowStatus.textContent = `MARGINAL (FS < ${targetFS})`;
-        legendWedge.className = "text-amber-500 dark:text-amber-400 font-medium";
+        legendWedge.className = "text-amber-400 font-medium";
       } else {
-        cardFS.className = "panel-glass rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 border border-emerald-300 dark:border-emerald-800/80 shadow-md";
-        valFS.className = "text-4xl md:text-5xl font-black text-emerald-600 dark:text-emerald-400 tracking-tight font-mono";
-        badgeFS.className = "text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-500/20 text-emerald-800 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-500/40 uppercase";
+        cardFS.className = "panel-glass rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 border border-slate-200 dark:border-slate-800";
+        valFS.className = "text-4xl md:text-5xl font-bold text-emerald-400 tracking-tight font-mono";
+        badgeFS.className = "text-xs font-semibold px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 uppercase";
         badgeFS.textContent = "ESTABLE (SÍSMICO)";
-        rowStatus.className = "text-emerald-600 dark:text-emerald-400 font-sans font-semibold";
+        rowStatus.className = "text-emerald-400 font-sans font-medium";
         rowStatus.textContent = `ESTABLE (FS ≥ ${targetFS})`;
-        legendWedge.className = "text-emerald-500 dark:text-emerald-400 font-medium";
+        legendWedge.className = "text-emerald-400 font-medium";
       }
 
-      // Actualizar Telemetría del Cockpit Superior (Propuesta 1: Deep Tech)
+      // Actualizar Telemetría del Cockpit Superior (Propuesta 2: Minimalist Precision)
       const elCockpitFS = document.getElementById('cockpit-fs-val');
       const elCockpitPill = document.getElementById('cockpit-fs-pill');
       if (elCockpitFS) {
         if (!res.isFinite) {
           elCockpitFS.textContent = "N/A";
-          elCockpitFS.className = "font-bold text-slate-400";
-          if (elCockpitPill) elCockpitPill.className = "px-2.5 py-1 rounded-xl bg-slate-900/90 dark:bg-slate-950 border border-slate-700/60 text-[11px] font-mono flex items-center gap-1.5 shadow-sm";
+          elCockpitFS.className = "font-bold text-slate-500";
+          if (elCockpitPill) elCockpitPill.className = "px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-[11px] font-mono flex items-center gap-1.5";
         } else if (res.fs < 1.0) {
           elCockpitFS.textContent = res.fs.toFixed(2);
           elCockpitFS.className = "font-bold text-rose-500";
-          if (elCockpitPill) elCockpitPill.className = "px-2.5 py-1 rounded-xl bg-slate-900/90 dark:bg-slate-950 border border-rose-500/50 text-[11px] font-mono flex items-center gap-1.5 shadow-sm";
+          if (elCockpitPill) elCockpitPill.className = "px-2.5 py-1 rounded-lg bg-slate-900 border border-rose-500/30 text-[11px] font-mono flex items-center gap-1.5";
         } else if (res.fs < targetFS) {
           elCockpitFS.textContent = res.fs.toFixed(2);
           elCockpitFS.className = "font-bold text-amber-400";
-          if (elCockpitPill) elCockpitPill.className = "px-2.5 py-1 rounded-xl bg-slate-900/90 dark:bg-slate-950 border border-amber-500/50 text-[11px] font-mono flex items-center gap-1.5 shadow-sm";
+          if (elCockpitPill) elCockpitPill.className = "px-2.5 py-1 rounded-lg bg-slate-900 border border-amber-500/30 text-[11px] font-mono flex items-center gap-1.5";
         } else {
           elCockpitFS.textContent = res.fs >= 100 ? '>100' : res.fs.toFixed(2);
           elCockpitFS.className = "font-bold text-emerald-400";
-          if (elCockpitPill) elCockpitPill.className = "px-2.5 py-1 rounded-xl bg-slate-900/90 dark:bg-slate-950 border border-emerald-500/40 text-[11px] font-mono flex items-center gap-1.5 shadow-sm";
+          if (elCockpitPill) elCockpitPill.className = "px-2.5 py-1 rounded-lg bg-slate-900 border border-emerald-500/30 text-[11px] font-mono flex items-center gap-1.5";
         }
       }
 
