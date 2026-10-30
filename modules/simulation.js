@@ -1,6 +1,7 @@
 /**
  * Módulo 4: Simulación Cinemática 3D de Inestabilidad y Caída
  * Modela la trayectoria física de desprendimiento de la cuña en tiempo real.
+ * Optimizado: 60 FPS directos sobre el renderizador 3D sin bucles recursivos.
  * Desarrollado para Geologgia Ltda.
  */
 
@@ -17,15 +18,19 @@ window.GeoWedgeSimulation = (function() {
 
   function init() {
     bindControls();
-    console.log('[Módulo Simulación] Inicializado.');
+    console.log('[Módulo Simulación] Inicializado y optimizado.');
   }
 
   function update(res, state) {
     lastRes = res;
-    lastState = JSON.parse(JSON.stringify(state));
+    lastState = state;
     maxDrop = (state.height || 4.5) * 0.95;
+    // Si la cuña no está en simulación activa, resetear suavemente las coordenadas
     if (!isRunning) {
-      reset();
+      simTime = 0;
+      offset.x = 0;
+      offset.y = 0;
+      offset.z = 0;
     }
   }
 
@@ -47,7 +52,9 @@ window.GeoWedgeSimulation = (function() {
     isRunning = true;
     isPaused = false;
     simTime = 0;
-    offset = { x: 0, y: 0, z: 0 };
+    offset.x = 0;
+    offset.y = 0;
+    offset.z = 0;
     updateUIButtons();
     loop();
   }
@@ -62,11 +69,14 @@ window.GeoWedgeSimulation = (function() {
     isRunning = false;
     isPaused = false;
     simTime = 0;
-    offset = { x: 0, y: 0, z: 0 };
+    offset.x = 0;
+    offset.y = 0;
+    offset.z = 0;
     if (animFrameId) cancelAnimationFrame(animFrameId);
     updateUIButtons();
-    if (typeof window.updateUI === 'function') {
-      window.updateUI();
+    // Renderizar solo la escena 3D sin relanzar updateUI
+    if (typeof window.draw3DCurrent === 'function') {
+      window.draw3DCurrent();
     }
   }
 
@@ -76,16 +86,14 @@ window.GeoWedgeSimulation = (function() {
     simTime += 0.016 * speedFactor;
 
     // Física de caída / deslizamiento cinemático
-    // Aceleración g = 9.81 m/s² escalada visualmente
-    const gEff = 4.5;
+    const gEff = 4.8;
     const dy = -0.5 * gEff * (simTime * simTime);
 
-    // Si hay sismo, el vector de caída se desvía horizontalmente
     let dx = 0;
     let dz = 0;
     if (lastState && lastState.enableSeismic) {
       const azRad = ((lastState.seismicAz || 90) * Math.PI) / 180;
-      const sMag = (lastState.kh || 0.15) * 2.0;
+      const sMag = (lastState.kh || 0.15) * 2.2;
       dx = Math.sin(azRad) * sMag * simTime;
       dz = Math.cos(azRad) * sMag * simTime;
     }
@@ -96,7 +104,7 @@ window.GeoWedgeSimulation = (function() {
       offset.z = dz;
       isPaused = true;
       updateUIButtons();
-      if (typeof window.updateUI === 'function') window.updateUI();
+      if (typeof window.draw3DCurrent === 'function') window.draw3DCurrent();
       return;
     }
 
@@ -104,8 +112,9 @@ window.GeoWedgeSimulation = (function() {
     offset.x = dx;
     offset.z = dz;
 
-    if (typeof window.updateUI === 'function') {
-      window.updateUI();
+    // Solo redibujar el canvas 3D (60 FPS puros)
+    if (typeof window.draw3DCurrent === 'function') {
+      window.draw3DCurrent();
     }
 
     animFrameId = requestAnimationFrame(loop);
@@ -113,7 +122,6 @@ window.GeoWedgeSimulation = (function() {
 
   function updateUIButtons() {
     const btnPlay = document.getElementById('sim-btn-play');
-    const btnPause = document.getElementById('sim-btn-pause');
     const statusText = document.getElementById('sim-status-text');
 
     if (btnPlay) {

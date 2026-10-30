@@ -1168,9 +1168,24 @@
       };
     }
 
+    let currentRes = null;
+
+    function renderSceneOnly() {
+      const elZoom = document.getElementById('ui-zoom-val');
+      if (elZoom) elZoom.textContent = `${Math.round(state.camera.zoom * 100)}%`;
+      const elCoords = document.getElementById('ui-cam-coords');
+      if (elCoords) elCoords.textContent = `Rot: (${Math.round(state.camera.rotX)}°, ${Math.round(state.camera.rotY)}°) | Pan: (${Math.round(state.camera.panX)}, ${Math.round(state.camera.panY)})`;
+      if (currentRes) {
+        draw3D(currentRes);
+      }
+    }
+    window.draw3DCurrent = renderSceneOnly;
+
     function updateUI() {
       const isShaft = isShaftMode();
       const res = computeWedge();
+      currentRes = res;
+      window.currentRes = res;
 
       let locTitle = "Estabilidad Cuña de Techo (Túnel)";
       if (isShaft) {
@@ -1820,7 +1835,7 @@
 
     function zoomCamera(delta) {
       state.camera.zoom = Math.max(0.3, Math.min(3.5, state.camera.zoom + delta));
-      updateUI();
+      renderSceneOnly();
     }
 
     function resetCamera() {
@@ -1834,7 +1849,7 @@
       state.camera.panX = 0;
       state.camera.panY = 0;
       state.camera.zoom = 1.0;
-      updateUI();
+      renderSceneOnly();
     }
 
     function bindInputs() {
@@ -1990,7 +2005,7 @@
           state.camera.rotX += dy * 0.7;
         }
 
-        updateUI();
+        renderSceneOnly();
       });
 
       window.addEventListener('mouseup', () => { isDragging = false; });
@@ -2027,7 +2042,7 @@
             state.camera.rotY += dx * 0.8;
             state.camera.rotX += dy * 0.8;
           }
-          updateUI();
+          renderSceneOnly();
         } else if (e.touches.length === 2) {
           const dist = Math.hypot(
             e.touches[0].clientX - e.touches[1].clientX,

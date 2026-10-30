@@ -20,8 +20,11 @@ window.GeoWedgeStereonet = (function() {
 
   function update(res, state) {
     lastRes = res;
-    lastState = JSON.parse(JSON.stringify(state));
-    draw();
+    lastState = state;
+    const panel = document.getElementById('panel-stereonet');
+    if (panel && !panel.classList.contains('hidden')) {
+      draw();
+    }
   }
 
   function toRad(deg) { return (deg * Math.PI) / 180; }

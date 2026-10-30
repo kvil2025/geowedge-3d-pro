@@ -13,7 +13,7 @@ window.GeoWedgeReport = (function() {
 
   function update(res, state) {
     lastRes = res;
-    lastState = JSON.parse(JSON.stringify(state));
+    lastState = state;
   }
 
   function generateReportHTML() {

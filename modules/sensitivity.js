@@ -20,8 +20,11 @@ window.GeoWedgeSensitivity = (function() {
 
   function update(res, state) {
     lastRes = res;
-    lastState = JSON.parse(JSON.stringify(state));
-    draw();
+    lastState = state;
+    const panel = document.getElementById('panel-sensitivity');
+    if (panel && !panel.classList.contains('hidden')) {
+      draw();
+    }
   }
 
   function evaluateFS(modState) {

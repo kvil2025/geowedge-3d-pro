@@ -62,6 +62,11 @@ window.GeoWedgeModules = (function() {
           btn.classList.add('bg-sky-600', 'text-white');
           btn.classList.remove('text-slate-600', 'dark:text-slate-400');
         }
+        if (panelId === 'panel-stereonet' && window.GeoWedgeStereonet) {
+          window.GeoWedgeStereonet.draw();
+        } else if (panelId === 'panel-sensitivity' && window.GeoWedgeSensitivity) {
+          window.GeoWedgeSensitivity.draw();
+        }
       } else {
         panel.classList.add('hidden');
         if (btn) {
