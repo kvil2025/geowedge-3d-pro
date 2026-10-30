@@ -95,6 +95,31 @@
         <button id="btn-preset-sismo-chile" class="px-2.5 py-1 text-xs bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-900/60 rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/60 font-medium transition">Sismo Chile (0.20g)</button>
         <button id="btn-preset-full" class="px-2.5 py-1 text-xs bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-900/60 rounded-lg hover:bg-emerald-100 dark:hover:bg-emerald-900/60 font-medium transition">Pernos + Shotcrete</button>
       </div>
+
+      <!-- BARRA DE MÓDULOS PRO (ACTIVACIÓN / DESACTIVACIÓN 1-CLIC) -->
+      <div class="w-full flex flex-wrap items-center justify-between gap-2 pt-2.5 border-t border-slate-200/80 dark:border-slate-800/80 text-xs">
+        <div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400 font-semibold text-[11px]">
+          <span class="text-sky-600 dark:text-sky-400">🧩 Módulos Pro:</span>
+          <span class="text-[10px] text-slate-400 font-normal hidden md:inline">• Activa o desactiva herramientas modulares</span>
+        </div>
+        <div class="flex flex-wrap items-center gap-1.5">
+          <button id="btn-toggle-stereonet" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-stereonet', 'btn-toggle-stereonet')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-medium transition shadow-sm hover:border-sky-500 flex items-center gap-1 text-[11px]">
+            <span>🌐</span> Estereonet
+          </button>
+          <button id="btn-toggle-simulation" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-simulation', 'btn-toggle-simulation')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-medium transition shadow-sm hover:border-sky-500 flex items-center gap-1 text-[11px]">
+            <span>🎬</span> Simulación 3D
+          </button>
+          <button id="btn-toggle-sensitivity" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-sensitivity', 'btn-toggle-sensitivity')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-medium transition shadow-sm hover:border-sky-500 flex items-center gap-1 text-[11px]">
+            <span>📊</span> Sensibilidad
+          </button>
+          <button id="btn-toggle-presets" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-presets', 'btn-toggle-presets')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-medium transition shadow-sm hover:border-sky-500 flex items-center gap-1 text-[11px]">
+            <span>💾</span> Proyectos & Presets
+          </button>
+          <button id="btn-print-report" onclick="window.GeoWedgeReport && window.GeoWedgeReport.openPrintWindow()" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold transition shadow-sm flex items-center gap-1.5 text-[11px]">
+            <span>📄</span> Memoria PDF
+          </button>
+        </div>
+      </div>
     </header>
 
     <!-- GRID PRINCIPAL -->
@@ -450,32 +475,56 @@
               <span class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
                 <span>🔄</span> Visualizador 3D: <span id="ui-current-shape-name" class="text-sky-600 dark:text-sky-400 font-semibold">Herradura Clásica</span>
               </span>
+              <span id="ui-render-mode-badge" class="text-[10px] px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-mono">Modo: Sólido</span>
             </div>
 
-            <!-- BOTONERA DE NAVEGACIÓN 3D -->
-            <div class="flex items-center gap-1 bg-slate-100 dark:bg-slate-950/80 p-0.5 rounded-xl border border-slate-200 dark:border-slate-800">
+            <!-- BOTONERA DE NAVEGACIÓN Y HERRAMIENTAS PRO 3D -->
+            <div class="flex flex-wrap items-center gap-1 bg-slate-100 dark:bg-slate-950/80 p-0.5 rounded-xl border border-slate-200 dark:border-slate-800">
               <button id="btn-mode-rotate" class="px-2.5 py-1 rounded-lg bg-sky-600 text-white font-semibold text-[11px] flex items-center gap-1 shadow-sm transition" title="Arrastra para rotar la cámara">
                 <span>🔄</span> Rotar
               </button>
               <button id="btn-mode-pan" class="px-2.5 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white font-semibold text-[11px] flex items-center gap-1 transition" title="Arrastra para mover el perfil del túnel (Pan)">
-                <span>✋</span> Mover (Pan)
+                <span>✋</span> Mover
               </button>
               <span class="w-px h-4 bg-slate-300 dark:bg-slate-700 mx-0.5"></span>
               <button id="btn-zoom-in" class="px-2 py-0.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 font-bold text-xs" title="Acercar">+</button>
               <span id="ui-zoom-val" class="font-mono text-[10px] text-sky-600 dark:text-sky-400 px-1 font-bold">100%</span>
               <button id="btn-zoom-out" class="px-2 py-0.5 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 font-bold text-xs" title="Alejar">-</button>
               <span class="w-px h-4 bg-slate-300 dark:bg-slate-700 mx-0.5"></span>
-              <button id="btn-center-model" class="px-2.5 py-1 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 text-[11px] flex items-center gap-1 font-medium" title="Centrar modelo">
-                <span>🎯</span> Centrar
+              <button id="btn-center-model" class="px-2 py-1 rounded-lg text-slate-700 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 text-[11px] flex items-center gap-1 font-medium" title="Centrar modelo">
+                <span>🎯</span>
+              </button>
+              <span class="w-px h-4 bg-slate-300 dark:bg-slate-700 mx-0.5"></span>
+              <!-- HERRAMIENTAS PRO FLOTANTES -->
+              <button id="btn-toggle-render-mode" class="px-2 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 hover:bg-sky-600 hover:text-white text-slate-700 dark:text-slate-300 text-[11px] font-semibold transition" title="Alternar Vista: Sólido / Rayos-X / Alambre">
+                <span>👁️</span> Rayos-X
+              </button>
+              <button id="btn-toggle-dimensions" class="px-2 py-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 hover:bg-sky-600 hover:text-white text-slate-700 dark:text-slate-300 text-[11px] font-semibold transition" title="Ver / Ocultar Cotas 3D">
+                <span>📐</span> Cotas
+              </button>
+              <button id="btn-snapshot-hd" class="px-2.5 py-1 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-[11px] font-semibold transition flex items-center gap-1 shadow-sm" title="Descargar Captura HD con marca de agua Geologgia">
+                <span>📷</span> HD
+              </button>
+              <button id="btn-fullscreen-3d" class="px-2 py-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs transition" title="Pantalla Completa">
+                <span>⛶</span>
               </button>
             </div>
           </div>
 
           <!-- ÁREA DEL CANVAS -->
-          <div class="w-full relative">
+          <div id="canvas-container-3d" class="w-full relative group">
             <canvas id="canvas-3d" width="700" height="380" class="w-full max-w-full rounded-xl bg-slate-900 cursor-grab active:cursor-grabbing border border-slate-300 dark:border-slate-800 select-none shadow-inner"></canvas>
             
-            <div class="absolute bottom-2.5 left-2.5 bg-slate-900/80 dark:bg-slate-950/80 backdrop-blur-sm border border-slate-700/60 px-2.5 py-1 rounded-lg text-[10px] text-slate-300 pointer-events-none flex gap-2.5 shadow-sm">
+            <!-- HUD FLOTANTE SUPERIOR DERECHO -->
+            <div class="absolute top-2.5 right-2.5 flex flex-col items-end gap-1.5 pointer-events-none">
+              <div id="hud-status-pill" class="px-2.5 py-1 rounded-lg bg-slate-900/85 backdrop-blur-md border border-slate-700 text-[10px] font-mono text-emerald-400 flex items-center gap-1.5 shadow-lg">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span id="hud-status-text">ESTABLE (SÍSMICO)</span>
+              </div>
+            </div>
+
+            <!-- CONTROLES INFERIORES -->
+            <div class="absolute bottom-2.5 left-2.5 bg-slate-900/85 backdrop-blur-md border border-slate-700/70 px-2.5 py-1 rounded-lg text-[10px] text-slate-300 pointer-events-none flex gap-2.5 shadow-md">
               <span>🖱️ Rueda: <b>Zoom</b></span>
               <span>• Clic izq: <b id="hint-action">Rotar</b></span>
               <span>• Clic der / Shift: <b>Mover</b></span>
@@ -556,6 +605,183 @@
           </div>
         </div>
 
+        <!-- CONTENEDOR DE PANELES MODULARES PRO (DESACOPLADOS Y COLAPSIBLES) -->
+        <div id="modular-panels-container" class="space-y-4">
+          
+          <!-- MODULO 1: RED ESTEREOGRÁFICA INTERACTIVA -->
+          <div id="panel-stereonet" class="panel-glass rounded-2xl p-4 space-y-3 border border-sky-300 dark:border-sky-900/60 shadow-md hidden">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-base">🌐</span>
+                <div>
+                  <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Proyección Estereográfica (Falsilla de Schmidt)</h3>
+                  <p class="text-[10px] text-slate-500 dark:text-slate-400">Polos, grandes círculos, eje de excavación e intersecciones cinemáticas (diedros)</p>
+                </div>
+              </div>
+              <button onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-stereonet', 'btn-toggle-stereonet')" class="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 text-xs transition" title="Ocultar módulo">✕</button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+              <div class="md:col-span-5 flex justify-center">
+                <canvas id="canvas-stereonet" width="280" height="280" class="rounded-xl bg-slate-900 border border-slate-700/60 shadow-inner max-w-full"></canvas>
+              </div>
+              <div class="md:col-span-7 space-y-2.5 text-xs">
+                <div class="grid grid-cols-3 gap-1.5 text-center text-[10px] font-mono">
+                  <div class="p-1.5 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 font-bold">● J1 (Azul)</div>
+                  <div class="p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold">● J2 (Verde)</div>
+                  <div class="p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold">● J3 (Naranja)</div>
+                </div>
+                <div>
+                  <h4 class="text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
+                    <span>Líneas de Intersección Diedras (Modos Cinemáticos):</span>
+                    <span class="text-[10px] text-slate-400 font-mono">Trend / Plunge</span>
+                  </h4>
+                  <div id="stereonet-intersections-list" class="space-y-1">
+                    <!-- Inyectado dinámicamente -->
+                  </div>
+                </div>
+                <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed bg-slate-100/60 dark:bg-slate-900/40 p-2 rounded-lg border border-slate-200/60 dark:border-slate-800/60">
+                  ℹ️ <b>Interpretación:</b> Las intersecciones entre pares de discontinuidades marcan la línea de deslizamiento diedro. Si el manteo (plunge) de la intersección aflora hacia el interior de la excavación y es mayor que el ángulo de fricción (&phi;), existe potencial de deslizamiento cinemático.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- MODULO 2: SIMULACIÓN CINEMÁTICA 3D -->
+          <div id="panel-simulation" class="panel-glass rounded-2xl p-4 space-y-3 border border-indigo-300 dark:border-indigo-900/60 shadow-md hidden">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-base">🎬</span>
+                <div>
+                  <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Simulación Cinemática de Inestabilidad 3D</h3>
+                  <p class="text-[10px] text-slate-500 dark:text-slate-400">Prueba dinámica de desprendimiento por gravedad y aceleración sísmica</p>
+                </div>
+              </div>
+              <button onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-simulation', 'btn-toggle-simulation')" class="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 text-xs transition" title="Ocultar módulo">✕</button>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-100/60 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200/80 dark:border-slate-800/80">
+              <div class="flex items-center gap-2">
+                <button id="sim-btn-play" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
+                  <span>▶️</span> Iniciar
+                </button>
+                <button id="sim-btn-pause" class="px-3 py-1.5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold transition">
+                  <span>⏸️</span> Pausa
+                </button>
+                <button id="sim-btn-reset" class="px-3 py-1.5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold transition">
+                  <span>🔄</span> Reiniciar
+                </button>
+              </div>
+
+              <div class="flex items-center gap-3 text-xs">
+                <span class="text-slate-500 text-[11px]">Velocidad:</span>
+                <input id="sim-slider-speed" type="range" min="0.5" max="3.0" step="0.5" value="1.0" class="w-20 accent-sky-600 cursor-pointer">
+                <span id="sim-lbl-speed" class="font-mono text-sky-600 dark:text-sky-400 font-bold">1.0x</span>
+              </div>
+
+              <div class="text-right">
+                <span class="text-[10px] text-slate-400 block font-mono">Estado Cinemático:</span>
+                <span id="sim-status-text" class="text-xs font-bold text-slate-800 dark:text-slate-200">En reposo en su posición geológica</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- MODULO 3: ANÁLISIS DE SENSIBILIDAD MULTIVARIABLE -->
+          <div id="panel-sensitivity" class="panel-glass rounded-2xl p-4 space-y-3 border border-amber-300 dark:border-amber-900/60 shadow-md hidden">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-base">📊</span>
+                <div>
+                  <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Curvas de Sensibilidad Geomecánica</h3>
+                  <p class="text-[10px] text-slate-500 dark:text-slate-400">Variación del Factor de Seguridad frente a parámetros críticos</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button id="btn-export-sensitivity-csv" class="px-2.5 py-1 bg-amber-600 hover:bg-amber-500 text-white rounded-lg text-[10px] font-bold transition flex items-center gap-1 shadow-sm">
+                  <span>📥</span> Exportar CSV
+                </button>
+                <button onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-sensitivity', 'btn-toggle-sensitivity')" class="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 text-xs transition" title="Ocultar módulo">✕</button>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <span class="text-slate-500 dark:text-slate-400 text-[11px]">Evaluar frente a:</span>
+                <select id="select-sensitivity-var" class="bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1 text-slate-800 dark:text-white text-xs font-semibold focus:ring-1 focus:ring-amber-500">
+                  <option value="friction">Ángulo de Fricción en Discontinuidades (φ)</option>
+                  <option value="shotcrete">Espesor de Shotcrete (cm)</option>
+                  <option value="seismic">Aceleración Sísmica Horizontal (kh)</option>
+                  <option value="bolts">Capacidad Tensil de Pernos (kN)</option>
+                </select>
+              </div>
+              <span class="text-[10px] text-slate-400 font-mono">Líneas guía: FS=1.0 (Falla) y FS=Objetivo</span>
+            </div>
+
+            <div class="w-full flex justify-center">
+              <canvas id="canvas-sensitivity" width="680" height="240" class="w-full max-w-full rounded-xl bg-slate-900 border border-slate-700/60 shadow-inner"></canvas>
+            </div>
+          </div>
+
+          <!-- MODULO 4: GESTOR DE PROYECTOS Y CASOS CHILENOS -->
+          <div id="panel-presets" class="panel-glass rounded-2xl p-4 space-y-3.5 border border-slate-300 dark:border-slate-800 shadow-md hidden">
+            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
+              <div class="flex items-center gap-2">
+                <span class="text-base">💾</span>
+                <div>
+                  <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Gestor de Proyectos & Casos de Estudio Chilenos</h3>
+                  <p class="text-[10px] text-slate-500 dark:text-slate-400">Guarda tus modelos en LocalStorage o carga referencias de minería y obras civiles</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <label for="input-import-json" class="px-2.5 py-1 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-[10px] font-semibold transition cursor-pointer flex items-center gap-1">
+                  <span>📂</span> Importar JSON
+                </label>
+                <input id="input-import-json" type="file" accept=".json" class="hidden">
+                <button id="btn-export-projects" class="px-2.5 py-1 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-[10px] font-semibold transition flex items-center gap-1">
+                  <span>📤</span> Exportar JSON
+                </button>
+                <button onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-presets', 'btn-toggle-presets')" class="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 text-xs transition" title="Ocultar módulo">✕</button>
+              </div>
+            </div>
+
+            <!-- GUARDAR CASO ACTUAL -->
+            <div class="p-3 rounded-xl bg-slate-100/60 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2 flex-1 min-w-[240px]">
+                <span class="text-xs text-slate-500 font-medium">Nombre:</span>
+                <input id="input-new-project-name" type="text" placeholder="Ej: Túnel Bypass Km 14+200 (Cuña Falla Maipo)" class="flex-1 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-lg px-2.5 py-1 text-slate-800 dark:text-white text-xs focus:ring-1 focus:ring-sky-500">
+              </div>
+              <button id="btn-save-project" class="px-3.5 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1 shadow-sm shrink-0">
+                <span>💾</span> Guardar Configuración Actual
+              </button>
+            </div>
+
+            <!-- DOS COLUMNAS: PROYECTOS USUARIO VS BENCHMARKS -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="space-y-2">
+                <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center justify-between">
+                  <span>Tus Proyectos Guardados (LocalStorage):</span>
+                  <span class="text-[10px] text-slate-400 font-mono">Persistente</span>
+                </h4>
+                <div id="presets-user-list" class="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+                  <!-- Inyectado dinámicamente -->
+                </div>
+              </div>
+
+              <div class="space-y-2">
+                <h4 class="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center justify-between">
+                  <span>Casos Benchmark Chilenos (Pre-cargados):</span>
+                  <span class="text-[10px] text-sky-500 font-mono">Geologgia</span>
+                </h4>
+                <div id="presets-benchmarks-list" class="space-y-1.5 max-h-56 overflow-y-auto pr-1">
+                  <!-- Inyectado dinámicamente -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
 
     </div>
@@ -600,6 +826,8 @@
       shape: 'horseshoe', // 'horseshoe', 'arch', 'circular', 'rectangular', 'shaft'
       wedgeLoc: 'roof', // 'roof', 'left', 'right'
       trend: 45, plunge: 0, span: 5.0, height: 4.5, wedgeScale: 1.0,
+      renderMode: 'solid', // 'solid', 'xray', 'wireframe'
+      showDimensions: false,
       j1: { dip: 65, dipdir: 135 },
       j2: { dip: 75, dipdir: 225 },
       j3: { dip: 50, dipdir: 15 },
@@ -613,6 +841,9 @@
       enableShotcrete: true, shotT: 10, shotFC: 28, shotShearMPa: 1.2,
       camera: { rotX: 20, rotY: -30, panX: 0, panY: 0, zoom: 1.0 }
     };
+    window.state = state;
+    window.useMPa = useMPa;
+    window.targetFS = targetFS;
 
     function isShaftMode() {
       return state.shape === 'shaft' || state.plunge >= 80;
@@ -1082,7 +1313,30 @@
       document.getElementById('ui-zoom-val').textContent = `${Math.round(state.camera.zoom * 100)}%`;
       document.getElementById('ui-cam-coords').textContent = `Rot: (${Math.round(state.camera.rotX)}°, ${Math.round(state.camera.rotY)}°) | Pan: (${Math.round(state.camera.panX)}, ${Math.round(state.camera.panY)})`;
 
+      // Actualizar HUD superior del canvas
+      const hudPill = document.getElementById('hud-status-pill');
+      const hudText = document.getElementById('hud-status-text');
+      if (hudPill && hudText) {
+        if (!res.isFinite) {
+          hudPill.className = "px-2.5 py-1 rounded-lg bg-slate-900/85 backdrop-blur-md border border-slate-700 text-[10px] font-mono text-slate-400 flex items-center gap-1.5 shadow-lg";
+          hudText.textContent = "GEOMETRÍA ABIERTA";
+        } else if (res.fs < 1.0) {
+          hudPill.className = "px-2.5 py-1 rounded-lg bg-rose-950/85 backdrop-blur-md border border-rose-700 text-[10px] font-mono text-rose-400 flex items-center gap-1.5 shadow-lg";
+          hudText.textContent = `CRÍTICO (FS ${res.fs.toFixed(2)})`;
+        } else if (res.fs < targetFS) {
+          hudPill.className = "px-2.5 py-1 rounded-lg bg-amber-950/85 backdrop-blur-md border border-amber-700 text-[10px] font-mono text-amber-400 flex items-center gap-1.5 shadow-lg";
+          hudText.textContent = `MARGINAL (FS ${res.fs.toFixed(2)})`;
+        } else {
+          hudPill.className = "px-2.5 py-1 rounded-lg bg-emerald-950/85 backdrop-blur-md border border-emerald-700 text-[10px] font-mono text-emerald-400 flex items-center gap-1.5 shadow-lg";
+          hudText.textContent = `ESTABLE (FS ${res.fs >= 100 ? '>100' : res.fs.toFixed(2)})`;
+        }
+      }
+
       draw3D(res);
+
+      if (window.GeoWedgeModules) {
+        window.GeoWedgeModules.notifyUpdate(res, state);
+      }
     }
 
     // --- CANVAS 3D CON SOPORTE DE PIQUES Y FORMAS MULTIPLES ---
@@ -1112,6 +1366,7 @@
     function draw3D(res) {
       ctx3d.clearRect(0, 0, canvas3d.width, canvas3d.height);
       const isShaft = isShaftMode();
+      const simOff = (window.GeoWedgeSimulation && window.GeoWedgeSimulation.getWedgeOffset()) || { x: 0, y: 0, z: 0 };
       
       const cx = (canvas3d.width / 2) + state.camera.panX;
       const cy = (canvas3d.height / 2 + (isShaft ? 0 : 35)) + state.camera.panY;
@@ -1170,18 +1425,27 @@
         // Cuña en la pared del Pique (Shaft Wall Wedge)
         const scaleFactor = Math.max(0.1, Math.min(1.0, state.wedgeScale || 1.0));
         const wallX = W * 0.95;
-        const vApex = project3D(wallX + res.wedgeHeight, 0, 0, cx, cy, scale);
-        const vBase1 = project3D(wallX, -1.2 * scaleFactor, -1.0 * scaleFactor, cx, cy, scale);
-        const vBase2 = project3D(wallX, 1.2 * scaleFactor, -1.0 * scaleFactor, cx, cy, scale);
-        const vBase3 = project3D(wallX, 0, 1.3 * scaleFactor, cx, cy, scale);
+        const vApex = project3D(wallX + res.wedgeHeight + simOff.x, simOff.y, simOff.z, cx, cy, scale);
+        const vBase1 = project3D(wallX + simOff.x, -1.2 * scaleFactor + simOff.y, -1.0 * scaleFactor + simOff.z, cx, cy, scale);
+        const vBase2 = project3D(wallX + simOff.x, 1.2 * scaleFactor + simOff.y, -1.0 * scaleFactor + simOff.z, cx, cy, scale);
+        const vBase3 = project3D(wallX + simOff.x, simOff.y, 1.3 * scaleFactor + simOff.z, cx, cy, scale);
 
         const isStable = res.fs >= targetFS;
         const isMarginal = res.fs >= 1.0 && res.fs < targetFS;
-        ctx3d.fillStyle = isStable 
-          ? (isDarkMode ? 'rgba(16, 185, 129, 0.45)' : 'rgba(16, 185, 129, 0.35)') 
-          : (isMarginal ? (isDarkMode ? 'rgba(245, 158, 11, 0.5)' : 'rgba(245, 158, 11, 0.4)') : (isDarkMode ? 'rgba(239, 68, 68, 0.55)' : 'rgba(239, 68, 68, 0.45)'));
+        
+        let fillColor;
+        if (state.renderMode === 'wireframe') {
+          fillColor = 'transparent';
+        } else if (state.renderMode === 'xray') {
+          fillColor = isStable ? 'rgba(16, 185, 129, 0.16)' : (isMarginal ? 'rgba(245, 158, 11, 0.18)' : 'rgba(239, 68, 68, 0.20)');
+        } else {
+          fillColor = isStable 
+            ? (isDarkMode ? 'rgba(16, 185, 129, 0.45)' : 'rgba(16, 185, 129, 0.35)') 
+            : (isMarginal ? (isDarkMode ? 'rgba(245, 158, 11, 0.5)' : 'rgba(245, 158, 11, 0.4)') : (isDarkMode ? 'rgba(239, 68, 68, 0.55)' : 'rgba(239, 68, 68, 0.45)'));
+        }
+        ctx3d.fillStyle = fillColor;
         ctx3d.strokeStyle = isStable ? '#059669' : (isMarginal ? '#d97706' : '#dc2626');
-        ctx3d.lineWidth = 1.6;
+        ctx3d.lineWidth = state.renderMode === 'wireframe' ? 2.0 : 1.6;
 
         const faces = [
           [vApex, vBase1, vBase2],
@@ -1267,32 +1531,41 @@
         if (state.wedgeLoc === 'left') {
           // Cuña en Caja/Pared Izquierda
           const wallX = -W * 0.98;
-          vApex = project3D(wallX + res.apex[0], wallY + res.apex[1], res.apex[2], cx, cy, scale);
-          vBase1 = project3D(wallX + res.b1[0], wallY + res.b1[1], res.b1[2], cx, cy, scale);
-          vBase2 = project3D(wallX + res.b2[0], wallY + res.b2[1], res.b2[2], cx, cy, scale);
-          vBase3 = project3D(wallX + res.b3[0], wallY + res.b3[1], res.b3[2], cx, cy, scale);
+          vApex = project3D(wallX + res.apex[0] + simOff.x, wallY + res.apex[1] + simOff.y, res.apex[2] + simOff.z, cx, cy, scale);
+          vBase1 = project3D(wallX + res.b1[0] + simOff.x, wallY + res.b1[1] + simOff.y, res.b1[2] + simOff.z, cx, cy, scale);
+          vBase2 = project3D(wallX + res.b2[0] + simOff.x, wallY + res.b2[1] + simOff.y, res.b2[2] + simOff.z, cx, cy, scale);
+          vBase3 = project3D(wallX + res.b3[0] + simOff.x, wallY + res.b3[1] + simOff.y, res.b3[2] + simOff.z, cx, cy, scale);
         } else if (state.wedgeLoc === 'right') {
           // Cuña en Caja/Pared Derecha
           const wallX = W * 0.98;
-          vApex = project3D(wallX + res.apex[0], wallY + res.apex[1], res.apex[2], cx, cy, scale);
-          vBase1 = project3D(wallX + res.b1[0], wallY + res.b1[1], res.b1[2], cx, cy, scale);
-          vBase2 = project3D(wallX + res.b2[0], wallY + res.b2[1], res.b2[2], cx, cy, scale);
-          vBase3 = project3D(wallX + res.b3[0], wallY + res.b3[1], res.b3[2], cx, cy, scale);
+          vApex = project3D(wallX + res.apex[0] + simOff.x, wallY + res.apex[1] + simOff.y, res.apex[2] + simOff.z, cx, cy, scale);
+          vBase1 = project3D(wallX + res.b1[0] + simOff.x, wallY + res.b1[1] + simOff.y, res.b1[2] + simOff.z, cx, cy, scale);
+          vBase2 = project3D(wallX + res.b2[0] + simOff.x, wallY + res.b2[1] + simOff.y, res.b2[2] + simOff.z, cx, cy, scale);
+          vBase3 = project3D(wallX + res.b3[0] + simOff.x, wallY + res.b3[1] + simOff.y, res.b3[2] + simOff.z, cx, cy, scale);
         } else {
           // Cuña en Techo (Roof Wedge) orientada por los diedros de discontinuidades
-          vApex = project3D(res.apex[0], crownY + res.apex[1], res.apex[2], cx, cy, scale);
-          vBase1 = project3D(res.b1[0], crownY + res.b1[1], res.b1[2], cx, cy, scale);
-          vBase2 = project3D(res.b2[0], crownY + res.b2[1], res.b2[2], cx, cy, scale);
-          vBase3 = project3D(res.b3[0], crownY + res.b3[1], res.b3[2], cx, cy, scale);
+          vApex = project3D(res.apex[0] + simOff.x, crownY + res.apex[1] + simOff.y, res.apex[2] + simOff.z, cx, cy, scale);
+          vBase1 = project3D(res.b1[0] + simOff.x, crownY + res.b1[1] + simOff.y, res.b1[2] + simOff.z, cx, cy, scale);
+          vBase2 = project3D(res.b2[0] + simOff.x, crownY + res.b2[1] + simOff.y, res.b2[2] + simOff.z, cx, cy, scale);
+          vBase3 = project3D(res.b3[0] + simOff.x, crownY + res.b3[1] + simOff.y, res.b3[2] + simOff.z, cx, cy, scale);
         }
 
         const isStable = res.fs >= targetFS;
         const isMarginal = res.fs >= 1.0 && res.fs < targetFS;
-        ctx3d.fillStyle = isStable 
-          ? (isDarkMode ? 'rgba(16, 185, 129, 0.45)' : 'rgba(16, 185, 129, 0.35)') 
-          : (isMarginal ? (isDarkMode ? 'rgba(245, 158, 11, 0.5)' : 'rgba(245, 158, 11, 0.4)') : (isDarkMode ? 'rgba(239, 68, 68, 0.55)' : 'rgba(239, 68, 68, 0.45)'));
+        
+        let fillColor;
+        if (state.renderMode === 'wireframe') {
+          fillColor = 'transparent';
+        } else if (state.renderMode === 'xray') {
+          fillColor = isStable ? 'rgba(16, 185, 129, 0.16)' : (isMarginal ? 'rgba(245, 158, 11, 0.18)' : 'rgba(239, 68, 68, 0.20)');
+        } else {
+          fillColor = isStable 
+            ? (isDarkMode ? 'rgba(16, 185, 129, 0.45)' : 'rgba(16, 185, 129, 0.35)') 
+            : (isMarginal ? (isDarkMode ? 'rgba(245, 158, 11, 0.5)' : 'rgba(245, 158, 11, 0.4)') : (isDarkMode ? 'rgba(239, 68, 68, 0.55)' : 'rgba(239, 68, 68, 0.45)'));
+        }
+        ctx3d.fillStyle = fillColor;
         ctx3d.strokeStyle = isStable ? '#059669' : (isMarginal ? '#d97706' : '#dc2626');
-        ctx3d.lineWidth = 1.6;
+        ctx3d.lineWidth = state.renderMode === 'wireframe' ? 2.0 : 1.6;
 
         const faces = [
           [vApex, vBase1, vBase2],
@@ -1395,6 +1668,76 @@
         ctx3d.lineWidth = 3;
         ctx3d.beginPath(); ctx3d.moveTo(gStart.x, gStart.y); ctx3d.lineTo(sEnd.x, sEnd.y); ctx3d.stroke();
         ctx3d.fillStyle = '#f97316'; ctx3d.beginPath(); ctx3d.arc(sEnd.x, sEnd.y, 4.5, 0, Math.PI*2); ctx3d.fill();
+      }
+
+      // --- HUD PRO: BRÚJULA 3D Y ORIENTACIÓN DEL TÚNEL ---
+      const compassRadius = 22;
+      const compassX = 35;
+      const compassY = 35;
+      const rotYRad = (state.camera.rotY * Math.PI) / 180;
+      const northAngle = -rotYRad - Math.PI / 2 + (state.trend * Math.PI) / 180;
+
+      ctx3d.save();
+      ctx3d.translate(compassX, compassY);
+      ctx3d.beginPath();
+      ctx3d.arc(0, 0, compassRadius, 0, Math.PI * 2);
+      ctx3d.fillStyle = isDarkMode ? 'rgba(15, 23, 42, 0.85)' : 'rgba(255, 255, 255, 0.90)';
+      ctx3d.fill();
+      ctx3d.strokeStyle = isDarkMode ? '#334155' : '#cbd5e1';
+      ctx3d.lineWidth = 1.2;
+      ctx3d.stroke();
+
+      // Aguja Norte (Rojo vivo)
+      ctx3d.beginPath();
+      ctx3d.moveTo(0, 0);
+      const nx = Math.sin(northAngle) * (compassRadius - 5);
+      const ny = -Math.cos(northAngle) * (compassRadius - 5);
+      ctx3d.lineTo(nx, ny);
+      ctx3d.strokeStyle = '#ef4444';
+      ctx3d.lineWidth = 2.2;
+      ctx3d.stroke();
+
+      // Letra N
+      ctx3d.fillStyle = '#ef4444';
+      ctx3d.font = 'bold 8px Inter, sans-serif';
+      ctx3d.textAlign = 'center';
+      ctx3d.textBaseline = 'middle';
+      ctx3d.fillText('N', nx * 1.15, ny * 1.15);
+
+      // Rumbo Túnel
+      ctx3d.fillStyle = isDarkMode ? '#94a3b8' : '#64748b';
+      ctx3d.font = '9px monospace';
+      ctx3d.textAlign = 'left';
+      ctx3d.fillText(`${state.trend}°`, compassRadius + 8, 3);
+      ctx3d.restore();
+
+      // --- COTAS Y MEDIDAS 3D ---
+      if (state.showDimensions) {
+        ctx3d.strokeStyle = isDarkMode ? '#38bdf8' : '#0284c7';
+        ctx3d.lineWidth = 1.2;
+        ctx3d.fillStyle = isDarkMode ? '#38bdf8' : '#0284c7';
+        ctx3d.font = 'bold 10px monospace';
+
+        // Cota Ancho (Span) en solera
+        const pLeft = project3D(-W, 0, 0, cx, cy, scale);
+        const pRight = project3D(W, 0, 0, cx, cy, scale);
+        ctx3d.beginPath();
+        ctx3d.moveTo(pLeft.x, pLeft.y + 18);
+        ctx3d.lineTo(pRight.x, pRight.y + 18);
+        ctx3d.stroke();
+
+        ctx3d.textAlign = 'center';
+        ctx3d.fillText(`Span: ${state.span.toFixed(1)} m`, (pLeft.x + pRight.x) / 2, pLeft.y + 32);
+
+        // Cota Altura (Height)
+        const pFloor = project3D(W * 1.05, 0, 0, cx, cy, scale);
+        const pCrown = project3D(W * 1.05, H, 0, cx, cy, scale);
+        ctx3d.beginPath();
+        ctx3d.moveTo(pFloor.x + 12, pFloor.y);
+        ctx3d.lineTo(pCrown.x + 12, pCrown.y);
+        ctx3d.stroke();
+        ctx3d.textAlign = 'left';
+        ctx3d.fillText(`H: ${state.height.toFixed(1)} m`, pCrown.x + 18, (pFloor.y + pCrown.y) / 2);
       }
     }
 
@@ -1548,6 +1891,66 @@
       document.getElementById('btn-zoom-in').addEventListener('click', () => zoomCamera(0.2));
       document.getElementById('btn-zoom-out').addEventListener('click', () => zoomCamera(-0.2));
       document.getElementById('btn-center-model').addEventListener('click', resetCamera);
+
+      // Herramientas Pro 3D (Rayos-X, Cotas, Snapshot HD, Fullscreen)
+      const btnRenderMode = document.getElementById('btn-toggle-render-mode');
+      if (btnRenderMode) {
+        btnRenderMode.addEventListener('click', () => {
+          const modes = ['solid', 'xray', 'wireframe'];
+          const nextIdx = (modes.indexOf(state.renderMode) + 1) % modes.length;
+          state.renderMode = modes[nextIdx];
+          const labels = { solid: 'Modo: Sólido', xray: 'Modo: Rayos-X', wireframe: 'Modo: Alambre' };
+          const badge = document.getElementById('ui-render-mode-badge');
+          if (badge) badge.textContent = labels[state.renderMode];
+          updateUI();
+        });
+      }
+
+      const btnDimensions = document.getElementById('btn-toggle-dimensions');
+      if (btnDimensions) {
+        btnDimensions.addEventListener('click', () => {
+          state.showDimensions = !state.showDimensions;
+          if (state.showDimensions) {
+            btnDimensions.classList.add('bg-sky-600', 'text-white');
+          } else {
+            btnDimensions.classList.remove('bg-sky-600', 'text-white');
+          }
+          updateUI();
+        });
+      }
+
+      const btnSnapshot = document.getElementById('btn-snapshot-hd');
+      if (btnSnapshot) {
+        btnSnapshot.addEventListener('click', () => {
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = canvas3d.width * 2;
+          tempCanvas.height = canvas3d.height * 2;
+          const tCtx = tempCanvas.getContext('2d');
+          tCtx.scale(2, 2);
+          tCtx.drawImage(canvas3d, 0, 0);
+
+          tCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+          tCtx.font = 'bold 11px Inter, sans-serif';
+          tCtx.fillText(`GeoWedge 3D Pro • Geologgia Ltda • Labor: ${state.shape} • FS: ${document.getElementById('val-fs').textContent}`, 15, canvas3d.height - 12);
+
+          const a = document.createElement('a');
+          a.download = `geowedge_3d_${state.shape}_${new Date().toISOString().slice(0, 10)}.png`;
+          a.href = tempCanvas.toDataURL('image/png');
+          a.click();
+        });
+      }
+
+      const btnFullscreen = document.getElementById('btn-fullscreen-3d');
+      if (btnFullscreen) {
+        btnFullscreen.addEventListener('click', () => {
+          const container = document.getElementById('canvas-container-3d');
+          if (!document.fullscreenElement) {
+            if (container.requestFullscreen) container.requestFullscreen();
+          } else {
+            if (document.exitFullscreen) document.exitFullscreen();
+          }
+        });
+      }
 
       // Zoom con rueda
       canvas3d.addEventListener('wheel', (e) => {
@@ -1815,6 +2218,22 @@
 
     bindInputs();
     updateUI();
+  </script>
+
+  <!-- MÓDULOS PRO MODULARES Y DESACOPLADOS -->
+  <script src="modules/core_hub.js"></script>
+  <script src="modules/report.js"></script>
+  <script src="modules/stereonet.js"></script>
+  <script src="modules/presets.js"></script>
+  <script src="modules/simulation.js"></script>
+  <script src="modules/sensitivity.js"></script>
+  <script>
+    // Inicialización de sincronización inicial en todos los módulos
+    setTimeout(() => {
+      if (typeof updateUI === 'function') {
+        updateUI();
+      }
+    }, 50);
   </script>
 </body>
 </html>
