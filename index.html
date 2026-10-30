@@ -106,7 +106,7 @@
           <button id="btn-toggle-stereonet" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-stereonet', 'btn-toggle-stereonet')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-medium transition shadow-sm hover:border-sky-500 flex items-center gap-1 text-[11px]">
             <span>🌐</span> Estereonet
           </button>
-          <button id="btn-toggle-simulation" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-simulation', 'btn-toggle-simulation')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-medium transition shadow-sm hover:border-sky-500 flex items-center gap-1 text-[11px]">
+          <button id="btn-toggle-simulation" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-simulation', 'btn-toggle-simulation')" class="px-2.5 py-1 rounded-lg bg-sky-600 text-white border border-sky-500 font-medium transition shadow-sm flex items-center gap-1 text-[11px]" title="Mostrar u ocultar barra de simulación bajo el visor 3D">
             <span>🎬</span> Simulación 3D
           </button>
           <button id="btn-toggle-sensitivity" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-sensitivity', 'btn-toggle-sensitivity')" class="px-2.5 py-1 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 font-medium transition shadow-sm hover:border-sky-500 flex items-center gap-1 text-[11px]">
@@ -545,6 +545,55 @@
           </div>
         </div>
 
+        <!-- PANEL DE SIMULACIÓN CINEMÁTICA 3D (EN FRONT, BAJO EL VISUALIZADOR 3D) -->
+        <div id="panel-simulation" class="w-full panel-glass rounded-2xl p-3.5 md:p-4 space-y-3 border border-indigo-400/50 dark:border-indigo-900/70 shadow-lg">
+          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200/80 dark:border-slate-800/80 pb-2.5">
+            <div class="flex items-center gap-2.5">
+              <span class="text-xl">🎬</span>
+              <div>
+                <h3 class="text-xs md:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                  Simulación Cinemática de Inestabilidad 3D
+                  <span class="text-[9px] px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-400 border border-indigo-500/30 font-mono">Tiempo Real (60 FPS)</span>
+                </h3>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400">Prueba dinámica de desprendimiento de la cuña por gravedad y aceleración sísmica</p>
+              </div>
+            </div>
+
+            <!-- Estado Cinemático Dinámico -->
+            <div class="flex items-center gap-2 bg-slate-100 dark:bg-slate-950/80 px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-800 text-[11px] font-mono">
+              <span class="text-slate-400">Estado:</span>
+              <span id="sim-status-text" class="font-bold text-sky-600 dark:text-sky-400">En reposo en su posición geológica</span>
+            </div>
+          </div>
+
+          <!-- Botones de Control de Reproducción y Velocidad -->
+          <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-100/60 dark:bg-slate-950/40 p-2.5 rounded-xl border border-slate-200/60 dark:border-slate-800/60">
+            <div class="flex items-center gap-2">
+              <button id="sim-btn-play" class="px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-sm active:scale-95">
+                <span>▶️</span> Iniciar
+              </button>
+              <button id="sim-btn-pause" class="px-3 py-1.5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold transition active:scale-95">
+                <span>⏸️</span> Pausa
+              </button>
+              <button id="sim-btn-reset" class="px-3 py-1.5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold transition active:scale-95">
+                <span>🔄</span> Reiniciar
+              </button>
+            </div>
+
+            <!-- Selector de Velocidad de Animación -->
+            <div class="flex items-center gap-2.5 text-xs bg-slate-200/50 dark:bg-slate-900/60 px-3 py-1 rounded-lg border border-slate-300/40 dark:border-slate-800">
+              <span class="text-slate-500 dark:text-slate-400 text-[11px] font-medium">Velocidad:</span>
+              <input id="sim-slider-speed" type="range" min="0.5" max="3.0" step="0.5" value="1.0" class="w-20 md:w-28 accent-indigo-600 cursor-pointer">
+              <span id="sim-lbl-speed" class="font-mono text-indigo-600 dark:text-indigo-400 font-bold text-xs">1.0x</span>
+            </div>
+
+            <!-- Indicador Táctil -->
+            <div class="hidden sm:flex items-center gap-1.5 text-[10px] text-slate-400 font-mono">
+              <span>💡 Rota el modelo con el ratón durante la simulación</span>
+            </div>
+          </div>
+        </div>
+
         <!-- MEMORIA DE CÁLCULO DE TENSIONES Y SISMICIDAD -->
         <div class="panel-glass rounded-2xl p-4 text-xs space-y-2.5 shadow-sm">
           <div class="flex justify-between items-center border-b border-slate-200/80 dark:border-slate-800/80 pb-2">
@@ -736,44 +785,6 @@
             </div>
           </div>
 
-          <!-- MODULO 2: SIMULACIÓN CINEMÁTICA 3D -->
-          <div id="panel-simulation" class="panel-glass rounded-2xl p-4 space-y-3 border border-indigo-300 dark:border-indigo-900/60 shadow-md hidden">
-            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
-              <div class="flex items-center gap-2">
-                <span class="text-base">🎬</span>
-                <div>
-                  <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Simulación Cinemática de Inestabilidad 3D</h3>
-                  <p class="text-[10px] text-slate-500 dark:text-slate-400">Prueba dinámica de desprendimiento por gravedad y aceleración sísmica</p>
-                </div>
-              </div>
-              <button onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-simulation', 'btn-toggle-simulation')" class="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 text-xs transition" title="Ocultar módulo">✕</button>
-            </div>
-
-            <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-100/60 dark:bg-slate-900/60 p-3 rounded-xl border border-slate-200/80 dark:border-slate-800/80">
-              <div class="flex items-center gap-2">
-                <button id="sim-btn-play" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition flex items-center gap-1.5 shadow-sm">
-                  <span>▶️</span> Iniciar
-                </button>
-                <button id="sim-btn-pause" class="px-3 py-1.5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold transition">
-                  <span>⏸️</span> Pausa
-                </button>
-                <button id="sim-btn-reset" class="px-3 py-1.5 bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold transition">
-                  <span>🔄</span> Reiniciar
-                </button>
-              </div>
-
-              <div class="flex items-center gap-3 text-xs">
-                <span class="text-slate-500 text-[11px]">Velocidad:</span>
-                <input id="sim-slider-speed" type="range" min="0.5" max="3.0" step="0.5" value="1.0" class="w-20 accent-sky-600 cursor-pointer">
-                <span id="sim-lbl-speed" class="font-mono text-sky-600 dark:text-sky-400 font-bold">1.0x</span>
-              </div>
-
-              <div class="text-right">
-                <span class="text-[10px] text-slate-400 block font-mono">Estado Cinemático:</span>
-                <span id="sim-status-text" class="text-xs font-bold text-slate-800 dark:text-slate-200">En reposo en su posición geológica</span>
-              </div>
-            </div>
-          </div>
 
           <!-- MODULO 3: ANÁLISIS DE SENSIBILIDAD MULTIVARIABLE -->
           <div id="panel-sensitivity" class="panel-glass rounded-2xl p-4 space-y-3 border border-amber-300 dark:border-amber-900/60 shadow-md hidden">
