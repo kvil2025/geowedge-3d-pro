@@ -146,65 +146,94 @@ window.GeoWedgeStereonet = (function() {
     };
   }
 
-  // Dibuja el Gran Círculo (traza del plano en la semiesfera inferior)
+  // Dibuja el Gran Círculo (traza del plano en la semiesfera inferior estilo Rocscience Dips / Stereonet)
   function drawGreatCircle(dip, dipdir, cx, cy, R, color, label) {
-    if (dip <= 0 || dip >= 90) return;
+    if (dip <= 0) return;
     ctx.strokeStyle = color;
-    ctx.lineWidth = 1.8;
-    ctx.beginPath();
+    ctx.lineWidth = 2.0;
 
     const strike = (dipdir - 90 + 360) % 360;
     const radStrike = toRad(strike);
+
+    if (dip >= 90) {
+      // Plano vertical: línea recta pasando por el centro entre los rumbos
+      const x1 = cx + R * Math.sin(radStrike);
+      const y1 = cy - R * Math.cos(radStrike);
+      const x2 = cx - R * Math.sin(radStrike);
+      const y2 = cy + R * Math.cos(radStrike);
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      return;
+    }
+
+    const radS = toRad(strike);
+    const radDir = toRad(dipdir);
     const radDip = toRad(dip);
 
-    const steps = 90;
-    let first = true;
+    // Base ortonormal estricta del plano geológico:
+    // v_strike: vector horizontal a lo largo del rumbo (plunge = 0)
+    // v_dip: vector de máxima pendiente apuntando hacia abajo en la dirección de manteo (plunge = dip)
+    const v_strike = [Math.sin(radS), Math.cos(radS), 0];
+    const v_dip = [Math.sin(radDir) * Math.cos(radDip), Math.cos(radDir) * Math.cos(radDip), -Math.sin(radDip)];
+
+    const steps = 180;
+    ctx.beginPath();
     let midPoint = null;
 
     for (let i = 0; i <= steps; i++) {
-      const alpha = -Math.PI / 2 + (Math.PI * i) / steps;
-      const xl = Math.cos(alpha);
-      const yl = Math.sin(alpha) * Math.cos(radDip);
-      const zl = -Math.sin(alpha) * Math.sin(radDip);
+      const psi = (Math.PI * i) / steps;
+      const vx = Math.cos(psi) * v_strike[0] + Math.sin(psi) * v_dip[0];
+      const vy = Math.cos(psi) * v_strike[1] + Math.sin(psi) * v_dip[1];
+      const vz = Math.cos(psi) * v_strike[2] + Math.sin(psi) * v_dip[2];
 
-      const gx = xl * Math.cos(radStrike) - yl * Math.sin(radStrike);
-      const gy = xl * Math.sin(radStrike) + yl * Math.cos(radStrike);
-
-      const r3d = Math.hypot(gx, gy);
-      const theta = Math.atan2(gx, gy);
-      const plungeAngle = Math.atan2(-zl, r3d);
+      const rHoriz = Math.hypot(vx, vy);
+      const trend = Math.atan2(vx, vy);
+      const plunge = Math.atan2(-vz, rHoriz); // vz es negativo hacia abajo, -vz > 0
 
       let rProj = 0;
       if (config.projection === 'schmidt') {
-        rProj = Math.SQRT2 * R * Math.sin((Math.PI / 2 - plungeAngle) / 2);
+        rProj = Math.SQRT2 * R * Math.sin((Math.PI / 2 - plunge) / 2);
       } else {
-        rProj = R * Math.tan((Math.PI / 2 - plungeAngle) / 2);
+        rProj = R * Math.tan((Math.PI / 2 - plunge) / 2);
       }
 
-      const px = cx + rProj * Math.sin(theta);
-      const py = cy - rProj * Math.cos(theta);
+      const px = cx + rProj * Math.sin(trend);
+      const py = cy - rProj * Math.cos(trend);
 
-      if (first) {
+      if (i === 0) {
         ctx.moveTo(px, py);
-        first = false;
       } else {
         ctx.lineTo(px, py);
       }
 
+      // El punto medio (psi = pi/2) corresponde exactamente a la línea de máxima pendiente (Apex / DipDir)
       if (i === Math.floor(steps / 2)) {
-        midPoint = { px, py, theta };
+        midPoint = { px, py, trend };
       }
     }
     ctx.stroke();
 
-    // Etiqueta a lo largo del arco
+    // Etiqueta legible en el ápex del Gran Círculo
     if (midPoint && label) {
       ctx.save();
+      ctx.font = 'bold 9.5px monospace';
+      const tw = ctx.measureText(label).width;
+      const distOffset = 16;
+      const lx = midPoint.px + distOffset * Math.sin(midPoint.trend);
+      const ly = midPoint.py - distOffset * Math.cos(midPoint.trend);
+
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.9)';
+      ctx.fillRect(lx - tw / 2 - 3, ly - 7, tw + 6, 14);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(lx - tw / 2 - 3, ly - 7, tw + 6, 14);
+
       ctx.fillStyle = color;
-      ctx.font = 'bold 10px monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText(label, midPoint.px + 12 * Math.sin(midPoint.theta), midPoint.py - 12 * Math.cos(midPoint.theta));
+      ctx.fillText(label, lx, ly);
       ctx.restore();
     }
   }
@@ -649,18 +678,25 @@ def project_schmidt(trend, plunge, R=1.0):
 def project_pole(dip, dipdir, R=1.0):
     return project_schmidt((dipdir + 180.0) % 360.0, 90.0 - dip, R)
 
-def great_circle(dip, dipdir, R=1.0, pts=150):
+def great_circle(dip, dipdir, R=1.0, pts=180):
+    if dip <= 0: return np.array([]), np.array([])
     strike = (dipdir - 90.0) % 360.0
-    alphas = np.linspace(-np.pi / 2.0, np.pi / 2.0, pts)
+    if dip >= 90:
+        rad1, rad2 = to_rad(strike), to_rad((strike + 180.0) % 360.0)
+        return np.array([R*np.sin(rad1), R*np.sin(rad2)]), np.array([R*np.cos(rad1), R*np.cos(rad2)])
+    rad_s, rad_dir, rad_dip = to_rad(strike), to_rad(dipdir), to_rad(dip)
+    v_strike = np.array([np.sin(rad_s), np.cos(rad_s), 0.0])
+    v_dip = np.array([np.sin(rad_dir)*np.cos(rad_dip), np.cos(rad_dir)*np.cos(rad_dip), -np.sin(rad_dip)])
+    psis = np.linspace(0.0, np.pi, pts)
     xs, ys = [], []
-    for a in alphas:
-        xl, yl, zl = np.cos(a), np.sin(a) * np.cos(to_rad(dip)), -np.sin(a) * np.sin(to_rad(dip))
-        gx = xl * np.cos(to_rad(strike)) - yl * np.sin(to_rad(strike))
-        gy = xl * np.sin(to_rad(strike)) + yl * np.cos(to_rad(strike))
-        plunge = np.arctan2(-zl, np.hypot(gx, gy))
-        r = np.sqrt(2.0) * R * np.sin((np.pi / 2.0 - plunge) / 2.0)
-        xs.append(r * np.sin(np.arctan2(gx, gy)))
-        ys.append(r * np.cos(np.arctan2(gx, gy)))
+    for psi in psis:
+        v = np.cos(psi)*v_strike + np.sin(psi)*v_dip
+        r_h = np.hypot(v[0], v[1])
+        plunge = np.arctan2(-v[2], r_h)
+        theta = np.arctan2(v[0], v[1])
+        r = np.sqrt(2.0) * R * np.sin((np.pi/2.0 - plunge) / 2.0)
+        xs.append(r * np.sin(theta))
+        ys.append(r * np.cos(theta))
     return np.array(xs), np.array(ys)
 
 fig, ax = plt.subplots(figsize=(8, 8), dpi=300)

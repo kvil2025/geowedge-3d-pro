@@ -47,32 +47,34 @@ def project_pole(dip_deg, dipdir_deg, R=1.0):
     return project_schmidt(pole_trend, pole_plunge, R)
 
 
-def calculate_great_circle(dip_deg, dipdir_deg, R=1.0, num_pts=150):
-    """Calcula los puntos del Gran Círculo (traza del plano en semiesfera inferior)."""
-    if dip_deg <= 0 or dip_deg >= 90:
+def calculate_great_circle(dip_deg, dipdir_deg, R=1.0, num_pts=180):
+    """Calcula los puntos del Gran Círculo (traza del plano en semiesfera inferior estilo Rocscience Dips / Stereonet)."""
+    if dip_deg <= 0:
         return np.array([]), np.array([])
-
     strike = (dipdir_deg - 90.0) % 360.0
-    rad_strike = to_rad(strike)
+    if dip_deg >= 90:
+        rad1 = to_rad(strike)
+        rad2 = to_rad((strike + 180.0) % 360.0)
+        return np.array([R * np.sin(rad1), R * np.sin(rad2)]), np.array([R * np.cos(rad1), R * np.cos(rad2)])
+
+    rad_s = to_rad(strike)
+    rad_dir = to_rad(dipdir_deg)
     rad_dip = to_rad(dip_deg)
 
-    alphas = np.linspace(-np.pi / 2.0, np.pi / 2.0, num_pts)
-    x_pts = []
-    y_pts = []
+    # Base ortonormal estricta del plano geológico:
+    # v_strike: vector horizontal a lo largo del rumbo (plunge = 0)
+    # v_dip: vector de máxima pendiente apuntando hacia abajo en la dirección de manteo (plunge = dip)
+    v_strike = np.array([np.sin(rad_s), np.cos(rad_s), 0.0])
+    v_dip = np.array([np.sin(rad_dir) * np.cos(rad_dip), np.cos(rad_dir) * np.cos(rad_dip), -np.sin(rad_dip)])
 
-    for alpha in alphas:
-        # Coordenadas locales en el plano
-        xl = np.cos(alpha)
-        yl = np.sin(alpha) * np.cos(rad_dip)
-        zl = -np.sin(alpha) * np.sin(rad_dip)  # Hacia abajo
+    psis = np.linspace(0.0, np.pi, num_pts)
+    x_pts, y_pts = [], []
 
-        # Rotar por el rumbo (strike)
-        gx = xl * np.cos(rad_strike) - yl * np.sin(rad_strike)
-        gy = xl * np.sin(rad_strike) + yl * np.cos(rad_strike)
-
-        r3d = np.hypot(gx, gy)
-        theta = np.arctan2(gx, gy)
-        plunge = np.arctan2(-zl, r3d)
+    for psi in psis:
+        v = np.cos(psi) * v_strike + np.sin(psi) * v_dip
+        r_horiz = np.hypot(v[0], v[1])
+        theta = np.arctan2(v[0], v[1])
+        plunge = np.arctan2(-v[2], r_horiz)
 
         r_proj = np.sqrt(2.0) * R * np.sin((np.pi / 2.0 - plunge) / 2.0)
         px = r_proj * np.sin(theta)
