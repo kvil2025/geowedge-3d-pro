@@ -184,13 +184,13 @@ def plot_stereonet(j1=(65, 135), j2=(75, 225), j3=(50, 15),
 
     # 5. Eje de Excavación (Túnel / Pique)
     tx, ty = project_schmidt(tunnel_axis[0], tunnel_axis[1], R)
-    ax.scatter([tx], [ty], s=110, marker='s', color='#ec4899', edgecolor='#ffffff', linewidth=1.5,
+    ax.scatter([tx], [ty], s=110, marker='s', color='#38bdf8', edgecolor='#ffffff', linewidth=1.5,
                zorder=6, label=f'Eje Túnel ({tunnel_axis[0]}°/{tunnel_axis[1]}°)')
-    ax.text(tx + 0.04, ty - 0.04, 'Eje Túnel', color='#ec4899', fontsize=9, fontweight='bold')
+    ax.text(tx + 0.04, ty - 0.04, 'Eje Túnel', color='#38bdf8', fontsize=9, fontweight='bold')
 
     # 6. Líneas de Intersección Diedras (Modos Cinemáticos)
     inters = [
-        ('I12 (J1-J2)', intersect_planes(j1[0], j1[1], j2[0], j2[1]), '#a855f7'),
+        ('I12 (J1-J2)', intersect_planes(j1[0], j1[1], j2[0], j2[1]), '#3b82f6'),
         ('I23 (J2-J3)', intersect_planes(j2[0], j2[1], j3[0], j3[1]), '#06b6d4'),
         ('I31 (J3-J1)', intersect_planes(j3[0], j3[1], j1[0], j1[1]), '#f43f5e')
     ]

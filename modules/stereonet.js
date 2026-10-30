@@ -481,18 +481,18 @@ window.GeoWedgeStereonet = (function() {
       renderPoleMarker(p3, '#fbbf24', 'J3', lastState.j3.dip, lastState.j3.dipdir);
     }
 
-    // 8. Eje de Excavación (Trend / Plunge del Túnel)
+    // 8. Eje de Excavación (Trend / Plunge del Túnel - Cyan Técnico)
     const tunnel = projectLine(lastState.trend, lastState.plunge, R);
     const tx = cx + tunnel.x;
     const ty = cy + tunnel.y;
 
-    ctx.fillStyle = '#ec4899';
+    ctx.fillStyle = '#38bdf8';
     ctx.fillRect(tx - 4.5, ty - 4.5, 9, 9);
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 1.5;
     ctx.strokeRect(tx - 4.5, ty - 4.5, 9, 9);
 
-    ctx.fillStyle = '#ec4899';
+    ctx.fillStyle = '#38bdf8';
     ctx.font = 'bold 10px sans-serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
@@ -544,7 +544,7 @@ window.GeoWedgeStereonet = (function() {
         ctx.fillText(`${label} (${inter.trend.toFixed(0)}°/${inter.plunge.toFixed(0)}°)`, ix + 9, iy);
       }
 
-      renderIntersectionMarker(i12, 'I₁₂', '#a855f7');
+      renderIntersectionMarker(i12, 'I₁₂', '#3b82f6');
       renderIntersectionMarker(i23, 'I₂₃', '#06b6d4');
       renderIntersectionMarker(i31, 'I₃₁', '#f43f5e');
     }
@@ -613,7 +613,7 @@ window.GeoWedgeStereonet = (function() {
     if (!interList) return;
 
     const inters = [
-      { name: 'I₁₂ (J1-J2)', data: i12, color: '#a855f7' },
+      { name: 'I₁₂ (J1-J2)', data: i12, color: '#3b82f6' },
       { name: 'I₂₃ (J2-J3)', data: i23, color: '#06b6d4' },
       { name: 'I₃₁ (J3-J1)', data: i31, color: '#f43f5e' }
     ];
@@ -743,7 +743,7 @@ for lbl, dip, dipdir, col in planes:
 
 # 5. Eje del Túnel
 tx, ty = project_schmidt(${lastState.trend}, ${lastState.plunge}, R)
-ax.scatter([tx], [ty], s=90, marker='s', color='#ec4899', edgecolors='#fff', zorder=6, label=f'Eje Túnel (${lastState.trend}°/${lastState.plunge}°)')
+ax.scatter([tx], [ty], s=90, marker='s', color='#38bdf8', edgecolors='#fff', zorder=6, label=f'Eje Túnel (${lastState.trend}°/${lastState.plunge}°)')
 
 ax.set_xlim(-1.25, 1.25); ax.set_ylim(-1.25, 1.25); ax.set_aspect('equal'); ax.axis('off')
 ax.legend(loc='lower center', bbox_to_anchor=(0.5, -0.20), ncol=2, facecolor='#0f172a', edgecolor='#334155', labelcolor='#e2e8f0', fontsize=8.5)

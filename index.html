@@ -30,20 +30,28 @@
     }
     input[type=range] { accent-color: #0284c7; }
     
+    html.dark body {
+      background: radial-gradient(120% 80% at 50% 0%, #0d1e3d 0%, #070c18 55%, #040810 100%) no-repeat fixed;
+      background-color: #070c18;
+    }
+    
     .dark .panel-glass {
-      background: rgba(15, 23, 42, 0.82);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(51, 65, 85, 0.7);
+      background: rgba(11, 20, 42, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(56, 189, 248, 0.16);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.04);
     }
     .panel-glass {
-      background: rgba(255, 255, 255, 0.90);
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(226, 232, 240, 0.95);
+      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06);
     }
 
     .dark .panel-sub {
-      background: rgba(2, 6, 23, 0.55);
-      border: 1px solid rgba(30, 41, 59, 0.8);
+      background: rgba(6, 12, 26, 0.75);
+      border: 1px solid rgba(30, 58, 95, 0.55);
     }
     .panel-sub {
       background: rgba(248, 250, 252, 0.85);
@@ -51,13 +59,13 @@
     }
   </style>
 </head>
-<body class="bg-slate-100 dark:bg-[#0b1120] text-slate-800 dark:text-slate-100 font-sans p-3 md:p-6 min-h-screen">
+<body class="bg-slate-100 dark:bg-[#070c18] text-slate-800 dark:text-slate-100 font-sans p-3 md:p-6 min-h-screen">
   <div class="max-w-7xl mx-auto space-y-4">
     
-    <!-- ENCABEZADO Y SELECTOR DE UNIDADES / TEMA -->
-    <header class="panel-glass rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 shadow-sm">
+    <!-- ENCABEZADO Y COCKPIT DE INGENIERÍA GEOLOGGIA (PROPUESTA 1: DEEP TECH) -->
+    <header class="panel-glass rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3 shadow-sm border border-slate-200 dark:border-sky-500/20">
       <div class="flex items-center space-x-3.5">
-        <div class="h-11 px-3 py-1.5 rounded-xl bg-slate-900/90 dark:bg-slate-950 border border-slate-700/60 dark:border-slate-800 flex items-center justify-center shadow-md">
+        <div class="h-11 px-3 py-1.5 rounded-xl bg-slate-900/95 dark:bg-slate-950 border border-slate-700/60 dark:border-sky-500/30 flex items-center justify-center shadow-lg shadow-sky-950/20">
           <!-- Logo adaptable de alto contraste para que el isotipo rojo y las letras resalten nítidamente -->
           <img id="header-logo" src="assets/logo_geologgia_dark.svg" alt="Geologgia Logo" class="h-7 w-auto object-contain drop-shadow">
         </div>
@@ -66,13 +74,34 @@
             <h1 class="text-lg md:text-xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
               GeoWedge 3D Pro
             </h1>
-            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-500/20">
-              v2.4 Pro
+            <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/25 font-mono">
+              v2.4 Enterprise
             </span>
           </div>
           <p class="text-xs text-slate-500 dark:text-slate-400">
-            Plataforma Geomecánica 3D • <b class="text-slate-700 dark:text-slate-300">Geologgia Ltda</b> (Teoría de Bloques Goodman & Shi y Equilibrio Límite 3D)
+            Plataforma Geomecánica 3D • <b class="text-slate-700 dark:text-sky-300">Geologgia Ltda</b> (Teoría Goodman & Shi y Equilibrio Límite 3D)
           </p>
+        </div>
+      </div>
+
+      <!-- TELEMETRÍA EN VIVO (COCKPIT STRIP) -->
+      <div class="flex items-center gap-2">
+        <div id="cockpit-fs-pill" class="px-2.5 py-1 rounded-xl bg-slate-900/90 dark:bg-slate-950 border border-emerald-500/40 text-[11px] font-mono flex items-center gap-1.5 shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          <span class="text-slate-400 text-[10px] uppercase font-semibold">FS:</span>
+          <span id="cockpit-fs-val" class="font-bold text-emerald-400">16.01</span>
+        </div>
+        <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/80 dark:bg-slate-950/80 border border-slate-700/60 text-[11px] font-mono">
+          <span class="text-amber-400 font-bold text-[10px]">VOL:</span>
+          <span id="cockpit-vol-val" class="text-slate-200 font-semibold">1.85 m³</span>
+        </div>
+        <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/80 dark:bg-slate-950/80 border border-slate-700/60 text-[11px] font-mono">
+          <span class="text-sky-400 font-bold text-[10px]">PESO:</span>
+          <span id="cockpit-weight-val" class="text-slate-200 font-semibold">4.8 T</span>
+        </div>
+        <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-slate-900/80 dark:bg-slate-950/80 border border-orange-500/30 text-[11px] font-mono">
+          <span class="text-orange-400 font-bold text-[10px]">SOPORTE:</span>
+          <span id="cockpit-support-val" class="text-slate-200 font-semibold">1.89 MN</span>
         </div>
       </div>
 
@@ -284,14 +313,14 @@
           </div>
         </div>
 
-        <!-- SECCIÓN 4: PATRÓN DE PERNOS -->
-        <div class="panel-glass rounded-2xl p-4 space-y-3 shadow-sm">
+        <!-- SECCIÓN 4: PATRÓN DE PERNOS (NARANJA INDUSTRIAL Y ACERO) -->
+        <div class="panel-glass rounded-2xl p-4 space-y-3 shadow-sm border border-slate-200 dark:border-orange-500/20">
           <div class="flex items-center justify-between border-b border-slate-200/80 dark:border-slate-800/80 pb-2">
-            <h2 class="text-xs font-bold text-violet-600 dark:text-violet-400 uppercase tracking-wider flex items-center gap-1.5">
+            <h2 class="text-xs font-bold text-orange-600 dark:text-orange-400 uppercase tracking-wider flex items-center gap-1.5">
               <span>🔩</span> Patrón de Pernos
             </h2>
             <label class="flex items-center gap-1.5 cursor-pointer">
-              <input id="chk-bolts" type="checkbox" checked class="rounded bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-violet-600 focus:ring-0">
+              <input id="chk-bolts" type="checkbox" checked class="rounded bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-700 text-orange-600 focus:ring-0">
               <span class="text-[11px] text-slate-600 dark:text-slate-300 font-medium">Activo</span>
             </label>
           </div>
@@ -312,31 +341,31 @@
               </div>
 
               <!-- Control Interactivo de Longitud con Slider y Cota Real -->
-              <div class="col-span-2 space-y-1.5 bg-violet-500/5 dark:bg-violet-950/25 p-2 rounded-xl border border-violet-500/20">
+              <div class="col-span-2 space-y-1.5 bg-orange-500/5 dark:bg-orange-950/25 p-2 rounded-xl border border-orange-500/20">
                 <div class="flex justify-between items-center">
                   <label class="text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-1.5 text-[11px]">
                     <span>📏</span> Longitud del Perno (L)
                   </label>
                   <div class="flex items-center gap-1">
-                    <input id="input-bolt-len" type="number" min="1.0" max="8.0" step="0.25" value="3.0" class="w-16 bg-white dark:bg-slate-900 border border-violet-300 dark:border-violet-700 rounded-lg px-1.5 py-0.5 text-right text-violet-700 dark:text-violet-300 font-mono text-xs font-bold">
+                    <input id="input-bolt-len" type="number" min="1.0" max="8.0" step="0.25" value="3.0" class="w-16 bg-white dark:bg-slate-900 border border-orange-300 dark:border-orange-700 rounded-lg px-1.5 py-0.5 text-right text-orange-700 dark:text-orange-300 font-mono text-xs font-bold">
                     <span class="text-slate-400 font-mono text-xs">m</span>
                   </div>
                 </div>
                 <div class="flex items-center gap-2">
                   <span class="text-[9px] text-slate-400 font-mono">1.0m</span>
-                  <input id="input-bolt-len-range" type="range" min="1.0" max="8.0" step="0.25" value="3.0" class="w-full accent-violet-600 cursor-pointer">
+                  <input id="input-bolt-len-range" type="range" min="1.0" max="8.0" step="0.25" value="3.0" class="w-full accent-orange-500 cursor-pointer">
                   <span class="text-[9px] text-slate-400 font-mono">8.0m</span>
                 </div>
-                <div id="ui-bolt-embed-status" class="text-[10px] font-mono px-2 py-1 rounded bg-violet-900/30 text-violet-300 flex items-center justify-between border border-violet-800/40">
+                <div id="ui-bolt-embed-status" class="text-[10px] font-mono px-2 py-1 rounded bg-orange-900/30 text-orange-300 flex items-center justify-between border border-orange-800/40">
                   <span>Anclaje en roca sana:</span>
                   <b class="font-bold">+0.85 m (Efectivo ✅)</b>
                 </div>
               </div>
             </div>
 
-            <div class="p-2 rounded-xl bg-violet-50 dark:bg-violet-950/30 border border-violet-200 dark:border-violet-900/50 flex justify-between text-[11px]">
-              <span class="text-violet-800 dark:text-violet-300">Pernos: <b id="ui-bolt-count">3</b> | Presión: <b id="ui-bolt-press" class="font-mono">0.089 MPa</b></span>
-              <span class="text-violet-800 dark:text-violet-300 font-mono">Total: <b id="ui-bolt-total">0.540 MN</b></span>
+            <div class="p-2 rounded-xl bg-orange-50 dark:bg-orange-950/30 border border-orange-200 dark:border-orange-900/50 flex justify-between text-[11px]">
+              <span class="text-orange-800 dark:text-orange-300">Pernos: <b id="ui-bolt-count">3</b> | Presión: <b id="ui-bolt-press" class="font-mono">0.089 MPa</b></span>
+              <span class="text-orange-800 dark:text-orange-300 font-mono">Total: <b id="ui-bolt-total">0.540 MN</b></span>
             </div>
           </div>
         </div>
@@ -434,17 +463,17 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
             
             <!-- OPCIÓN A: SOLO PERNOS -->
-            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-violet-200 dark:border-violet-800/60 flex flex-col justify-between space-y-2.5 hover:border-violet-400 dark:hover:border-violet-500 transition shadow-sm">
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-950/70 border border-orange-200 dark:border-orange-800/60 flex flex-col justify-between space-y-2.5 hover:border-orange-400 dark:hover:border-orange-500 transition shadow-sm">
               <div class="space-y-1">
-                <div class="flex justify-between items-center text-violet-700 dark:text-violet-400 font-bold">
+                <div class="flex justify-between items-center text-orange-700 dark:text-orange-400 font-bold">
                   <span>Opción A: Solo Pernos</span>
-                  <span id="ai-opt-a-fs" class="px-1.5 py-0.5 rounded bg-violet-100 dark:bg-violet-500/20 text-[10px] font-mono">FS 1.5</span>
+                  <span id="ai-opt-a-fs" class="px-1.5 py-0.5 rounded bg-orange-100 dark:bg-orange-500/20 text-orange-700 dark:text-orange-300 text-[10px] font-mono">FS 1.5</span>
                 </div>
                 <p class="text-[11px] text-slate-600 dark:text-slate-300">Malla requerida: <b id="ai-opt-a-mesh" class="text-slate-900 dark:text-white font-mono">2.2 x 2.2 m</b></p>
                 <p class="text-[11px] text-slate-600 dark:text-slate-300">Pernos activos: <b id="ai-opt-a-count" class="text-slate-900 dark:text-white font-mono">1 perno</b></p>
                 <p class="text-[11px] text-slate-600 dark:text-slate-300">Longitud mín: <b id="ai-opt-a-len" class="text-slate-900 dark:text-white font-mono">3.0 m</b></p>
               </div>
-              <button id="btn-apply-ai-a" class="w-full py-1.5 text-[11px] rounded-lg bg-violet-600 hover:bg-violet-700 text-white font-semibold transition flex items-center justify-center gap-1 shadow-sm">
+              <button id="btn-apply-ai-a" class="w-full py-1.5 text-[11px] rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-semibold transition flex items-center justify-center gap-1 shadow-sm">
                 <span>⚡</span> Aplicar Solo Pernos
               </button>
             </div>
@@ -554,7 +583,7 @@
             <div class="flex flex-wrap gap-3">
               <span class="text-sky-500 dark:text-sky-400 font-medium">● Labor/Pique</span>
               <span id="legend-wedge" class="text-emerald-500 dark:text-emerald-400 font-medium">● Cuña</span>
-              <span class="text-violet-500 dark:text-violet-400 font-medium">● Pernos</span>
+              <span class="text-orange-500 dark:text-orange-400 font-medium">● Pernos</span>
               <span class="text-amber-500 dark:text-amber-400 font-medium">● Shotcrete</span>
               <span class="text-orange-500 font-medium">➜ Vector Sismo</span>
             </div>
@@ -645,10 +674,10 @@
                   <td id="row-rock-pct" class="text-right text-slate-400">0.0%</td>
                 </tr>
                 <tr>
-                  <td class="py-1.5 text-violet-700 dark:text-violet-300 font-semibold">2. Patrón de Pernos de Anclaje</td>
-                  <td id="row-stress-bolts" class="text-violet-600 dark:text-violet-400">0.089 MPa</td>
-                  <td id="row-bolts" class="text-right text-violet-600 dark:text-violet-400 font-bold">0.540</td>
-                  <td id="row-bolts-pct" class="text-right text-violet-500">28.6%</td>
+                  <td class="py-1.5 text-orange-700 dark:text-orange-400 font-semibold">2. Patrón de Pernos de Anclaje</td>
+                  <td id="row-stress-bolts" class="text-orange-600 dark:text-orange-400">0.089 MPa</td>
+                  <td id="row-bolts" class="text-right text-orange-600 dark:text-orange-400 font-bold">0.540</td>
+                  <td id="row-bolts-pct" class="text-right text-orange-500">28.6%</td>
                 </tr>
                 <tr>
                   <td class="py-1.5 text-amber-700 dark:text-amber-300 font-semibold">3. Hormigón Armado / Shotcrete</td>
@@ -1473,6 +1502,36 @@
         legendWedge.className = "text-emerald-500 dark:text-emerald-400 font-medium";
       }
 
+      // Actualizar Telemetría del Cockpit Superior (Propuesta 1: Deep Tech)
+      const elCockpitFS = document.getElementById('cockpit-fs-val');
+      const elCockpitPill = document.getElementById('cockpit-fs-pill');
+      if (elCockpitFS) {
+        if (!res.isFinite) {
+          elCockpitFS.textContent = "N/A";
+          elCockpitFS.className = "font-bold text-slate-400";
+          if (elCockpitPill) elCockpitPill.className = "px-2.5 py-1 rounded-xl bg-slate-900/90 dark:bg-slate-950 border border-slate-700/60 text-[11px] font-mono flex items-center gap-1.5 shadow-sm";
+        } else if (res.fs < 1.0) {
+          elCockpitFS.textContent = res.fs.toFixed(2);
+          elCockpitFS.className = "font-bold text-rose-500";
+          if (elCockpitPill) elCockpitPill.className = "px-2.5 py-1 rounded-xl bg-slate-900/90 dark:bg-slate-950 border border-rose-500/50 text-[11px] font-mono flex items-center gap-1.5 shadow-sm";
+        } else if (res.fs < targetFS) {
+          elCockpitFS.textContent = res.fs.toFixed(2);
+          elCockpitFS.className = "font-bold text-amber-400";
+          if (elCockpitPill) elCockpitPill.className = "px-2.5 py-1 rounded-xl bg-slate-900/90 dark:bg-slate-950 border border-amber-500/50 text-[11px] font-mono flex items-center gap-1.5 shadow-sm";
+        } else {
+          elCockpitFS.textContent = res.fs >= 100 ? '>100' : res.fs.toFixed(2);
+          elCockpitFS.className = "font-bold text-emerald-400";
+          if (elCockpitPill) elCockpitPill.className = "px-2.5 py-1 rounded-xl bg-slate-900/90 dark:bg-slate-950 border border-emerald-500/40 text-[11px] font-mono flex items-center gap-1.5 shadow-sm";
+        }
+      }
+
+      const elCockpitVol = document.getElementById('cockpit-vol-val');
+      if (elCockpitVol) elCockpitVol.textContent = res.isFinite ? `${res.volumeM3.toFixed(2)} m³` : 'Abierta';
+      const elCockpitWeight = document.getElementById('cockpit-weight-val');
+      if (elCockpitWeight) elCockpitWeight.textContent = res.isFinite ? `${res.weightTon.toFixed(1)} T` : 'N/A';
+      const elCockpitSupport = document.getElementById('cockpit-support-val');
+      if (elCockpitSupport) elCockpitSupport.textContent = useMPa ? `${res.totalResistingMN.toFixed(2)} MN` : `${res.totalResistingKN.toFixed(0)} kN`;
+
       // Actualizar indicadores de cámara
       document.getElementById('ui-zoom-val').textContent = `${Math.round(state.camera.zoom * 100)}%`;
       document.getElementById('ui-cam-coords').textContent = `Rot: (${Math.round(state.camera.rotX)}°, ${Math.round(state.camera.rotY)}°) | Pan: (${Math.round(state.camera.panX)}, ${Math.round(state.camera.panY)})`;
@@ -1540,9 +1599,9 @@
       const H = state.height;
       const L = 6.0;
 
-      const bgGridColor = isDarkMode ? 'rgba(30, 41, 59, 0.45)' : 'rgba(226, 232, 240, 0.7)';
-      const canvasBg = isDarkMode ? '#0b1120' : '#f8fafc';
-      const tunnelLineColor = isDarkMode ? '#475569' : '#94a3b8';
+      const bgGridColor = isDarkMode ? 'rgba(56, 189, 248, 0.08)' : 'rgba(226, 232, 240, 0.7)';
+      const canvasBg = isDarkMode ? '#060b17' : '#f8fafc';
+      const tunnelLineColor = isDarkMode ? '#38bdf8' : '#94a3b8';
 
       canvas3d.style.backgroundColor = canvasBg;
 
@@ -1562,7 +1621,7 @@
       // Obtener perfil 2D paramétrico
       const profile = generateProfile2D(state.shape, W, H);
 
-      // Renderizador Físico Realista de Pernos con Cotas de Longitud
+      // Renderizador Físico Realista de Pernos con Cotas de Longitud (Naranja Industrial & Acero)
       function drawRockbolt3D(collar3D, toe3D, isPrimary, wedgeDepth) {
         const pCollar = project3D(collar3D.x, collar3D.y, collar3D.z, cx, cy, scale);
         const pToe = project3D(toe3D.x, toe3D.y, toe3D.z, cx, cy, scale);
@@ -1603,15 +1662,15 @@
 
         // 2. Tendón / Barra de Acero Corrugado
         // Contorno de alto contraste
-        ctx3d.strokeStyle = isDarkMode ? '#2e1065' : '#1e1b4b';
+        ctx3d.strokeStyle = isDarkMode ? '#0f172a' : '#1e293b';
         ctx3d.lineWidth = 5.0;
         ctx3d.beginPath();
         ctx3d.moveTo(pCollar.x, pCollar.y);
         ctx3d.lineTo(pToe.x, pToe.y);
         ctx3d.stroke();
 
-        // Núcleo dentro de la cuña (Zona de corte)
-        ctx3d.strokeStyle = '#c084fc';
+        // Núcleo dentro de la cuña (Zona de corte - Naranja Industrial)
+        ctx3d.strokeStyle = '#f97316';
         ctx3d.lineWidth = 3.0;
         ctx3d.beginPath();
         ctx3d.moveTo(pCollar.x, pCollar.y);
@@ -1662,14 +1721,14 @@
           ctx3d.stroke();
         }
 
-        // 3. Cota y Dimensionamiento Métrico Real (Longitud)
+        // 3. Cota y Dimensionamiento Métrico Real (Cyan Técnico)
         if (isPrimary || state.showDimensions) {
           const cotaDist = 28;
           const c1 = { x: pCollar.x + perpX * cotaDist, y: pCollar.y + perpY * cotaDist };
           const c2 = { x: pToe.x + perpX * cotaDist, y: pToe.y + perpY * cotaDist };
 
           // Líneas testigo (witness lines)
-          ctx3d.strokeStyle = isDarkMode ? 'rgba(192, 132, 252, 0.6)' : 'rgba(124, 58, 237, 0.5)';
+          ctx3d.strokeStyle = isDarkMode ? 'rgba(56, 189, 248, 0.5)' : 'rgba(2, 132, 199, 0.4)';
           ctx3d.lineWidth = 0.9;
           ctx3d.setLineDash([2, 2]);
           ctx3d.beginPath();
@@ -1681,7 +1740,7 @@
           ctx3d.setLineDash([]);
 
           // Línea de cota
-          ctx3d.strokeStyle = isDarkMode ? '#c084fc' : '#7c3aed';
+          ctx3d.strokeStyle = isDarkMode ? '#38bdf8' : '#0284c7';
           ctx3d.lineWidth = 1.4;
           ctx3d.beginPath();
           ctx3d.moveTo(c1.x, c1.y);
@@ -1705,13 +1764,13 @@
           ctx3d.font = 'bold 10px monospace';
           const tw = ctx3d.measureText(txt).width;
 
-          ctx3d.fillStyle = isDarkMode ? 'rgba(15, 23, 42, 0.94)' : 'rgba(255, 255, 255, 0.95)';
+          ctx3d.fillStyle = isDarkMode ? 'rgba(7, 12, 24, 0.95)' : 'rgba(255, 255, 255, 0.95)';
           ctx3d.fillRect(midX - tw / 2 - 5, midY - 9, tw + 10, 18);
-          ctx3d.strokeStyle = isDarkMode ? '#a855f7' : '#7c3aed';
+          ctx3d.strokeStyle = isDarkMode ? '#38bdf8' : '#0284c7';
           ctx3d.lineWidth = 1;
           ctx3d.strokeRect(midX - tw / 2 - 5, midY - 9, tw + 10, 18);
 
-          ctx3d.fillStyle = isDarkMode ? '#f8fafc' : '#0f172a';
+          ctx3d.fillStyle = isDarkMode ? '#38bdf8' : '#0369a1';
           ctx3d.textAlign = 'center';
           ctx3d.textBaseline = 'middle';
           ctx3d.fillText(txt, midX, midY);
