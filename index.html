@@ -608,41 +608,130 @@
         <!-- CONTENEDOR DE PANELES MODULARES PRO (DESACOPLADOS Y COLAPSIBLES) -->
         <div id="modular-panels-container" class="space-y-4">
           
-          <!-- MODULO 1: RED ESTEREOGRÁFICA INTERACTIVA -->
-          <div id="panel-stereonet" class="panel-glass rounded-2xl p-4 space-y-3 border border-sky-300 dark:border-sky-900/60 shadow-md hidden">
-            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-2">
-              <div class="flex items-center gap-2">
-                <span class="text-base">🌐</span>
+          <!-- MODULO 1: RED ESTEREOGRÁFICA INTERACTIVA PRO -->
+          <div id="panel-stereonet" class="panel-glass rounded-2xl p-4 md:p-5 space-y-4 border border-sky-400/40 dark:border-sky-800/60 shadow-xl hidden">
+            <!-- Header con título y barra de herramientas -->
+            <div class="flex flex-wrap items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3 gap-3">
+              <div class="flex items-center gap-2.5">
+                <span class="text-xl">🌐</span>
                 <div>
-                  <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Proyección Estereográfica (Falsilla de Schmidt)</h3>
-                  <p class="text-[10px] text-slate-500 dark:text-slate-400">Polos, grandes círculos, eje de excavación e intersecciones cinemáticas (diedros)</p>
+                  <h3 class="text-xs md:text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+                    Proyección Estereográfica Geomecánica Pro
+                    <span class="text-[9px] px-2 py-0.5 rounded-full bg-sky-500/15 text-sky-400 border border-sky-500/30 font-mono">Dips / Allmendinger</span>
+                  </h3>
+                  <p class="text-[11px] text-slate-500 dark:text-slate-400">Polos, grandes círculos, cono de fricción (φ), diedros cinemáticos y cursor interactivo en tiempo real</p>
                 </div>
               </div>
-              <button onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-stereonet', 'btn-toggle-stereonet')" class="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 text-xs transition" title="Ocultar módulo">✕</button>
+
+              <!-- Botonera de herramientas y exportación del estereograma -->
+              <div class="flex flex-wrap items-center gap-1.5">
+                <!-- Selector de Proyección -->
+                <div class="flex items-center bg-slate-100 dark:bg-slate-900/90 p-0.5 rounded-lg border border-slate-200 dark:border-slate-800 text-[10px] font-semibold">
+                  <button id="btn-proj-schmidt" onclick="window.GeoWedgeStereonet && window.GeoWedgeStereonet.setProjection('schmidt')" class="px-2 py-1 rounded-md bg-sky-600 text-white transition shadow-sm" title="Proyección de Igual Área (Schmidt - Semisfera Inferior)">
+                    Schmidt
+                  </button>
+                  <button id="btn-proj-wulff" onclick="window.GeoWedgeStereonet && window.GeoWedgeStereonet.setProjection('wulff')" class="px-2 py-1 rounded-md bg-slate-800 text-slate-400 hover:text-white transition" title="Proyección de Igual Ángulo (Wulff)">
+                    Wulff
+                  </button>
+                </div>
+
+                <span class="w-px h-4 bg-slate-300 dark:bg-slate-700 mx-0.5"></span>
+
+                <!-- Botones de Exportación -->
+                <button onclick="window.GeoWedgeStereonet && window.GeoWedgeStereonet.downloadCanvasHD()" class="px-2.5 py-1 rounded-lg bg-sky-600/90 hover:bg-sky-500 text-white text-[11px] font-semibold flex items-center gap-1 transition shadow-sm" title="Descargar estereograma en alta resolución (PNG)">
+                  <span>📷</span> HD
+                </button>
+                <button onclick="window.GeoWedgeStereonet && window.GeoWedgeStereonet.showPythonModal()" class="px-2.5 py-1 rounded-lg bg-indigo-600/90 hover:bg-indigo-500 text-white text-[11px] font-semibold flex items-center gap-1 transition shadow-sm" title="Ver estereograma con calidad de publicación Matplotlib DPI 300">
+                  <span>🖼️</span> Python 300 DPI
+                </button>
+                <button onclick="window.GeoWedgeStereonet && window.GeoWedgeStereonet.downloadPythonScript()" class="px-2.5 py-1 rounded-lg bg-emerald-600/90 hover:bg-emerald-500 text-white text-[11px] font-semibold flex items-center gap-1 transition shadow-sm" title="Descargar script Python con tus parámetros para Matplotlib / mplstereonet">
+                  <span>🐍</span> Script .py
+                </button>
+
+                <button onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-stereonet', 'btn-toggle-stereonet')" class="p-1 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-400 text-xs transition" title="Ocultar módulo">✕</button>
+              </div>
+            </div>
+
+            <!-- Capas conmutables (Toggles) -->
+            <div class="flex flex-wrap items-center gap-3 text-[11px] bg-slate-100/70 dark:bg-slate-900/50 p-2 rounded-xl border border-slate-200/80 dark:border-slate-800/80">
+              <span class="text-slate-400 font-bold uppercase text-[9px] tracking-wider">Capas:</span>
+              <label class="flex items-center gap-1.5 cursor-pointer text-slate-700 dark:text-slate-300 select-none">
+                <input type="checkbox" checked onchange="window.GeoWedgeStereonet && window.GeoWedgeStereonet.toggleLayer('showGreatCircles')" class="rounded text-sky-600 focus:ring-0">
+                <span>Grandes Círculos</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer text-slate-700 dark:text-slate-300 select-none">
+                <input type="checkbox" checked onchange="window.GeoWedgeStereonet && window.GeoWedgeStereonet.toggleLayer('showPoles')" class="rounded text-emerald-600 focus:ring-0">
+                <span>Polos (P)</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer text-slate-700 dark:text-slate-300 select-none">
+                <input type="checkbox" checked onchange="window.GeoWedgeStereonet && window.GeoWedgeStereonet.toggleLayer('showFrictionCone')" class="rounded text-rose-600 focus:ring-0">
+                <span>Cono Fricción (φ)</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer text-slate-700 dark:text-slate-300 select-none">
+                <input type="checkbox" checked onchange="window.GeoWedgeStereonet && window.GeoWedgeStereonet.toggleLayer('showIntersections')" class="rounded text-indigo-600 focus:ring-0">
+                <span>Intersecciones Diedras (I)</span>
+              </label>
+              <label class="flex items-center gap-1.5 cursor-pointer text-slate-700 dark:text-slate-300 select-none">
+                <input type="checkbox" checked onchange="window.GeoWedgeStereonet && window.GeoWedgeStereonet.toggleLayer('showGrid')" class="rounded text-slate-400 focus:ring-0">
+                <span>Cuadrícula / Falsilla</span>
+              </label>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
-              <div class="md:col-span-5 flex justify-center">
-                <canvas id="canvas-stereonet" width="280" height="280" class="rounded-xl bg-slate-900 border border-slate-700/60 shadow-inner max-w-full"></canvas>
-              </div>
-              <div class="md:col-span-7 space-y-2.5 text-xs">
-                <div class="grid grid-cols-3 gap-1.5 text-center text-[10px] font-mono">
-                  <div class="p-1.5 rounded-lg bg-blue-500/10 border border-blue-500/30 text-blue-400 font-bold">● J1 (Azul)</div>
-                  <div class="p-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold">● J2 (Verde)</div>
-                  <div class="p-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-400 font-bold">● J3 (Naranja)</div>
-                </div>
-                <div>
-                  <h4 class="text-[11px] font-bold text-slate-700 dark:text-slate-300 mb-1 flex items-center justify-between">
-                    <span>Líneas de Intersección Diedras (Modos Cinemáticos):</span>
-                    <span class="text-[10px] text-slate-400 font-mono">Trend / Plunge</span>
-                  </h4>
-                  <div id="stereonet-intersections-list" class="space-y-1">
-                    <!-- Inyectado dinámicamente -->
+            <!-- Cuerpo principal: Canvas estereográfico y panel analítico -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+              <!-- Columna izquierda: Canvas Estereográfico con cursor interactivo -->
+              <div class="lg:col-span-6 flex flex-col items-center justify-center">
+                <div class="w-full max-w-[460px] aspect-square relative rounded-2xl bg-slate-950 border border-slate-800 shadow-2xl overflow-hidden group">
+                  <canvas id="canvas-stereonet" width="460" height="460" class="w-full h-full cursor-crosshair select-none block"></canvas>
+                  <div class="absolute bottom-2 left-2 pointer-events-none text-[9px] font-mono text-slate-500 bg-slate-950/80 px-2 py-0.5 rounded backdrop-blur">
+                    Pasa el cursor para leer Trend / Plunge
                   </div>
                 </div>
-                <p class="text-[10px] text-slate-500 dark:text-slate-400 leading-relaxed bg-slate-100/60 dark:bg-slate-900/40 p-2 rounded-lg border border-slate-200/60 dark:border-slate-800/60">
-                  ℹ️ <b>Interpretación:</b> Las intersecciones entre pares de discontinuidades marcan la línea de deslizamiento diedro. Si el manteo (plunge) de la intersección aflora hacia el interior de la excavación y es mayor que el ángulo de fricción (&phi;), existe potencial de deslizamiento cinemático.
-                </p>
+              </div>
+
+              <!-- Columna derecha: Análisis cinemático de diedros y discontinuidades -->
+              <div class="lg:col-span-6 space-y-3 text-xs">
+                <!-- Tarjetas de Discontinuidades J1, J2, J3 -->
+                <div class="grid grid-cols-3 gap-2 text-center text-[10px] font-mono">
+                  <div class="p-2 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-400">
+                    <div class="font-bold text-[11px]">● J1 Principal</div>
+                    <div class="text-slate-400 text-[10px]" id="stereo-lbl-j1">65° / 135°</div>
+                  </div>
+                  <div class="p-2 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                    <div class="font-bold text-[11px]">● J2 Diaclasa A</div>
+                    <div class="text-slate-400 text-[10px]" id="stereo-lbl-j2">75° / 225°</div>
+                  </div>
+                  <div class="p-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400">
+                    <div class="font-bold text-[11px]">● J3 Diaclasa B</div>
+                    <div class="text-slate-400 text-[10px]" id="stereo-lbl-j3">50° / 015°</div>
+                  </div>
+                </div>
+
+                <!-- Tabla de Intersecciones Diedras (Kinematics) -->
+                <div class="bg-slate-900/70 border border-slate-800 rounded-xl p-3 space-y-2">
+                  <h4 class="text-[11px] font-bold text-slate-200 flex items-center justify-between">
+                    <span class="flex items-center gap-1.5">
+                      <span>◆</span> Intersecciones Diedras de Planos (Modos de Deslizamiento)
+                    </span>
+                    <span class="text-[10px] text-slate-400 font-mono">Trend / Plunge</span>
+                  </h4>
+                  <div id="stereonet-intersections-list" class="space-y-1.5">
+                    <!-- Inyectado dinámicamente por stereonet.js -->
+                  </div>
+                </div>
+
+                <!-- Criterio Geomecánico -->
+                <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-800/80 space-y-1.5 text-[11px] text-slate-300">
+                  <div class="flex items-center gap-1.5 font-bold text-sky-400">
+                    <span>💡</span> Criterio Cinemático de Deslizamiento (Goodman & Shi / Hoek):
+                  </div>
+                  <p class="text-[10px] text-slate-400 leading-relaxed">
+                    1. <b>Deslizamiento en Diedro:</b> Ocurre a lo largo de la línea de intersección cuando su inclinación (plunge) es mayor que el ángulo de fricción de las juntas (<b>Plunge &gt; φ</b>).<br>
+                    2. <b>Afloramiento:</b> La línea debe intersectar la cara libre del túnel hacia el interior de la excavación (zona de daylighting).<br>
+                    3. <b>Deslizamiento en un Solo Plano:</b> Si la fuerza motriz se inclina hacia uno de los planos, la cuña se deslizará sobre una cara individual antes de perder contacto con la otra.
+                  </p>
+                </div>
+
               </div>
             </div>
           </div>
