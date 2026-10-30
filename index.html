@@ -306,15 +306,34 @@
                 <label class="text-slate-500 dark:text-slate-400 block mb-0.5 font-medium">Malla Longit. (m)</label>
                 <input id="input-bolt-sl" type="number" min="0.8" max="3.0" step="0.1" value="1.5" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-slate-800 dark:text-slate-100 font-mono text-xs">
               </div>
-              <div>
+              <div class="col-span-2 sm:col-span-1">
                 <label class="text-slate-500 dark:text-slate-400 block mb-0.5 font-medium">Capacidad (<span class="unit-force">MN</span>)</label>
                 <input id="input-bolt-cap" type="number" min="0.01" max="1000" step="0.01" value="0.18" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-slate-800 dark:text-slate-100 font-mono text-xs">
               </div>
-              <div>
-                <label class="text-slate-500 dark:text-slate-400 block mb-0.5 font-medium">Longitud (m)</label>
-                <input id="input-bolt-len" type="number" min="1.5" max="6.0" step="0.5" value="3.0" class="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-slate-800 dark:text-slate-100 font-mono text-xs">
+
+              <!-- Control Interactivo de Longitud con Slider y Cota Real -->
+              <div class="col-span-2 space-y-1.5 bg-violet-500/5 dark:bg-violet-950/25 p-2 rounded-xl border border-violet-500/20">
+                <div class="flex justify-between items-center">
+                  <label class="text-slate-700 dark:text-slate-200 font-semibold flex items-center gap-1.5 text-[11px]">
+                    <span>📏</span> Longitud del Perno (L)
+                  </label>
+                  <div class="flex items-center gap-1">
+                    <input id="input-bolt-len" type="number" min="1.0" max="8.0" step="0.25" value="3.0" class="w-16 bg-white dark:bg-slate-900 border border-violet-300 dark:border-violet-700 rounded-lg px-1.5 py-0.5 text-right text-violet-700 dark:text-violet-300 font-mono text-xs font-bold">
+                    <span class="text-slate-400 font-mono text-xs">m</span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-2">
+                  <span class="text-[9px] text-slate-400 font-mono">1.0m</span>
+                  <input id="input-bolt-len-range" type="range" min="1.0" max="8.0" step="0.25" value="3.0" class="w-full accent-violet-600 cursor-pointer">
+                  <span class="text-[9px] text-slate-400 font-mono">8.0m</span>
+                </div>
+                <div id="ui-bolt-embed-status" class="text-[10px] font-mono px-2 py-1 rounded bg-violet-900/30 text-violet-300 flex items-center justify-between border border-violet-800/40">
+                  <span>Anclaje en roca sana:</span>
+                  <b class="font-bold">+0.85 m (Efectivo ✅)</b>
+                </div>
               </div>
             </div>
+
             <div class="p-2 rounded-xl bg-violet-50 dark:bg-violet-950/30 border border-violet-200 dark:border-violet-900/50 flex justify-between text-[11px]">
               <span class="text-violet-800 dark:text-violet-300">Pernos: <b id="ui-bolt-count">3</b> | Presión: <b id="ui-bolt-press" class="font-mono">0.089 MPa</b></span>
               <span class="text-violet-800 dark:text-violet-300 font-mono">Total: <b id="ui-bolt-total">0.540 MN</b></span>
@@ -1351,6 +1370,36 @@
       const strStress = useMPa ? 'MPa' : 'kPa';
       const convStress = useMPa ? 1.0 : 1000.0;
 
+      // Actualizar Métricas de Pernos y Cota de Anclaje
+      const elBoltCount = document.getElementById('ui-bolt-count');
+      if (elBoltCount) elBoltCount.textContent = res.boltCount;
+      const elBoltInput = document.getElementById('input-bolt-len');
+      if (elBoltInput && document.activeElement !== elBoltInput && Number(elBoltInput.value) !== state.boltLen) {
+        elBoltInput.value = state.boltLen;
+      }
+      const elBoltRange = document.getElementById('input-bolt-len-range');
+      if (elBoltRange && document.activeElement !== elBoltRange && Number(elBoltRange.value) !== state.boltLen) {
+        elBoltRange.value = state.boltLen;
+      }
+
+      const embedment = state.boltLen - res.wedgeHeight;
+      const elEmbedStatus = document.getElementById('ui-bolt-embed-status');
+      if (elEmbedStatus) {
+        if (!state.enableBolts) {
+          elEmbedStatus.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-slate-800/40 text-slate-400 flex items-center justify-between border border-slate-700/40";
+          elEmbedStatus.innerHTML = `<span>Pernos desactivados</span>`;
+        } else if (embedment >= 0.5) {
+          elEmbedStatus.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex items-center justify-between";
+          elEmbedStatus.innerHTML = `<span>Anclaje en roca sana:</span> <b class="font-bold">+${embedment.toFixed(2)} m (Efectivo ✅)</b>`;
+        } else if (embedment > 0) {
+          elEmbedStatus.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/15 text-amber-400 border border-amber-500/30 flex items-center justify-between";
+          elEmbedStatus.innerHTML = `<span>Anclaje mínimo:</span> <b class="font-bold">+${embedment.toFixed(2)} m (Marginal ⚠️)</b>`;
+        } else {
+          elEmbedStatus.className = "text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/15 text-rose-400 border border-rose-500/30 flex items-center justify-between";
+          elEmbedStatus.innerHTML = `<span>Perno corto:</span> <b class="font-bold">${Math.abs(embedment).toFixed(2)} m en cuña (Sin anclaje ❌)</b>`;
+        }
+      }
+
       document.getElementById('ui-bolt-press').textContent = (res.boltPressureMPa * convStress).toFixed(useMPa ? 3 : 1) + ' ' + strStress;
       document.getElementById('ui-shot-perim').textContent = res.perimetroBase.toFixed(1) + ' m';
       document.getElementById('ui-shot-press').textContent = (res.shotPressureMPa * convStress).toFixed(useMPa ? 3 : 1) + ' ' + strStress;
@@ -1513,6 +1562,179 @@
       // Obtener perfil 2D paramétrico
       const profile = generateProfile2D(state.shape, W, H);
 
+      // Renderizador Físico Realista de Pernos con Cotas de Longitud
+      function drawRockbolt3D(collar3D, toe3D, isPrimary, wedgeDepth) {
+        const pCollar = project3D(collar3D.x, collar3D.y, collar3D.z, cx, cy, scale);
+        const pToe = project3D(toe3D.x, toe3D.y, toe3D.z, cx, cy, scale);
+
+        const dx = pToe.x - pCollar.x;
+        const dy = pToe.y - pCollar.y;
+        const len2D = Math.hypot(dx, dy);
+        if (len2D < 2) return;
+
+        const ux = dx / len2D;
+        const uy = dy / len2D;
+        const perpX = -uy;
+        const perpY = ux;
+
+        const isAnchored = state.boltLen > wedgeDepth;
+        const fracWedge = Math.min(1.0, Math.max(0.08, wedgeDepth / Math.max(0.5, state.boltLen)));
+        const pFault = {
+          x: pCollar.x + dx * fracWedge,
+          y: pCollar.y + dy * fracWedge
+        };
+
+        ctx3d.save();
+
+        // 1. Placa de apoyo de acero (Bearing Plate) en la boquilla
+        const plateW = 8;
+        ctx3d.strokeStyle = isDarkMode ? '#e2e8f0' : '#1e293b';
+        ctx3d.lineWidth = 3.5;
+        ctx3d.beginPath();
+        ctx3d.moveTo(pCollar.x - perpX * plateW, pCollar.y - perpY * plateW);
+        ctx3d.lineTo(pCollar.x + perpX * plateW, pCollar.y + perpY * plateW);
+        ctx3d.stroke();
+
+        // Tuerca hexagonal central
+        ctx3d.fillStyle = '#f8fafc';
+        ctx3d.beginPath();
+        ctx3d.arc(pCollar.x, pCollar.y, 3, 0, Math.PI * 2);
+        ctx3d.fill();
+
+        // 2. Tendón / Barra de Acero Corrugado
+        // Contorno de alto contraste
+        ctx3d.strokeStyle = isDarkMode ? '#2e1065' : '#1e1b4b';
+        ctx3d.lineWidth = 5.0;
+        ctx3d.beginPath();
+        ctx3d.moveTo(pCollar.x, pCollar.y);
+        ctx3d.lineTo(pToe.x, pToe.y);
+        ctx3d.stroke();
+
+        // Núcleo dentro de la cuña (Zona de corte)
+        ctx3d.strokeStyle = '#c084fc';
+        ctx3d.lineWidth = 3.0;
+        ctx3d.beginPath();
+        ctx3d.moveTo(pCollar.x, pCollar.y);
+        ctx3d.lineTo(pFault.x, pFault.y);
+        ctx3d.stroke();
+
+        // Zona anclada en roca sana más allá de la falla
+        if (isAnchored) {
+          // Bulbo de lechada/resina envolvente
+          ctx3d.strokeStyle = 'rgba(16, 185, 129, 0.45)';
+          ctx3d.lineWidth = 7.5;
+          ctx3d.beginPath();
+          ctx3d.moveTo(pFault.x, pFault.y);
+          ctx3d.lineTo(pToe.x, pToe.y);
+          ctx3d.stroke();
+
+          // Alma de anclaje de acero en roca sana
+          ctx3d.strokeStyle = '#10b981';
+          ctx3d.lineWidth = 3.2;
+          ctx3d.beginPath();
+          ctx3d.moveTo(pFault.x, pFault.y);
+          ctx3d.lineTo(pToe.x, pToe.y);
+          ctx3d.stroke();
+
+          // Punta de anclaje expandida (Toe)
+          ctx3d.fillStyle = '#059669';
+          ctx3d.beginPath();
+          ctx3d.arc(pToe.x, pToe.y, 4.5, 0, Math.PI * 2);
+          ctx3d.fill();
+          ctx3d.strokeStyle = '#ffffff';
+          ctx3d.lineWidth = 1.2;
+          ctx3d.stroke();
+        } else {
+          // Perno corto: se mantiene dentro de la cuña
+          ctx3d.strokeStyle = '#f43f5e';
+          ctx3d.lineWidth = 3.0;
+          ctx3d.beginPath();
+          ctx3d.moveTo(pFault.x, pFault.y);
+          ctx3d.lineTo(pToe.x, pToe.y);
+          ctx3d.stroke();
+
+          ctx3d.fillStyle = '#e11d48';
+          ctx3d.beginPath();
+          ctx3d.arc(pToe.x, pToe.y, 4, 0, Math.PI * 2);
+          ctx3d.fill();
+          ctx3d.strokeStyle = '#ffffff';
+          ctx3d.lineWidth = 1;
+          ctx3d.stroke();
+        }
+
+        // 3. Cota y Dimensionamiento Métrico Real (Longitud)
+        if (isPrimary || state.showDimensions) {
+          const cotaDist = 28;
+          const c1 = { x: pCollar.x + perpX * cotaDist, y: pCollar.y + perpY * cotaDist };
+          const c2 = { x: pToe.x + perpX * cotaDist, y: pToe.y + perpY * cotaDist };
+
+          // Líneas testigo (witness lines)
+          ctx3d.strokeStyle = isDarkMode ? 'rgba(192, 132, 252, 0.6)' : 'rgba(124, 58, 237, 0.5)';
+          ctx3d.lineWidth = 0.9;
+          ctx3d.setLineDash([2, 2]);
+          ctx3d.beginPath();
+          ctx3d.moveTo(pCollar.x, pCollar.y);
+          ctx3d.lineTo(c1.x + perpX * 3, c1.y + perpY * 3);
+          ctx3d.moveTo(pToe.x, pToe.y);
+          ctx3d.lineTo(c2.x + perpX * 3, c2.y + perpY * 3);
+          ctx3d.stroke();
+          ctx3d.setLineDash([]);
+
+          // Línea de cota
+          ctx3d.strokeStyle = isDarkMode ? '#c084fc' : '#7c3aed';
+          ctx3d.lineWidth = 1.4;
+          ctx3d.beginPath();
+          ctx3d.moveTo(c1.x, c1.y);
+          ctx3d.lineTo(c2.x, c2.y);
+          ctx3d.stroke();
+
+          // Ticks / flechas en extremos
+          const tk = 4.5;
+          ctx3d.beginPath();
+          ctx3d.moveTo(c1.x - perpX * tk - ux * tk, c1.y - perpY * tk - uy * tk);
+          ctx3d.lineTo(c1.x + perpX * tk + ux * tk, c1.y + perpY * tk + uy * tk);
+          ctx3d.moveTo(c2.x - perpX * tk - ux * tk, c2.y - perpY * tk - uy * tk);
+          ctx3d.lineTo(c2.x + perpX * tk + ux * tk, c2.y + perpY * tk + uy * tk);
+          ctx3d.stroke();
+
+          // Etiqueta de longitud
+          const midX = (c1.x + c2.x) / 2;
+          const midY = (c1.y + c2.y) / 2;
+          const txt = `L = ${state.boltLen.toFixed(2)} m`;
+
+          ctx3d.font = 'bold 10px monospace';
+          const tw = ctx3d.measureText(txt).width;
+
+          ctx3d.fillStyle = isDarkMode ? 'rgba(15, 23, 42, 0.94)' : 'rgba(255, 255, 255, 0.95)';
+          ctx3d.fillRect(midX - tw / 2 - 5, midY - 9, tw + 10, 18);
+          ctx3d.strokeStyle = isDarkMode ? '#a855f7' : '#7c3aed';
+          ctx3d.lineWidth = 1;
+          ctx3d.strokeRect(midX - tw / 2 - 5, midY - 9, tw + 10, 18);
+
+          ctx3d.fillStyle = isDarkMode ? '#f8fafc' : '#0f172a';
+          ctx3d.textAlign = 'center';
+          ctx3d.textBaseline = 'middle';
+          ctx3d.fillText(txt, midX, midY);
+
+          // Sub-cota de anclaje efectivo en roca sana
+          if (isPrimary) {
+            const diffM = state.boltLen - wedgeDepth;
+            ctx3d.font = 'bold 8.5px sans-serif';
+            if (diffM >= 0.5) {
+              ctx3d.fillStyle = '#10b981';
+              ctx3d.fillText(`+${diffM.toFixed(2)}m anclado en roca`, midX, midY + 15);
+            } else if (diffM > 0) {
+              ctx3d.fillStyle = '#f59e0b';
+              ctx3d.fillText(`+${diffM.toFixed(2)}m (anclaje corto)`, midX, midY + 15);
+            } else {
+              ctx3d.fillStyle = '#ef4444';
+              ctx3d.fillText(`⚠️ Dentro de la cuña`, midX, midY + 15);
+            }
+          }
+        }
+        ctx3d.restore();
+      }
+
       // CASO A: PIQUE VERTICAL (Eje vertical Y)
       if (isShaft) {
         // Dibujar anillos del pique vertical a distintas profundidades
@@ -1576,15 +1798,11 @@
 
         // Pernos Radiales en la pared del Pique
         if (state.enableBolts && res.boltCount > 0) {
-          ctx3d.strokeStyle = '#7c3aed';
-          ctx3d.lineWidth = 2.5;
           const boltY = [-0.6, 0.6, 0].slice(0, res.boltCount);
-          boltY.forEach(by => {
-            const pCollar = project3D(wallX, by, 0, cx, cy, scale);
-            const pToe = project3D(wallX + state.boltLen, by, 0, cx, cy, scale);
-            ctx3d.beginPath(); ctx3d.moveTo(pCollar.x, pCollar.y); ctx3d.lineTo(pToe.x, pToe.y); ctx3d.stroke();
-            ctx3d.fillStyle = '#a78bfa'; ctx3d.beginPath(); ctx3d.arc(pCollar.x, pCollar.y, 4, 0, Math.PI*2); ctx3d.fill();
-            ctx3d.fillStyle = '#6d28d9'; ctx3d.beginPath(); ctx3d.arc(pToe.x, pToe.y, 2.5, 0, Math.PI*2); ctx3d.fill();
+          boltY.forEach((by, idx) => {
+            const collar3D = { x: wallX, y: by, z: 0 };
+            const toe3D = { x: wallX + state.boltLen, y: by, z: 0 };
+            drawRockbolt3D(collar3D, toe3D, idx === 0, res.wedgeHeight);
           });
         }
 
@@ -1694,11 +1912,8 @@
           ctx3d.closePath(); ctx3d.fill(); ctx3d.stroke();
         });
 
-        // Pernos Adaptativos a la Geometría Dinámica de la Cuña
+        // Pernos Adaptativos a la Geometría Dinámica de la Cuña con Dimensionamiento Real
         if (state.enableBolts && res.boltCount > 0) {
-          ctx3d.strokeStyle = '#7c3aed';
-          ctx3d.lineWidth = 2.5;
-
           if (state.wedgeLoc === 'left') {
             // Pernos en caja izquierda siguiendo los vértices de la cuña
             const wallX = -W * 0.98;
@@ -1710,12 +1925,10 @@
               { y: (res.b1[1] + res.b2[1]) * 0.4, z: (res.b1[2] + res.b2[2]) * 0.4 }
             ].slice(0, res.boltCount);
 
-            collarOffsets.forEach(co => {
-              const pCollar = project3D(wallX, wallY + co.y, co.z, cx, cy, scale);
-              const pToe = project3D(wallX - state.boltLen, wallY + co.y, co.z, cx, cy, scale);
-              ctx3d.beginPath(); ctx3d.moveTo(pCollar.x, pCollar.y); ctx3d.lineTo(pToe.x, pToe.y); ctx3d.stroke();
-              ctx3d.fillStyle = '#a78bfa'; ctx3d.beginPath(); ctx3d.arc(pCollar.x, pCollar.y, 4, 0, Math.PI * 2); ctx3d.fill();
-              ctx3d.fillStyle = '#6d28d9'; ctx3d.beginPath(); ctx3d.arc(pToe.x, pToe.y, 2.5, 0, Math.PI * 2); ctx3d.fill();
+            collarOffsets.forEach((co, idx) => {
+              const collar3D = { x: wallX, y: wallY + co.y, z: co.z };
+              const toe3D = { x: wallX - state.boltLen, y: wallY + co.y, z: co.z };
+              drawRockbolt3D(collar3D, toe3D, idx === 0, res.wedgeHeight);
             });
           } else if (state.wedgeLoc === 'right') {
             // Pernos en caja derecha siguiendo los vértices de la cuña
@@ -1728,12 +1941,10 @@
               { y: (res.b1[1] + res.b2[1]) * 0.4, z: (res.b1[2] + res.b2[2]) * 0.4 }
             ].slice(0, res.boltCount);
 
-            collarOffsets.forEach(co => {
-              const pCollar = project3D(wallX, wallY + co.y, co.z, cx, cy, scale);
-              const pToe = project3D(wallX + state.boltLen, wallY + co.y, co.z, cx, cy, scale);
-              ctx3d.beginPath(); ctx3d.moveTo(pCollar.x, pCollar.y); ctx3d.lineTo(pToe.x, pToe.y); ctx3d.stroke();
-              ctx3d.fillStyle = '#a78bfa'; ctx3d.beginPath(); ctx3d.arc(pCollar.x, pCollar.y, 4, 0, Math.PI * 2); ctx3d.fill();
-              ctx3d.fillStyle = '#6d28d9'; ctx3d.beginPath(); ctx3d.arc(pToe.x, pToe.y, 2.5, 0, Math.PI * 2); ctx3d.fill();
+            collarOffsets.forEach((co, idx) => {
+              const collar3D = { x: wallX, y: wallY + co.y, z: co.z };
+              const toe3D = { x: wallX + state.boltLen, y: wallY + co.y, z: co.z };
+              drawRockbolt3D(collar3D, toe3D, idx === 0, res.wedgeHeight);
             });
           } else {
             // Pernos en techo adaptados a la huella real de la cuña en la corona
@@ -1746,14 +1957,11 @@
               { x: (res.b2[0] + res.b3[0]) * 0.35, z: (res.b2[2] + res.b3[2]) * 0.35 }
             ].slice(0, res.boltCount);
 
-            collarOffsets.forEach(bp => {
+            collarOffsets.forEach((bp, idx) => {
               const collarY = crownY * 0.96;
-              const toeY = collarY + state.boltLen;
-              const pCollar = project3D(bp.x, collarY, bp.z, cx, cy, scale);
-              const pToe = project3D(bp.x, toeY, bp.z, cx, cy, scale);
-              ctx3d.beginPath(); ctx3d.moveTo(pCollar.x, pCollar.y); ctx3d.lineTo(pToe.x, pToe.y); ctx3d.stroke();
-              ctx3d.fillStyle = '#a78bfa'; ctx3d.beginPath(); ctx3d.arc(pCollar.x, pCollar.y, 4, 0, Math.PI * 2); ctx3d.fill();
-              ctx3d.fillStyle = '#6d28d9'; ctx3d.beginPath(); ctx3d.arc(pToe.x, pToe.y, 2.5, 0, Math.PI * 2); ctx3d.fill();
+              const collar3D = { x: bp.x, y: collarY, z: bp.z };
+              const toe3D = { x: bp.x, y: collarY + state.boltLen, z: bp.z };
+              drawRockbolt3D(collar3D, toe3D, idx === 0, res.wedgeHeight);
             });
           }
         }
@@ -1955,7 +2163,10 @@
     function bindInputs() {
       const bind = (id, fn) => {
         const el = document.getElementById(id);
-        if (el) el.addEventListener('input', fn);
+        if (el) {
+          el.addEventListener('input', fn);
+          el.addEventListener('change', fn);
+        }
       };
 
       document.getElementById('btn-unit-mpa').addEventListener('click', () => setUnitMode(true));
@@ -2226,7 +2437,19 @@
         state.boltCapMN = useMPa ? val : (val / 1000.0);
         updateUI();
       });
-      bind('input-bolt-len', e => { state.boltLen = Number(e.target.value); updateUI(); });
+      const onBoltLenUpdate = (val) => {
+        const num = parseFloat(val);
+        if (!isNaN(num) && num > 0) {
+          state.boltLen = num;
+          const numInput = document.getElementById('input-bolt-len');
+          const rangeInput = document.getElementById('input-bolt-len-range');
+          if (numInput && Number(numInput.value) !== num) numInput.value = num;
+          if (rangeInput && Number(rangeInput.value) !== num) rangeInput.value = num;
+          updateUI();
+        }
+      };
+      bind('input-bolt-len', e => onBoltLenUpdate(e.target.value));
+      bind('input-bolt-len-range', e => onBoltLenUpdate(e.target.value));
 
       // Shotcrete
       document.getElementById('chk-shotcrete').addEventListener('change', e => {
@@ -2259,6 +2482,8 @@
         document.getElementById('input-bolt-st').value = state.boltST;
         document.getElementById('input-bolt-sl').value = state.boltSL;
         document.getElementById('input-bolt-len').value = state.boltLen;
+        const rA = document.getElementById('input-bolt-len-range');
+        if (rA) rA.value = state.boltLen;
         updateUI();
       });
 
@@ -2286,6 +2511,8 @@
         document.getElementById('input-bolt-st').value = state.boltST;
         document.getElementById('input-bolt-sl').value = state.boltSL;
         document.getElementById('input-bolt-len').value = state.boltLen;
+        const rA = document.getElementById('input-bolt-len-range');
+        if (rA) rA.value = state.boltLen;
         document.getElementById('input-shot-t').value = state.shotT;
         updateUI();
       });

@@ -138,6 +138,7 @@ window.GeoWedgePresets = (function() {
     setVal('input-bolt-sl', window.state.boltSL);
     setVal('input-bolt-cap', window.useMPa ? window.state.boltCapMN : window.state.boltCapMN * 1000);
     setVal('input-bolt-len', window.state.boltLen);
+    setVal('input-bolt-len-range', window.state.boltLen);
 
     setChk('chk-shotcrete', window.state.enableShotcrete);
     setVal('input-shot-t', window.state.shotT);
