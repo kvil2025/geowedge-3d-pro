@@ -239,8 +239,8 @@ window.GeoWedgePresets = (function() {
   function exportProjectsJSON() {
     const projects = getSavedProjects();
     const payload = {
-      app: 'GeoWedge 3D Pro',
-      version: '2.4',
+      app: 'GeologgIA TÚNEL 3D',
+      version: '2.5',
       date: new Date().toISOString(),
       projects
     };
@@ -248,7 +248,7 @@ window.GeoWedgePresets = (function() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `geowedge_proyectos_${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `geologgia_tunel_proyectos_${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
   }

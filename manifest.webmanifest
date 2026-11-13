@@ -1,0 +1,17 @@
+{
+  "name": "GeologgIA TÚNEL 3D — Estabilidad de Cuñas Subterráneas",
+  "short_name": "GeologgIA TÚNEL",
+  "description": "Software geotécnico 3D para análisis de estabilidad de cuñas en túneles y piques subterráneos (Goodman & Shi 1985). 100% Client-Side PWA.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#07090e",
+  "theme_color": "#07090e",
+  "icons": [
+    {
+      "src": "assets/logo_geologgia.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

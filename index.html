@@ -2,13 +2,17 @@
 <html lang="es" class="dark">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GeoWedge 3D Pro | Geologgia Ltda - Geomecánica y Estabilidad 3D</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>GeologgIA TÚNEL 3D — Estabilidad de Cuñas Subterráneas & Soporte PWA</title>
+  <meta name="description" content="Software geotécnico 3D para análisis cinemático y estabilidad de cuñas en excavaciones subterráneas (túneles y piques) basado en Teoría de Bloques (Goodman & Shi 1985). 100% Client-Side PWA.">
+  <meta name="theme-color" content="#07090e">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="assets/logo_geologgia.svg">
   
-  <!-- Tipografía Profesional Google Fonts -->
+  <!-- Tipografía Profesional Google Fonts (Familia GeologgIA: Outfit + Inter + JetBrains Mono) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -17,46 +21,109 @@
       theme: {
         extend: {
           fontFamily: {
+            display: ['Outfit', 'sans-serif'],
             sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
             mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: '#00e5b4',
+            gold: '#00e5b4',
+            teal: '#38bdf8',
+            navy: '#0D2560',
+            darkslate: '#07090e'
           }
         }
       }
     }
   </script>
   <style>
+    :root {
+      --lx-bg: #07090e;
+      --lx-panel: #0d111a;
+      --lx-panel2: #131824;
+      --lx-panel3: #1a2232;
+      --lx-gold: #00e5b4;
+      --lx-teal: #38bdf8;
+      --lx-navy: #0D2560;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      max-width: 100vw;
+      overflow-x: hidden;
+      background-color: #07090e;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      touch-action: manipulation;
+      -webkit-font-smoothing: antialiased;
+    }
+
     body, header, div, span, button, input, select, table, th, td {
       transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
     }
-    input[type=range] { accent-color: #2563eb; }
+    input[type=range] { accent-color: #00e5b4; }
     
     html.dark body {
-      background-color: #0b0f19;
-      background: #0b0f19;
-      color: #f1f5f9;
+      background-color: #07090e;
+      background: #07090e;
+      color: #f8fafc;
     }
     
-    .dark .panel-glass {
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4);
-    }
     .panel-glass {
-      background: #ffffff;
-      border: 1px solid #e2e8f0;
-      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+      background: #0d111a;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
     }
 
-    .dark .panel-sub {
-      background: #090d16;
-      border: 1px solid #1e293b;
-    }
     .panel-sub {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
+      background: #131824;
+      border: 1px solid rgba(255, 255, 255, 0.06);
     }
 
-    /* Botones de Módulos Pro: Feedback Táctil Claro (Linear / Apple HIG) */
+    /* Logo Mark Oficial GT (GeologgIA TÚNEL) */
+    .brand-logo-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0, 229, 180, 0.22), rgba(56, 189, 248, 0.08));
+      border: 1px solid #00e5b4;
+      color: #00e5b4;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 800;
+      font-size: 14px;
+      box-shadow: 0 0 16px rgba(0, 229, 180, 0.18);
+      flex-shrink: 0;
+    }
+
+    /* Status Pill Oficial */
+    .brand-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: 9999px;
+      background: #131824;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      color: #94a3b8;
+    }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #00e5b4;
+      box-shadow: 0 0 8px #00e5b4;
+    }
+
+    /* Botones de Módulos Pro: Geotech Slate */
     .btn-module-toggle {
       display: inline-flex;
       align-items: center;
@@ -64,13 +131,14 @@
       padding: 0.35rem 0.65rem;
       border-radius: 0.5rem;
       font-size: 0.75rem;
-      font-weight: 500;
+      font-weight: 600;
       transition: all 0.15s ease;
       cursor: pointer;
       user-select: none;
-      border: 1px solid #334155;
-      background: #0b0f19;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: #131824;
       color: #94a3b8;
+      min-height: 34px;
     }
     .btn-module-toggle .indicator {
       width: 6px;
@@ -80,19 +148,19 @@
       transition: all 0.15s ease;
     }
     .btn-module-toggle:hover {
-      background: #1e293b;
+      background: #1a2232;
       color: #f8fafc;
-      border-color: #475569;
+      border-color: rgba(0, 229, 180, 0.3);
     }
     .btn-module-toggle.is-active {
-      background: #1e3a8a !important;
-      color: #ffffff !important;
-      border-color: #3b82f6 !important;
-      box-shadow: 0 0 10px rgba(37, 99, 235, 0.35);
+      background: rgba(0, 229, 180, 0.12) !important;
+      color: #00e5b4 !important;
+      border-color: #00e5b4 !important;
+      box-shadow: 0 0 10px rgba(0, 229, 180, 0.25);
     }
     .btn-module-toggle.is-active .indicator {
-      background-color: #38bdf8 !important;
-      box-shadow: 0 0 6px #38bdf8;
+      background-color: #00e5b4 !important;
+      box-shadow: 0 0 6px #00e5b4;
     }
 
     /* Botón de Memoria PDF */
@@ -103,60 +171,195 @@
       padding: 0.35rem 0.75rem;
       border-radius: 0.5rem;
       font-size: 0.75rem;
-      font-weight: 600;
-      background: #047857;
-      color: #ffffff;
-      border: 1px solid #059669;
+      font-weight: 700;
+      background: linear-gradient(135deg, #00e5b4 0%, #10b981 100%);
+      color: #04130e;
+      border: 1px solid #00e5b4;
+      box-shadow: 0 4px 12px rgba(0, 229, 180, 0.25);
       transition: all 0.15s ease;
       cursor: pointer;
+      min-height: 34px;
     }
     .btn-report-action:hover {
-      background: #059669;
-      border-color: #10b981;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 229, 180, 0.35);
+    }
+
+    /* --- RESPONSIVIDAD MOBILE-FIRST (GEOTECH SUITE) --- */
+    .mobile-only {
+      display: none !important;
+    }
+
+    @media (max-width: 960px) {
+      .mobile-only {
+        display: flex !important;
+      }
+
+      /* Barra de Navegación Móvil */
+      #mobile-view-bar {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        padding: 6px 8px;
+        background: #0d111a;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 8px;
+      }
+
+      .mob-view-btn {
+        flex: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        padding: 7px 8px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: #131824;
+        color: #94a3b8;
+        font-family: 'Inter', sans-serif;
+        font-weight: 700;
+        font-size: 11px;
+        cursor: pointer;
+        transition: all 0.16s ease;
+        min-height: 36px;
+        white-space: nowrap;
+      }
+
+      .mob-view-btn.active {
+        background: rgba(0, 229, 180, 0.15) !important;
+        border-color: #00e5b4 !important;
+        color: #00e5b4 !important;
+        box-shadow: 0 0 10px rgba(0, 229, 180, 0.2);
+      }
+
+      /* Modos de visualización móvil */
+      body.mobile-view-3d #controls-col {
+        display: none !important;
+      }
+      body.mobile-view-3d #viewport-col {
+        display: block !important;
+        width: 100% !important;
+      }
+
+      body.mobile-view-params #viewport-col {
+        display: none !important;
+      }
+      body.mobile-view-params #controls-col {
+        display: block !important;
+        width: 100% !important;
+      }
+
+      body.mobile-view-split #controls-col,
+      body.mobile-view-split #viewport-col {
+        display: block !important;
+        width: 100% !important;
+      }
+
+      /* Contenedores con scroll horizontal touch */
+      #telemetry-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        flex-wrap: nowrap !important;
+        max-width: 100%;
+        padding-bottom: 2px;
+      }
+      #telemetry-container::-webkit-scrollbar {
+        display: none;
+      }
+
+      #modules-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        flex-wrap: nowrap !important;
+        max-width: 100%;
+        padding-bottom: 2px;
+      }
+      #modules-container::-webkit-scrollbar {
+        display: none;
+      }
+
+      #toolbar-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        flex-wrap: nowrap !important;
+        max-width: 100%;
+        padding: 4px;
+      }
+      #toolbar-container::-webkit-scrollbar {
+        display: none;
+      }
+
+      #canvas-3d {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        min-height: 280px;
+      }
     }
   </style>
 </head>
-<body class="bg-slate-100 dark:bg-[#0b0f19] text-slate-800 dark:text-slate-100 font-sans p-3 md:p-6 min-h-screen">
-  <div class="max-w-7xl mx-auto space-y-4">
+<body class="bg-[#07090e] text-slate-100 font-sans p-2 sm:p-4 md:p-6 min-h-screen mobile-view-split">
+  <div class="max-w-7xl mx-auto space-y-3 sm:space-y-4">
     
-    <!-- ENCABEZADO MINIMALISTA DE PRECISIÓN (PROPUESTA 2: LINEAR / APPLE HIG) -->
-    <header class="panel-glass rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3 shadow-sm border border-slate-200 dark:border-slate-800">
+    <!-- Barra Superior de Navegación Móvil (Solo visible en pantallas pequeñas <= 960px) -->
+    <nav id="mobile-view-bar" class="mobile-only" aria-label="Navegación Móvil">
+      <button type="button" class="mob-view-btn active" data-view="split" title="Vista dividida 3D y Parámetros">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18M12 3v18"/></svg> Dividido
+      </button>
+      <button type="button" class="mob-view-btn" data-view="3d" title="Ampliar Visor 3D a pantalla completa">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg> Visor 3D
+      </button>
+      <button type="button" class="mob-view-btn" data-view="params" title="Ver controles de Geometría y Parámetros">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> Parámetros
+      </button>
+    </nav>
+
+    <!-- ENCABEZADO GEOLOGGIA TÚNEL 3D (PROPUESTA SUITE DE PRECISIÓN) -->
+    <header class="panel-glass rounded-xl p-3.5 flex flex-wrap items-center justify-between gap-3 shadow-md border border-white/10">
       <div class="flex items-center space-x-3">
-        <div class="h-10 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center">
-          <!-- Logo de Geologgia de alta definición sin saturación innecesaria -->
-          <img id="header-logo" src="assets/logo_geologgia_dark.svg" alt="Geologgia Logo" class="h-6 w-auto object-contain">
-        </div>
+        <span class="brand-logo-mark">GT</span>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-base md:text-lg font-semibold tracking-tight text-slate-900 dark:text-white">
-              GeoWedge 3D Pro
+            <h1 class="text-base md:text-lg font-bold tracking-tight text-white font-['Outfit']">
+              GeologgIA <span class="text-[#00e5b4]">TÚNEL</span>
             </h1>
-            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-300 dark:border-slate-700">
-              v2.4
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-semibold">
+              v2.5
             </span>
           </div>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400">
-            Geomecánica Subterránea &bull; <span class="font-medium text-slate-700 dark:text-slate-300">Geologgia Ltda</span>
+          <p class="text-[11px] text-slate-400 flex items-center gap-2 flex-wrap">
+            <span>Geomecánica Subterránea &bull; Goodman & Shi (1985)</span>
+            <span class="hidden sm:inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-900 border border-slate-700 text-[10px] text-emerald-400 font-mono">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#00e5b4] shadow-[0_0_6px_#00e5b4]"></span> 100% Client-Side PWA
+            </span>
           </p>
         </div>
       </div>
 
-      <!-- TELEMETRÍA EN VIVO (PRECISIÓN MINIMALISTA) -->
-      <div class="flex items-center gap-2">
-        <div id="cockpit-fs-pill" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-emerald-500/30 text-[11px] font-mono flex items-center gap-1.5">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+      <!-- TELEMETRÍA EN VIVO (GEOLOGGIA COCKPIT) -->
+      <div id="telemetry-container" class="flex items-center gap-2 overflow-x-auto max-w-full pb-1">
+        <div id="cockpit-fs-pill" class="px-2.5 py-1 rounded-lg bg-[#131824] border border-emerald-500/40 text-[11px] font-mono flex items-center gap-1.5 flex-shrink-0 shadow-[0_0_12px_rgba(0,229,180,0.15)]">
+          <span class="w-2 h-2 rounded-full bg-[#00e5b4] shadow-[0_0_8px_#00e5b4]"></span>
           <span class="text-slate-400 text-[10px] font-semibold">FS:</span>
-          <span id="cockpit-fs-val" class="font-bold text-emerald-400">16.01</span>
+          <span id="cockpit-fs-val" class="font-bold text-[#00e5b4] text-xs">16.01</span>
         </div>
-        <div class="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-[11px] font-mono">
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#131824] border border-white/10 text-[11px] font-mono flex-shrink-0">
           <span class="text-slate-400 text-[10px]">Vol:</span>
           <span id="cockpit-vol-val" class="text-slate-200 font-medium">1.85 m³</span>
         </div>
-        <div class="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-[11px] font-mono">
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#131824] border border-white/10 text-[11px] font-mono flex-shrink-0">
           <span class="text-slate-400 text-[10px]">Peso:</span>
           <span id="cockpit-weight-val" class="text-slate-200 font-medium">4.8 T</span>
         </div>
-        <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-[11px] font-mono">
+        <div class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-[#131824] border border-white/10 text-[11px] font-mono flex-shrink-0">
           <span class="text-slate-400 text-[10px]">Soporte:</span>
           <span id="cockpit-support-val" class="text-slate-200 font-medium">1.89 MN</span>
         </div>
@@ -164,29 +367,29 @@
 
       <!-- BOTONES DE MODO DE UNIDAD, TEMA Y PRESETS -->
       <div class="flex flex-wrap items-center gap-1.5">
-        <div class="bg-slate-200/80 dark:bg-slate-900 border border-slate-300 dark:border-slate-800 p-0.5 rounded-lg flex items-center text-xs">
-          <button id="btn-unit-mpa" class="px-2 py-0.5 rounded-md bg-blue-600 text-white font-medium transition text-[11px]">MPa</button>
-          <button id="btn-unit-kpa" class="px-2 py-0.5 rounded-md text-slate-500 dark:text-slate-400 hover:text-white font-medium transition text-[11px]">kPa</button>
+        <div class="bg-[#131824] border border-white/10 p-0.5 rounded-lg flex items-center text-xs">
+          <button id="btn-unit-mpa" class="px-2 py-0.5 rounded-md bg-[#0D2560] text-emerald-300 font-medium transition text-[11px] border border-emerald-500/30">MPa</button>
+          <button id="btn-unit-kpa" class="px-2 py-0.5 rounded-md text-slate-400 hover:text-white font-medium transition text-[11px]">kPa</button>
         </div>
 
-        <button id="btn-theme-toggle" class="p-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 hover:text-slate-100 text-xs transition" title="Alternar Modo Claro / Oscuro">
+        <button id="btn-theme-toggle" class="p-1.5 rounded-lg bg-[#131824] border border-white/10 text-slate-400 hover:text-slate-100 text-xs transition" title="Alternar Modo Claro / Oscuro">
           <span id="theme-icon">🌙</span>
         </button>
 
-        <div class="h-5 w-px bg-slate-300 dark:bg-slate-800 mx-0.5 hidden sm:block"></div>
+        <div class="h-5 w-px bg-white/10 mx-0.5 hidden sm:block"></div>
 
-        <button id="btn-preset-sin-soporte" class="px-2 py-1 text-[11px] bg-slate-100 dark:bg-slate-900 hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-800 rounded-lg font-medium transition">Sin Soporte</button>
-        <button id="btn-preset-pique" class="px-2 py-1 text-[11px] bg-slate-100 dark:bg-slate-900 hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-800 rounded-lg font-medium transition">Pique (90°)</button>
-        <button id="btn-preset-sismo-chile" class="px-2 py-1 text-[11px] bg-slate-100 dark:bg-slate-900 hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-800 rounded-lg font-medium transition">Sismo (0.20g)</button>
-        <button id="btn-preset-full" class="px-2 py-1 text-[11px] bg-slate-100 dark:bg-slate-900 hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-800 rounded-lg font-medium transition">Pernos + Shotcrete</button>
+        <button id="btn-preset-sin-soporte" class="px-2 py-1 text-[11px] bg-[#131824] hover:bg-slate-800 text-slate-300 border border-white/10 rounded-lg font-medium transition">Sin Soporte</button>
+        <button id="btn-preset-pique" class="px-2 py-1 text-[11px] bg-[#131824] hover:bg-slate-800 text-slate-300 border border-white/10 rounded-lg font-medium transition">Pique (90°)</button>
+        <button id="btn-preset-sismo-chile" class="px-2 py-1 text-[11px] bg-[#131824] hover:bg-slate-800 text-slate-300 border border-white/10 rounded-lg font-medium transition">Sismo (0.20g)</button>
+        <button id="btn-preset-full" class="px-2 py-1 text-[11px] bg-[#131824] hover:bg-slate-800 text-slate-300 border border-white/10 rounded-lg font-medium transition">Pernos + Shotcrete</button>
       </div>
 
       <!-- BARRA DE MÓDULOS DE ANÁLISIS (CON FEEDBACK TÁCTIL CLARO) -->
-      <div class="w-full flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-200 dark:border-slate-800/80 text-xs">
-        <div class="flex items-center gap-1.5 text-slate-400 font-medium text-[11px]">
+      <div id="modules-container" class="w-full flex items-center justify-between gap-2 pt-2 border-t border-white/10 text-xs overflow-x-auto max-w-full pb-1">
+        <div class="flex items-center gap-1.5 text-slate-400 font-medium text-[11px] flex-shrink-0">
           <span>Módulos de Análisis:</span>
         </div>
-        <div class="flex flex-wrap items-center gap-1.5">
+        <div class="flex items-center gap-1.5 flex-shrink-0">
           <button id="btn-toggle-stereonet" onclick="window.GeoWedgeModules && window.GeoWedgeModules.togglePanel('panel-stereonet', 'btn-toggle-stereonet')" class="btn-module-toggle" title="Mostrar u ocultar proyección estereográfica">
             <span class="indicator"></span>
             <span>Estereonet</span>
@@ -211,10 +414,10 @@
     </header>
 
     <!-- GRID PRINCIPAL -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
+    <div id="main-grid" class="grid grid-cols-1 lg:grid-cols-12 gap-3 sm:gap-4">
       
       <!-- COLUMNA IZQUIERDA: CONTROLES GEOMECÁNICOS Y FORMA DEL PERFIL (4 COLS) -->
-      <div class="lg:col-span-4 space-y-3">
+      <div id="controls-col" class="lg:col-span-4 space-y-3">
         
         <!-- SECCIÓN 1: PERFIL Y GEOMETRÍA -->
         <div class="panel-glass rounded-xl p-3.5 space-y-3">
@@ -471,7 +674,7 @@
       </div>
 
       <!-- COLUMNA DERECHA: RESULTADOS + CANVAS 3D INTERACTIVO + ROBOTITO IA (8 COLS) -->
-      <div class="lg:col-span-8 space-y-4">
+      <div id="viewport-col" class="lg:col-span-8 space-y-4">
         
         <!-- FACTOR DE SEGURIDAD SÍSMICO (PRECISIÓN MINIMALISTA) -->
         <div id="card-fs" class="panel-glass rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
@@ -586,30 +789,30 @@
             </div>
 
             <!-- BOTONERA DE NAVEGACIÓN Y HERRAMIENTAS PRO 3D -->
-            <div class="flex flex-wrap items-center gap-1 bg-slate-900 p-0.5 rounded-lg border border-slate-800">
-              <button id="btn-mode-rotate" class="px-2 py-0.5 rounded bg-blue-600 text-white font-medium text-[11px] transition" title="Arrastra para rotar la cámara">
+            <div id="toolbar-container" class="flex items-center gap-1 bg-[#131824] p-0.5 rounded-lg border border-white/10 overflow-x-auto max-w-full">
+              <button id="btn-mode-rotate" class="px-2 py-0.5 rounded bg-[#0D2560] text-emerald-300 font-semibold text-[11px] transition border border-emerald-500/30 whitespace-nowrap" title="Arrastra para rotar la cámara">
                 Rotar
               </button>
-              <button id="btn-mode-pan" class="px-2 py-0.5 rounded text-slate-400 hover:text-white font-medium text-[11px] transition" title="Arrastra para mover el perfil del túnel (Pan)">
+              <button id="btn-mode-pan" class="px-2 py-0.5 rounded text-slate-400 hover:text-white font-medium text-[11px] transition whitespace-nowrap" title="Arrastra para mover el perfil del túnel (Pan)">
                 Mover
               </button>
-              <span class="w-px h-3.5 bg-slate-800 mx-0.5"></span>
+              <span class="w-px h-3.5 bg-white/10 mx-0.5 flex-shrink-0"></span>
               <button id="btn-zoom-in" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800 hover:text-white font-bold text-xs" title="Acercar">+</button>
-              <span id="ui-zoom-val" class="font-mono text-[10px] text-blue-400 px-1 font-semibold">100%</span>
+              <span id="ui-zoom-val" class="font-mono text-[10px] text-emerald-400 px-1 font-semibold">100%</span>
               <button id="btn-zoom-out" class="px-1.5 py-0.5 rounded text-slate-400 hover:bg-slate-800 hover:text-white font-bold text-xs" title="Alejar">-</button>
-              <span class="w-px h-3.5 bg-slate-800 mx-0.5"></span>
-              <button id="btn-center-model" class="px-2 py-0.5 rounded text-slate-400 hover:bg-slate-800 hover:text-white text-[11px] font-medium" title="Centrar modelo">
+              <span class="w-px h-3.5 bg-white/10 mx-0.5 flex-shrink-0"></span>
+              <button id="btn-center-model" class="px-2 py-0.5 rounded text-slate-400 hover:bg-slate-800 hover:text-white text-[11px] font-medium whitespace-nowrap" title="Centrar modelo">
                 Centrar
               </button>
-              <span class="w-px h-3.5 bg-slate-800 mx-0.5"></span>
+              <span class="w-px h-3.5 bg-white/10 mx-0.5 flex-shrink-0"></span>
               <!-- HERRAMIENTAS PRO FLOTANTES -->
-              <button id="btn-toggle-render-mode" class="px-2 py-0.5 rounded hover:bg-slate-800 text-slate-400 hover:text-white text-[11px] font-medium transition" title="Alternar Vista: Sólido / Rayos-X / Alambre">
+              <button id="btn-toggle-render-mode" class="px-2 py-0.5 rounded hover:bg-slate-800 text-slate-400 hover:text-white text-[11px] font-medium transition whitespace-nowrap" title="Alternar Vista: Sólido / Rayos-X / Alambre">
                 Rayos-X
               </button>
-              <button id="btn-toggle-dimensions" class="px-2 py-0.5 rounded hover:bg-slate-800 text-slate-400 hover:text-white text-[11px] font-medium transition" title="Ver / Ocultar Cotas 3D">
+              <button id="btn-toggle-dimensions" class="px-2 py-0.5 rounded hover:bg-slate-800 text-slate-400 hover:text-white text-[11px] font-medium transition whitespace-nowrap" title="Ver / Ocultar Cotas 3D">
                 Cotas
               </button>
-              <button id="btn-snapshot-hd" class="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-medium transition border border-slate-700" title="Descargar Captura HD">
+              <button id="btn-snapshot-hd" class="px-2 py-0.5 rounded bg-[#1a2232] hover:bg-slate-800 text-emerald-300 text-[11px] font-medium transition border border-emerald-500/20 whitespace-nowrap" title="Descargar Captura HD">
                 Captura HD
               </button>
             </div>
@@ -1578,11 +1781,11 @@
       }
 
       const elCockpitVol = document.getElementById('cockpit-vol-val');
-      if (elCockpitVol) elCockpitVol.textContent = res.isFinite ? `${res.volumeM3.toFixed(2)} m³` : 'Abierta';
+      if (elCockpitVol) elCockpitVol.textContent = (res && res.isFinite && res.volumeM3 != null) ? `${res.volumeM3.toFixed(2)} m³` : (res && res.isFinite ? '0.00 m³' : 'Abierta');
       const elCockpitWeight = document.getElementById('cockpit-weight-val');
-      if (elCockpitWeight) elCockpitWeight.textContent = res.isFinite ? `${res.weightTon.toFixed(1)} T` : 'N/A';
+      if (elCockpitWeight) elCockpitWeight.textContent = (res && res.isFinite && res.weightTon != null) ? `${res.weightTon.toFixed(1)} T` : 'N/A';
       const elCockpitSupport = document.getElementById('cockpit-support-val');
-      if (elCockpitSupport) elCockpitSupport.textContent = useMPa ? `${res.totalResistingMN.toFixed(2)} MN` : `${res.totalResistingKN.toFixed(0)} kN`;
+      if (elCockpitSupport) elCockpitSupport.textContent = useMPa ? `${(res && res.totalResistingMN != null ? res.totalResistingMN.toFixed(2) : '0.00')} MN` : `${(res && res.totalResistingKN != null ? res.totalResistingKN.toFixed(0) : '0')} kN`;
 
       // Actualizar indicadores de cámara
       document.getElementById('ui-zoom-val').textContent = `${Math.round(state.camera.zoom * 100)}%`;
@@ -2368,10 +2571,10 @@
 
           tCtx.fillStyle = 'rgba(255, 255, 255, 0.9)';
           tCtx.font = 'bold 11px Inter, sans-serif';
-          tCtx.fillText(`GeoWedge 3D Pro • Geologgia Ltda • Labor: ${state.shape} • FS: ${document.getElementById('val-fs').textContent}`, 15, canvas3d.height - 12);
+          tCtx.fillText(`GeologgIA TÚNEL 3D • Geologgia Ltda • Labor: ${state.shape} • FS: ${document.getElementById('val-fs').textContent}`, 15, canvas3d.height - 12);
 
           const a = document.createElement('a');
-          a.download = `geowedge_3d_${state.shape}_${new Date().toISOString().slice(0, 10)}.png`;
+          a.download = `geologgia_tunel_3d_${state.shape}_${new Date().toISOString().slice(0, 10)}.png`;
           a.href = tempCanvas.toDataURL('image/png');
           a.click();
         });
@@ -2667,11 +2870,35 @@
         document.getElementById('panel-shotcrete').style.opacity = '1';
         updateUI();
       });
+
+      // Switcher de vista móvil (Dividido, Solo 3D, Solo Parámetros)
+      function setMobileView(viewName) {
+        document.body.classList.remove('mobile-view-split', 'mobile-view-3d', 'mobile-view-params');
+        document.body.classList.add('mobile-view-' + viewName);
+        document.querySelectorAll('.mob-view-btn').forEach((b) => {
+          b.classList.toggle('active', b.getAttribute('data-view') === viewName);
+        });
+        setTimeout(() => {
+          if (typeof renderSceneOnly === 'function') renderSceneOnly();
+        }, 60);
+      }
+
+      document.querySelectorAll('.mob-view-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          setMobileView(btn.getAttribute('data-view'));
+        });
+      });
     }
 
     bindInputs();
     updateUI();
   </script>
+
+  <!-- FOOTER OFICIAL DE LA FAMILIA GEOLOGGIA -->
+  <footer id="app-footer" class="text-center py-6 text-xs text-slate-500 border-t border-white/10 space-y-1 mt-6">
+    <div><strong class="text-slate-200 font-semibold">GeologgIA TÚNEL 3D</strong> · <span class="font-mono text-[#00e5b4] font-semibold">v2.5 PWA</span></div>
+    <div>Desarrollado por Tecknologia · Diseñado por Geologgia Ltda.</div>
+  </footer>
 
   <!-- MÓDULOS PRO MODULARES Y DESACOPLADOS -->
   <script src="modules/core_hub.js"></script>
@@ -2687,6 +2914,13 @@
         updateUI();
       }
     }, 50);
+
+    // Registro de PWA Service Worker
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(() => {});
+      });
+    }
   </script>
 </body>
 </html>

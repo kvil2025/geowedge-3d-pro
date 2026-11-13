@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-🏔️ GeoWedge 3D Pro - Generador Profesional de Red Estereográfica (Stereonet)
+🏔️ GeologgIA TÚNEL 3D - Generador Profesional de Red Estereográfica (Stereonet)
 =============================================================================
-Genera un estereograma geomecánico de alta resolución (DPI 300) estilo
-Rocscience Dips / Allmendinger Stereonet usando Matplotlib.
+Genera un estereograma geomecánico de alta resolución (DPI 300) de igual área
+(Schmidt Equal-Area Lower Hemisphere) usando Matplotlib.
 
 Proyección: Schmidt Equal-Area (Lambert Azimuthal Lower Hemisphere)
 Calcula: Polos, Grandes Círculos, Cono de Fricción (phi), Líneas de Intersección Diedras.
@@ -48,7 +48,7 @@ def project_pole(dip_deg, dipdir_deg, R=1.0):
 
 
 def calculate_great_circle(dip_deg, dipdir_deg, R=1.0, num_pts=180):
-    """Calcula los puntos del Gran Círculo (traza del plano en semiesfera inferior estilo Rocscience Dips / Stereonet)."""
+    """Calcula los puntos del Gran Círculo (traza del plano en semiesfera inferior)."""
     if dip_deg <= 0:
         return np.array([]), np.array([])
     strike = (dipdir_deg - 90.0) % 360.0
@@ -112,7 +112,7 @@ def intersect_planes(dip1, dir1, dip2, dir2):
 
 def plot_stereonet(j1=(65, 135), j2=(75, 225), j3=(50, 15),
                    tunnel_axis=(45, 0), friction=32.0, output_path="stereonet_hd.png", dark_mode=True):
-    """Dibuja un estereograma profesional con falsilla de Schmidt completa y estilo Rocscience Dips."""
+    """Dibuja un estereograma profesional con falsilla de Schmidt completa para GeologgIA TÚNEL 3D."""
     fig, ax = plt.subplots(figsize=(9, 9), dpi=300)
 
     # Colores según modo
@@ -217,7 +217,7 @@ def plot_stereonet(j1=(65, 135), j2=(75, 225), j3=(50, 15),
     ax.text(0, 1.12, "Semisfera Inferior • Block Theory Goodman & Shi • Geologgia Ltda",
             color='#94a3b8' if dark_mode else '#64748b', fontsize=9, ha='center')
 
-    # Leyenda geomecánica tipo Rocscience Dips
+    # Leyenda geomecánica técnica
     leg = ax.legend(loc='lower center', bbox_to_anchor=(0.5, -0.22), ncol=2,
                     frameon=True, facecolor='#0f172a' if dark_mode else '#f8fafc',
                     edgecolor='#334155' if dark_mode else '#cbd5e1', fontsize=8.5)

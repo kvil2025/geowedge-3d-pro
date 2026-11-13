@@ -1,7 +1,8 @@
-# GeoWedge 3D Pro ⛏️🚇
+# GeologgIA TÚNEL 3D ⛏️🚇
 
-> **Herramienta Geotécnica 3D para Análisis de Estabilidad de Cuñas Subterráneas, Soporte Óptimo y Efecto Sísmico.**  
-> Desarrollado por **Geologgia Ltda** ([geologgia.cl](https://geologgia.cl)).
+> **Software Geotécnico 3D para Análisis de Estabilidad de Cuñas Subterráneas, Soporte Óptimo y Efecto Sísmico.**  
+> Desarrollado por **Tecknologia** · Diseñado por **Geologgia Ltda** ([geologgia.cl](https://geologgia.cl)).  
+> Parte de la **Suite GeologgIA** junto a *GeologgIA CUÑA 3D (Taludes)*.
 
 ![Geologgia Logo](assets/logo_geologgia.svg)
 
@@ -9,9 +10,9 @@
 
 ## 🌟 Descripción General
 
-**GeoWedge 3D Pro** es una plataforma web interactiva y motor analítico en Python desarrollada por **Geologgia Ltda** para el análisis cinemático y cálculo de estabilidad tridimensional de cuñas en excavaciones subterráneas.
+**GeologgIA TÚNEL 3D** (v2.5 PWA) es una plataforma web progresiva (100% Client-Side & Offline-First) para el análisis cinemático y cálculo de estabilidad tridimensional de cuñas en excavaciones subterráneas (túneles civiles, túneles mineros y piques verticales).
 
-Permite a ingenieros geotécnicos, geomecánicos y de túneles evaluar de manera instantánea el factor de seguridad (FS) de cuñas inducidas por discontinuidades estructurales (fallas, diaclasas, estratificación) en obras civiles y mineras tanto en techos (corona) como en paredes laterales (cajas / hastiales).
+Permite a ingenieros geotécnicos, geomecánicos y especialistas en fortificación subterránea evaluar de manera instantánea el Factor de Seguridad (FS) de cuñas inducidas por discontinuidades estructurales (fallas, diaclasas, estratificación) tanto en la clave/corona (techo) como en las cajas laterales (hastiales) bajo solicitaciones estáticas, dinámicas sísmicas y con dimensionamiento de pernos y shotcrete.
 
 ---
 

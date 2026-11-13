@@ -219,7 +219,7 @@ window.GeoWedgeSensitivity = (function() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `sensibilidad_geowedge_${activeCurve}_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `sensibilidad_geologgia_tunel_${activeCurve}_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   }

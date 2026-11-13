@@ -59,7 +59,7 @@ window.GeoWedgeReport = (function() {
           </div>
           <div class="text-right text-xs text-slate-500 font-mono">
             <p><b>Fecha:</b> ${dateStr}</p>
-            <p><b>Software:</b> GeoWedge 3D Pro v2.4</p>
+            <p><b>Software:</b> GeologgIA TÚNEL 3D v2.5 PWA</p>
             <p><b>Metodología:</b> Block Theory (Goodman & Shi)</p>
           </div>
         </div>
@@ -208,7 +208,7 @@ window.GeoWedgeReport = (function() {
       <html lang="es">
       <head>
         <meta charset="UTF-8">
-        <title>Memoria de Cálculo Geotécnico - GeoWedge 3D Pro</title>
+        <title>Memoria de Cálculo Geotécnico — GeologgIA TÚNEL 3D</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
           @media print {

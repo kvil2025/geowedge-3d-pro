@@ -1,5 +1,5 @@
 /**
- * Módulo 2: Proyección Estereográfica Profesional (Rocscience Dips / Stereonet Style)
+ * Módulo 2: Proyección Estereográfica Profesional (Schmidt / Wulff Hemisferio Inferior)
  * Falsilla de Schmidt (Igual Área) y Wulff (Igual Ángulo)
  * Graduación de limbo de 2°/10°, cuadrícula polar/ecuatorial, cono de fricción (phi),
  * polos con etiquetas, trazas de grandes círculos, diedros de intersección y cursor interactivo.
@@ -146,7 +146,7 @@ window.GeoWedgeStereonet = (function() {
     };
   }
 
-  // Dibuja el Gran Círculo (traza del plano en la semiesfera inferior estilo Rocscience Dips / Stereonet)
+  // Dibuja el Gran Círculo (traza del plano en la semiesfera inferior)
   function drawGreatCircle(dip, dipdir, cx, cy, R, color, label) {
     if (dip <= 0) return;
     ctx.strokeStyle = color;
@@ -591,7 +591,7 @@ window.GeoWedgeStereonet = (function() {
     ctx.fillText(`${config.projection.toUpperCase()} NET • Semisfera Inferior`, w - 10, h - 8);
 
     ctx.textAlign = 'left';
-    ctx.fillText('Geologgia Ltda • GeoWedge Pro', 10, h - 8);
+    ctx.fillText('Geologgia Ltda • GeologgIA TÚNEL 3D', 10, h - 8);
 
     ctx.restore();
 
@@ -657,9 +657,9 @@ window.GeoWedgeStereonet = (function() {
     if (!lastState) return;
     const pyScript = `#!/usr/bin/env python3
 """
-🏔️ GeoWedge 3D Pro - Generador Profesional de Red Estereográfica (Schmidt / Rocscience Dips)
-Generado automáticamente desde la sesión interactiva de GeoWedge 3D Pro.
-Geologgia Ltda - Geología & Geotecnia
+🏔️ GeologgIA TÚNEL 3D - Generador Profesional de Falsilla Estereográfica (Schmidt / Wulff Hemisferio Inferior)
+Generado automáticamente desde la sesión interactiva de GeologgIA TÚNEL 3D.
+Geologgia Ltda - Geología & Geomecánica Subterránea
 """
 
 import numpy as np
@@ -747,16 +747,16 @@ ax.scatter([tx], [ty], s=90, marker='s', color='#38bdf8', edgecolors='#fff', zor
 
 ax.set_xlim(-1.25, 1.25); ax.set_ylim(-1.25, 1.25); ax.set_aspect('equal'); ax.axis('off')
 ax.legend(loc='lower center', bbox_to_anchor=(0.5, -0.20), ncol=2, facecolor='#0f172a', edgecolor='#334155', labelcolor='#e2e8f0', fontsize=8.5)
-plt.title("PROYECCIÓN ESTEREOGRÁFICA (SCHMIDT EQUAL-AREA)\\nGeologgia Ltda • GeoWedge 3D Pro", color='#f1f5f9', fontsize=12, pad=15)
+plt.title("PROYECCIÓN ESTEREOGRÁFICA (SCHMIDT EQUAL-AREA)\\nGeologgia Ltda • GeologgIA TÚNEL 3D", color='#f1f5f9', fontsize=12, pad=15)
 plt.tight_layout()
-plt.savefig("estereograma_geowedge_300dpi.png", dpi=300, bbox_inches='tight')
-print("✅ Estereograma HD guardado en 'estereograma_geowedge_300dpi.png'")
+plt.savefig("estereograma_geologgia_tunel_300dpi.png", dpi=300, bbox_inches='tight')
+print("✅ Estereograma HD guardado en 'estereograma_geologgia_tunel_300dpi.png'")
 plt.show()
 `;
 
     const blob = new Blob([pyScript], { type: 'text/x-python' });
     const link = document.createElement('a');
-    link.download = 'generar_estereograma_geowedge.py';
+    link.download = 'generar_estereograma_geologgia_tunel.py';
     link.href = URL.createObjectURL(blob);
     link.click();
   }
